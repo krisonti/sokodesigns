@@ -165,7 +165,9 @@ Return ONLY clean HTML for the body of an email (no <html>, <head>, or <body> ta
     }),
   });
   const out = await res.json();
-  const text = out?.content?.[0]?.text;
+  // Sonnet 5 can return a "thinking" block before the "text" block — find the text block.
+  const block = Array.isArray(out?.content) ? out.content.find(b => b.type === "text") : null;
+  const text = block?.text;
   if (!text) {
     const detail = `anthropic HTTP ${res.status}: ${JSON.stringify(out?.error || out).slice(0, 220)}`;
     console.error("Claude report error:", detail);
