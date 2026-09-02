@@ -53,17 +53,24 @@ exports.handler = async function (event) {
 
   // ---- 2 + 3. Generate the report and email it (best-effort) ----
   let reportSent = false;
+  const debug = {};
   try {
-    const reportHtml = await generateReport({ name, address, city });
-    if (reportHtml) {
-      reportSent = await sendEmail({ name, email, reportHtml });
-    }
+    const gen = await generateReport({ name, address, city });
+    debug.reportErr = gen.error || null;
+    // If the AI report fails for any reason, fall back to a solid static report
+    // so a lead ALWAYS receives an email.
+    const reportHtml = gen.html || fallbackReport({ name, city });
+    debug.usedFallback = !gen.html;
+    const sent = await sendEmail({ name, email, reportHtml });
+    reportSent = sent.ok;
+    debug.emailErr = sent.error || null;
   } catch (err) {
+    debug.exception = String((err && err.message) || err).slice(0, 300);
     console.error("Report/email failed:", err);
   }
 
   // Always return success to the page if we at least captured the lead.
-  return json(200, { ok: mondayOk || reportSent, mondayOk, reportSent });
+  return json(200, { ok: mondayOk || reportSent, mondayOk, reportSent, debug });
 };
 
 /* ---------------- Monday ---------------- */
@@ -121,7 +128,7 @@ async function createMondayLead({ name, email, phone, address, city, variant, le
 /* ---------------- Claude report ---------------- */
 async function generateReport({ name, address, city }) {
   const key = process.env.ANTHROPIC_API_KEY;
-  if (!key) { console.error("Missing ANTHROPIC_API_KEY — skipping AI report"); return null; }
+  if (!key) { console.error("Missing ANTHROPIC_API_KEY — skipping AI report"); return { html: null, error: "missing ANTHROPIC_API_KEY" }; }
 
   const prompt = `You are an ADU (accessory dwelling unit) feasibility analyst for SOKO Designs, a turnkey design-permit-build firm serving the Phoenix, Arizona metro.
 
@@ -159,8 +166,32 @@ Return ONLY clean HTML for the body of an email (no <html>, <head>, or <body> ta
   });
   const out = await res.json();
   const text = out?.content?.[0]?.text;
-  if (!text) { console.error("Claude report error:", JSON.stringify(out)); return null; }
-  return text;
+  if (!text) {
+    const detail = `anthropic HTTP ${res.status}: ${JSON.stringify(out?.error || out).slice(0, 220)}`;
+    console.error("Claude report error:", detail);
+    return { html: null, error: detail };
+  }
+  return { html: text, error: null };
+}
+
+/* ---------------- Fallback report (used if the AI call fails) ---------------- */
+function fallbackReport({ name, city }) {
+  const cityName = city ? city.replace(/\b\w/g, m => m.toUpperCase()) : "your area";
+  return `
+    <h2>Your preliminary ADU feasibility snapshot</h2>
+    <p>Thanks for reaching out! Here's a quick preliminary look at building an ADU (accessory dwelling unit) on your property in ${escapeHtml(cityName)}. This is early guidance — we confirm the specifics for your exact parcel during a free consult.</p>
+    <h3>What Arizona law means for you</h3>
+    <p>Recent Arizona law (HB 2720 / HB 2928) now requires larger metro cities to permit ADUs on most single-family lots — generally without a public hearing or variance, and often allowing long-term rental with reduced setbacks. Exact size caps and setbacks vary by city and lot, so the next step is confirming the rules for your address.</p>
+    <h3>Your likely options</h3>
+    <ul>
+      <li><strong>Studio Casita</strong> — ~400 sq ft, efficient one-room living</li>
+      <li><strong>One-Bedroom</strong> — ~600 sq ft, a true separate bedroom</li>
+      <li><strong>Two-Level</strong> — ~800 sq ft, maximizes a tight footprint</li>
+    </ul>
+    <h3>Rough numbers</h3>
+    <p>Turnkey build investment typically runs <strong>$99,000–$149,000</strong>, and long-term rents in the metro commonly land around <strong>$1,450–$1,800/month</strong> — a second income stream on land you already own.</p>
+    <h3>Your next step</h3>
+    <p>Let's confirm what your lot qualifies for. Reply to this email or call us and we'll map out your options, timeline, and a firm number.</p>`;
 }
 
 /* ---------------- Resend email ---------------- */
@@ -168,7 +199,7 @@ async function sendEmail({ name, email, reportHtml }) {
   const key = process.env.RESEND_API_KEY;
   const from = process.env.FROM_EMAIL || "SOKO Designs <kris@sokodesigns.com>";
   const notify = process.env.LEAD_NOTIFY_EMAIL;
-  if (!key) { console.error("Missing RESEND_API_KEY — skipping email"); return false; }
+  if (!key) { console.error("Missing RESEND_API_KEY — skipping email"); return { ok: false, error: "missing RESEND_API_KEY" }; }
 
   const html = emailShell(name, reportHtml);
   const payload = {
@@ -185,8 +216,12 @@ async function sendEmail({ name, email, reportHtml }) {
     headers: { "Content-Type": "application/json", Authorization: `Bearer ${key}` },
     body: JSON.stringify(payload),
   });
-  if (!res.ok) { console.error("Resend error:", await res.text()); return false; }
-  return true;
+  if (!res.ok) {
+    const detail = `resend HTTP ${res.status}: ${(await res.text()).slice(0, 220)}`;
+    console.error("Resend error:", detail);
+    return { ok: false, error: detail };
+  }
+  return { ok: true, error: null };
 }
 
 function emailShell(name, inner) {
