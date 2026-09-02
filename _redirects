@@ -1,0 +1,24 @@
+# SOKO Designs — redirects from old Wix URLs to the new site (preserve SEO)
+# Format:  <old path>   <new path>   <status>
+
+# --- Blog posts: old Wix /post/<slug> -> new /blog/<slug> ---
+/post/how-to-get-an-adu-permit-in-phoenix-arizona                                          /blog/how-to-get-an-adu-permit-in-phoenix-arizona        301
+/post/how-to-get-a-building-permit-in-phoenix-arizona                                      /blog/how-to-get-a-building-permit-in-phoenix-arizona    301
+/post/how-to-get-a-building-permit-in-mesa-arizona                                         /blog/how-to-get-a-building-permit-in-mesa-arizona       301
+/post/your-backyard-could-be-the-next-data-center-and-you-might-actually-get-paid-for-it   /blog/your-backyard-could-be-the-next-data-center        301
+
+# Any other old blog post -> blog index
+/post/*                       /blog/    301
+
+# Old blog category pages -> blog index
+/blog/categories/*            /blog/    301
+
+# --- Old service / placeholder pages ---
+# HVAC (Manual J/S/D) service page -> homepage services (until a dedicated HVAC page exists)
+/manual-j-s-d-reports-mechanical-plans   /#services   301
+
+# Old Wix placeholder/unused pages -> home
+/listing        /    301
+/blank          /    301
+/blank-1        /    301
+/blank-8-1      /    301
