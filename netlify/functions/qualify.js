@@ -69,8 +69,10 @@ exports.handler = async function (event) {
     console.error("Report/email failed:", err);
   }
 
+  if (debug.reportErr || debug.emailErr || debug.exception) console.error("qualify debug:", JSON.stringify(debug));
+
   // Always return success to the page if we at least captured the lead.
-  return json(200, { ok: mondayOk || reportSent, mondayOk, reportSent, debug });
+  return json(200, { ok: mondayOk || reportSent, mondayOk, reportSent });
 };
 
 /* ---------------- Monday ---------------- */
