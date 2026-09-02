@@ -426,7 +426,7 @@
   document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
 
   /* CONFIG — swap when ready */
-  const START_PROJECT_URL = "#start"; // TODO: paste your Monday "Start a Project" form URL (forms.monday.com/...)
+  const START_PROJECT_URL = "https://forms.monday.com/forms/b9fc6047c4ea6739a984acff4a733699?r=use1";
   document.querySelectorAll('#start-project-btn, #start-top').forEach(a=>{
     if(START_PROJECT_URL && START_PROJECT_URL !== "#start"){ a.setAttribute('href', START_PROJECT_URL); a.setAttribute('target','_blank'); a.setAttribute('rel','noopener'); }
   });
