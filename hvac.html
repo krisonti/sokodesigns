@@ -330,15 +330,28 @@
 </footer>
 
 <script>
-  // Track checkout starts. To count these as Google Ads conversions, create a
-  // "Purchase" conversion action in Google Ads and add its label as ADS_PURCHASE_LABEL.
-  var ADS_PURCHASE_LABEL = "";   // e.g. "AW-18011803346/xxxxxxxxxxxxxxxx"
+  // Track checkout starts. Checkout itself happens on QuickBooks, which cannot
+  // run our tag, so this counts the intent to buy rather than a settled payment.
+  var ADS_PURCHASE_LABEL = "AW-18011803346/0VMGCN_R-v4cENKd2YxD";
+  var fired = {};
   document.addEventListener("click", function (e) {
     var a = e.target.closest && e.target.closest(".pay-btn");
     if (!a || typeof gtag !== "function") return;
+    var report = a.dataset.report || "HVAC report";
     var v = parseFloat(a.dataset.amount || "0");
-    gtag("event", "begin_checkout", { currency: "USD", value: v, items: [{ item_name: a.dataset.report }] });
-    if (ADS_PURCHASE_LABEL) gtag("event", "conversion", { send_to: ADS_PURCHASE_LABEL, value: v, currency: "USD" });
+    gtag("event", "begin_checkout", { currency: "USD", value: v, items: [{ item_name: report }] });
+    // The Ads action counts Every conversion, so a second click on the same
+    // button would count twice. One transaction_id per report per page view
+    // lets Google dedupe those.
+    if (!ADS_PURCHASE_LABEL || fired[report]) return;
+    fired[report] = "hvac-" + report.replace(/\W+/g, "-").toLowerCase() + "-" +
+      Date.now() + "-" + Math.random().toString(36).slice(2, 8);
+    gtag("event", "conversion", {
+      send_to: ADS_PURCHASE_LABEL,
+      value: v,
+      currency: "USD",
+      transaction_id: fired[report]
+    });
   });
 </script>
 <script src="/site-nav.js" defer></script>
