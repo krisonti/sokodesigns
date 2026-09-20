@@ -15,7 +15,7 @@
 
 # --- Old service / placeholder pages ---
 # HVAC (Manual J/S/D) service page -> homepage services (until a dedicated HVAC page exists)
-/manual-j-s-d-reports-mechanical-plans   /#services   301
+/manual-j-s-d-reports-mechanical-plans   /hvac       301
 
 # Old Wix placeholder/unused pages -> home
 /listing        /    301
@@ -25,15 +25,15 @@
 
 # --- Old Wix store (retired; HVAC reports now quoted directly) ---
 # Specific HVAC products -> the HVAC service section on the homepage
-/product-page/manual-j-report*        /#services   301
-/product-page/manual-js*              /#services   301
-/product-page/manual-jsd*             /#services   301
-/product-page/mechanical-plan*        /#services   301
-/product-page/rescheck*               /#services   301
-/product-page/copy-of-rescheck*       /#services   301
-/product-page/bundle-*                /#services   301
+/product-page/manual-j-report*        /hvac   301
+/product-page/manual-js*              /hvac   301
+/product-page/manual-jsd*             /hvac   301
+/product-page/mechanical-plan*        /hvac   301
+/product-page/rescheck*               /hvac   301
+/product-page/copy-of-rescheck*       /hvac   301
+/product-page/bundle-*                /hvac   301
 # Anything else from the old store
-/product-page/*                       /#services   301
-/category/*                           /#services   301
+/product-page/*                       /hvac   301
+/category/*                           /hvac   301
 /cart                                 /            301
 /checkout                             /            301

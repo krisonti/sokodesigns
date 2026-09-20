@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manual J/S/D &amp; ResCheck Energy Reports | SOKO Designs</title>
+<meta name="description" content="Manual J, S, and D load calculations and ResCheck energy compliance reports for Arizona building permits. Flat $750 for homes up to 3,000 sf, $500 for ResCheck. Turnaround in days, not weeks.">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://www.sokodesigns.com/hvac">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Manual J/S/D &amp; ResCheck Energy Reports | SOKO Designs">
+<meta property="og:description" content="Manual J/S/D load calculations and ResCheck reports for Arizona permits. Flat $750 up to 3,000 sf. ResCheck $500.">
+<meta property="og:url" content="https://www.sokodesigns.com/hvac">
+<meta property="og:site_name" content="SOKO Designs">
+<meta property="og:image" content="https://www.sokodesigns.com/images/og-default.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Manual J/S/D &amp; ResCheck Energy Reports | SOKO Designs">
+<meta name="twitter:image" content="https://www.sokodesigns.com/images/og-default.jpg">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="theme-color" content="#4A7C7E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<!-- Google tag (gtag.js) — Google Ads conversion tracking -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-18011803346"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'AW-18011803346');
+</script>
+<style>
+  :root{
+    --ink:#1A1A1A; --ink-soft:#5B5B57;
+    --teal:#4A7C7E; --teal-deep:#3A6365; --teal-tint:#EAF0F0;
+    --cream:#F4F3F0; --sand:#EDE7DB; --white:#FFFFFF; --clay:#B67243;
+    --line:#E3DED3; --line-soft:#ECE8DE;
+    --maxw:1180px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--cream); color:var(--ink); font-family:"Inter",system-ui,Arial,sans-serif; font-size:17px; line-height:1.65; -webkit-font-smoothing:antialiased}
+  h1,h2,h3{font-family:"Cormorant Garamond",Georgia,serif; line-height:1.06; font-weight:600}
+  .eyebrow{font-weight:600; font-size:12px; letter-spacing:.2em; text-transform:uppercase; color:var(--teal)}
+  .wrap{max-width:var(--maxw); margin:0 auto; padding:0 26px}
+  a{color:inherit}
+  img{display:block; width:100%; height:auto}
+  section{padding:80px 0}
+
+  .btn{font-weight:600; font-size:15px; background:var(--ink); color:var(--white); border:none; border-radius:3px; padding:15px 26px; cursor:pointer; text-decoration:none; display:inline-block; transition:background .2s, transform .2s}
+  .btn:hover{background:var(--teal); transform:translateY(-1px)}
+  .btn-teal{background:var(--teal)} .btn-teal:hover{background:var(--teal-deep)}
+  .btn-ghost{background:transparent; color:var(--ink); border:1px solid var(--ink)}
+  .btn-ghost:hover{background:var(--ink); color:var(--white)}
+
+  header{position:sticky; top:0; z-index:60; background:rgba(255,255,255,.94); backdrop-filter:blur(10px); border-bottom:1px solid var(--line)}
+  .nav{display:flex; align-items:center; justify-content:space-between; height:72px; gap:20px}
+  .brand-link{display:flex; align-items:center; text-decoration:none}
+  .brand-logo{height:50px; width:auto; display:block}
+  .nav-menu{display:flex; align-items:center; gap:26px; margin-left:auto}
+  .nav-menu a.link{font-weight:500; font-size:15px; text-decoration:none; color:var(--ink)}
+  .nav-menu a.link:hover,.nav-menu a.link.active{color:var(--teal)}
+  .nav-phone{font-weight:600; font-size:15px; text-decoration:none; color:var(--ink)}
+  .nav .btn{padding:11px 18px; font-size:14px}
+  @media(max-width:940px){ .brand-logo{height:42px} .nav{height:62px} }
+
+  /* HERO */
+  .hero{background:var(--teal-deep); color:#fff; padding:76px 0 68px}
+  .hero .eyebrow{color:#9FC3C4}
+  .hero h1{font-size:clamp(40px,6vw,66px); margin-top:14px}
+  .hero p{color:#DCEAE9; font-size:19px; margin-top:18px; max-width:56ch}
+  .hero .btns{display:flex; flex-wrap:wrap; gap:12px; margin-top:32px}
+  .hero .btn-ghost{color:#fff; border-color:rgba(255,255,255,.7)}
+  .hero .btn-ghost:hover{background:#fff; color:var(--ink)}
+
+  /* PRICING */
+  .price-grid{display:grid; grid-template-columns:1fr 1fr; gap:22px; margin-top:44px}
+  .price{background:var(--white); border:1px solid var(--line); border-radius:6px; padding:34px 30px; display:flex; flex-direction:column}
+  .price.feature{border-color:var(--teal); box-shadow:0 18px 44px rgba(74,124,126,.12)}
+  .price .tag{font-weight:600; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--clay)}
+  .price h3{font-size:31px; margin-top:10px}
+  .price .amount{font-family:"Cormorant Garamond",Georgia,serif; font-weight:700; font-size:58px; color:var(--teal-deep); line-height:1; margin-top:16px}
+  .price .unit{font-size:15px; color:var(--ink-soft); margin-top:8px}
+  .price ul{list-style:none; margin-top:20px; padding-top:20px; border-top:1px solid var(--line-soft)}
+  .price li{position:relative; padding-left:24px; margin-bottom:10px; font-size:16px; color:var(--ink-soft)}
+  .price li::before{content:"✓"; position:absolute; left:0; color:var(--teal); font-weight:700}
+  .price .cta{margin-top:auto; padding-top:24px}
+  .price .cta .btn{width:100%; text-align:center}
+  @media(max-width:760px){ .price-grid{grid-template-columns:1fr} }
+
+  .note{background:var(--sand); border-radius:6px; padding:26px 28px; margin-top:26px; font-size:16px; color:var(--ink-soft)}
+  .note b{color:var(--ink)}
+
+  /* WHAT IT IS */
+  .what{background:var(--white)}
+  .what-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:24px; margin-top:44px}
+  .what-card{border:1px solid var(--line); border-radius:6px; padding:28px 26px}
+  .what-card .n{font-family:"Cormorant Garamond",Georgia,serif; font-size:34px; color:var(--teal); font-weight:700}
+  .what-card h3{font-size:24px; margin-top:6px}
+  .what-card p{color:var(--ink-soft); font-size:16px; margin-top:10px}
+  @media(max-width:820px){ .what-grid{grid-template-columns:1fr} }
+
+  .sec-head{max-width:64ch}
+  .sec-head.center{margin:0 auto; text-align:center}
+  .sec-head h2{font-size:clamp(32px,4.4vw,52px); margin-top:12px}
+  .sec-head p{color:var(--ink-soft); font-size:18px; margin-top:16px}
+
+  /* CTA */
+  .cta-band{background:var(--teal); color:#fff; text-align:center}
+  .cta-band h2{font-size:clamp(32px,4.4vw,52px)}
+  .cta-band p{color:#DCEAE9; font-size:18px; margin-top:14px; max-width:54ch; margin-left:auto; margin-right:auto}
+  .cta-band .btns{display:flex; justify-content:center; flex-wrap:wrap; gap:12px; margin-top:30px}
+  .cta-band .btn-ghost{color:#fff; border-color:rgba(255,255,255,.7)}
+  .cta-band .btn-ghost:hover{background:#fff; color:var(--ink)}
+  .cta-band .btn-white{background:#fff; color:var(--teal-deep)}
+  .cta-band .btn-white:hover{background:var(--cream); color:var(--teal-deep)}
+
+  /* FOOTER */
+  footer{background:#111110; color:#B7B4AC; padding:52px 0 38px}
+  .foot-top{display:grid; grid-template-columns:1.3fr 1fr 1fr; gap:30px; border-bottom:1px solid #2A2A27; padding-bottom:28px}
+  .foot-logo{background:#fff; border-radius:10px; padding:11px 15px; display:inline-block}
+  .foot-logo img{height:52px; width:auto}
+  .foot-col h4{font-family:"Inter",sans-serif; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:#8A877F; margin-bottom:12px; font-weight:600}
+  .foot-col a{display:block; color:#C9C6BE; text-decoration:none; font-size:15px; padding:5px 0}
+  .foot-col a:hover{color:#fff}
+  .foot-bottom{display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap; margin-top:20px; font-size:13px; color:#7C7A73}
+  @media(max-width:760px){ .foot-top{grid-template-columns:1fr} }
+</style>
+<link rel="stylesheet" href="/site-nav.css">
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a href="/" class="brand-link" aria-label="SOKO Designs home"><img class="brand-logo" src="/soko-designs-logo.png" alt="SOKO Designs"></a>
+    <nav class="nav-menu">
+      <a class="link" href="/#services">Services</a>
+      <a class="link" href="/#serve">Who We Serve</a>
+      <a class="link" href="/adu">ADUs</a>
+      <a class="link active" href="/hvac">HVAC Reports</a>
+      <a class="link" href="/guides/">Permit Guides</a>
+      <a class="link" href="/blog/">Blog</a>
+      <a class="nav-phone" href="tel:4806603133">480-660-3133</a>
+      <a class="btn btn-teal" href="#request">Request a Report</a>
+    </nav>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="wrap">
+    <div class="eyebrow">HVAC energy compliance</div>
+    <h1>Manual J/S/D and ResCheck,<br>priced flat.</h1>
+    <p>The energy compliance documentation your building permit requires — prepared by the same team that pulls permits across Arizona every week. No hourly billing, no surprise line items.</p>
+    <div class="btns">
+      <a class="btn btn-white" href="#request" style="background:#fff;color:var(--teal-deep)">Request a report &rarr;</a>
+      <a class="btn btn-ghost" href="tel:4806603133">Call 480-660-3133</a>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing">
+  <div class="wrap">
+    <div class="sec-head center">
+      <div class="eyebrow">Pricing</div>
+      <h2>Two reports. Two prices.</h2>
+      <p>That's the whole menu. If your project falls outside these, tell us about it and we'll quote it.</p>
+    </div>
+
+    <div class="price-grid">
+      <div class="price feature">
+        <div class="tag">Most requested</div>
+        <h3>Manual J / S / D</h3>
+        <div class="amount">$750</div>
+        <div class="unit">Flat fee &middot; homes up to 3,000 sq ft</div>
+        <ul>
+          <li>Manual J — room-by-room load calculation</li>
+          <li>Manual S — equipment sizing and selection</li>
+          <li>Manual D — duct design and sizing</li>
+          <li>Formatted for Arizona plan review</li>
+          <li>Revisions included if the city comments</li>
+        </ul>
+        <div class="cta"><a class="btn btn-teal" href="#request">Request this report</a></div>
+      </div>
+
+      <div class="price">
+        <div class="tag">Energy code</div>
+        <h3>ResCheck</h3>
+        <div class="amount">$500</div>
+        <div class="unit">Flat fee</div>
+        <ul>
+          <li>Residential energy code compliance report</li>
+          <li>Envelope, insulation, and fenestration review</li>
+          <li>Signed compliance certificate</li>
+          <li>Formatted for Arizona plan review</li>
+          <li>Revisions included if the city comments</li>
+        </ul>
+        <div class="cta"><a class="btn btn-ghost" href="#request">Request this report</a></div>
+      </div>
+    </div>
+
+    <div class="note">
+      <b>Over 3,000 sq ft, commercial, or something unusual?</b> Send us the plans and we'll quote it — multifamily, tenant improvements, additions to existing systems, and anything that needs a custom scope. Quotes usually come back same or next business day.
+    </div>
+  </div>
+</section>
+
+<!-- WHAT IT IS -->
+<section class="what">
+  <div class="wrap">
+    <div class="sec-head center">
+      <div class="eyebrow">What you're getting</div>
+      <h2>The paperwork the city asks for.</h2>
+      <p>Most Arizona jurisdictions won't issue a permit on new construction or a mechanical change-out without these. Here's what each one does.</p>
+    </div>
+    <div class="what-grid">
+      <div class="what-card">
+        <div class="n">J</div>
+        <h3>The load calculation</h3>
+        <p>Works out how much heating and cooling the building actually needs, room by room — based on orientation, insulation, windows, and local design temperatures.</p>
+      </div>
+      <div class="what-card">
+        <div class="n">S</div>
+        <h3>The equipment sizing</h3>
+        <p>Takes the Manual J numbers and selects equipment that matches them. This is what stops a house from getting a wildly oversized unit that short-cycles.</p>
+      </div>
+      <div class="what-card">
+        <div class="n">D</div>
+        <h3>The duct design</h3>
+        <p>Sizes the duct runs and registers so the air the equipment moves actually reaches the rooms that need it, at the right volume.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section>
+  <div class="wrap">
+    <div class="sec-head center">
+      <div class="eyebrow">How it works</div>
+      <h2>Send plans, get a report.</h2>
+    </div>
+    <div class="what-grid">
+      <div class="what-card">
+        <div class="n">1</div>
+        <h3>Send your plans</h3>
+        <p>Floor plans and elevations are usually enough. Tell us the jurisdiction so we format it the way that reviewer expects.</p>
+      </div>
+      <div class="what-card">
+        <div class="n">2</div>
+        <h3>We prepare it</h3>
+        <p>We run the calculations and produce the stamped report set, ready to drop into your permit submittal.</p>
+      </div>
+      <div class="what-card">
+        <div class="n">3</div>
+        <h3>You submit</h3>
+        <p>If the city comes back with comments on the energy documents, we handle the response — that's included.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REQUEST -->
+<section class="cta-band" id="request">
+  <div class="wrap">
+    <div class="eyebrow" style="color:#DCEAE9">Request a report</div>
+    <h2>Tell us about the project.</h2>
+    <p>Send the address, square footage, and plans. We'll confirm the price and the turnaround — and if it's outside the flat-fee range, we'll quote it.</p>
+    <div class="btns">
+      <a class="btn btn-white" href="mailto:kris@sokodesigns.com?subject=HVAC%20Report%20Request&amp;body=Project%20address%3A%0D%0ASquare%20footage%3A%0D%0AJurisdiction%2Fcity%3A%0D%0AReport%20needed%20(Manual%20J%2FS%2FD%2C%20ResCheck%2C%20or%20both)%3A%0D%0A%0D%0APlease%20attach%20plans%20if%20you%20have%20them.">Email us the project</a>
+      <a class="btn btn-ghost" href="/#start">Use the project form</a>
+      <a class="btn btn-ghost" href="tel:4806603133">Call 480-660-3133</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <div class="foot-top">
+      <div>
+        <div class="foot-logo"><img src="/soko-designs-logo.png" alt="SOKO Designs"></div>
+        <p style="margin-top:16px;font-size:15px;max-width:34ch;color:#B7B4AC">Phoenix drafting, permit-ready plans, and construction estimating. Built for those who build.</p>
+      </div>
+      <div class="foot-col">
+        <h4>Services</h4>
+        <a href="/#services">Plans &amp; Permits</a>
+        <a href="/adu">ADUs &amp; Additions</a>
+        <a href="/#services">Tenant Improvements</a>
+        <a href="/hvac">HVAC Energy Reports</a>
+        <a href="/#services">Takeoffs &amp; Estimates</a>
+      </div>
+      <div class="foot-col">
+        <h4>Company</h4>
+        <a href="/#process">Our Process</a>
+        <a href="/guides/">Permit Guides</a>
+        <a href="/blog/">Blog</a>
+        <a href="/adu-guide">Homeowner&#39;s ADU Guide</a>
+        <a href="/investor-guide">Investor&#39;s ADU Guide</a>
+        <a href="tel:4806603133">480-660-3133</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <div>© SOKO Designs · Phoenix, Arizona · <a href="mailto:kris@sokodesigns.com" style="color:#B7B4AC">kris@sokodesigns.com</a></div>
+      <div>Plans · Permits · Estimating</div>
+    </div>
+  </div>
+</footer>
+
+<script src="/site-nav.js" defer></script>
+</body>
+</html>
