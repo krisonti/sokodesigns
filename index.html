@@ -156,7 +156,72 @@
 
   .reveal{opacity:0; transform:translateY(16px); transition:opacity .6s ease, transform .6s ease}
   .reveal.in{opacity:1; transform:none}
+  .free-guides{display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-top:44px; text-align:left}
+  .fg-card{display:block; background:var(--white); border:1px solid var(--line); border-radius:6px; padding:28px 26px; text-decoration:none; transition:border-color .2s, transform .2s, box-shadow .2s}
+  .fg-card:hover{border-color:var(--teal); transform:translateY(-2px); box-shadow:0 14px 34px rgba(26,26,26,.09)}
+  .fg-tag{font-family:"Inter",sans-serif; font-weight:600; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--clay)}
+  .fg-card h3{font-size:27px; margin-top:10px; color:var(--ink)}
+  .fg-card p{color:var(--ink-soft); font-size:16px; margin-top:10px}
+  .fg-go{display:inline-block; margin-top:16px; font-weight:600; font-size:15px; color:var(--teal)}
+  @media(max-width:760px){ .free-guides{grid-template-columns:1fr} }
+
 </style>
+<link rel="canonical" href="https://www.sokodesigns.com/">
+<meta property="og:url" content="https://www.sokodesigns.com/">
+<meta property="og:site_name" content="SOKO Designs">
+<meta property="og:image" content="https://www.sokodesigns.com/images/og-default.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="SOKO Designs | Plans, Permits & Estimating in Phoenix, AZ">
+<meta name="twitter:image" content="https://www.sokodesigns.com/images/og-default.jpg">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="theme-color" content="#4A7C7E">
+<!-- Google tag (gtag.js) — Google Ads conversion tracking -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-18011803346"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'AW-18011803346');
+</script>
+<link rel="stylesheet" href="/site-nav.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  "@id": "https://www.sokodesigns.com/#business",
+  "name": "SOKO Designs",
+  "description": "Phoenix drafting, permit-ready plans, and construction estimating for general contractors, homeowners, and business owners across Arizona.",
+  "url": "https://www.sokodesigns.com/",
+  "logo": "https://www.sokodesigns.com/soko-designs-logo.png",
+  "image": "https://www.sokodesigns.com/images/og-default.jpg",
+  "telephone": "+1-480-660-3133",
+  "email": "kris@sokodesigns.com",
+  "priceRange": "$$",
+  "address": { "@type": "PostalAddress", "addressLocality": "Phoenix", "addressRegion": "AZ", "addressCountry": "US" },
+  "areaServed": [
+    { "@type": "City", "name": "Phoenix" }, { "@type": "City", "name": "Scottsdale" },
+    { "@type": "City", "name": "Mesa" }, { "@type": "City", "name": "Tempe" },
+    { "@type": "City", "name": "Chandler" }, { "@type": "City", "name": "Gilbert" },
+    { "@type": "City", "name": "Glendale" }, { "@type": "AdministrativeArea", "name": "Maricopa County" }
+  ],
+  "hasOfferCatalog": {
+    "@type": "OfferCatalog",
+    "name": "Services",
+    "itemListElement": [
+      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Plans & Permits" } },
+      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "ADUs & Additions" } },
+      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Tenant Improvements" } },
+      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "HVAC Energy Reports (Manual J/S/D)" } },
+      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Zoning & Variances" } },
+      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Takeoffs & Estimates" } }
+    ]
+  }
+}
+</script>
 </head>
 <body>
 
@@ -356,7 +421,7 @@
   <div class="lb-viewer" id="lb-viewer" hidden>
     <div class="lb-stage">
       <button class="lb-nav lb-prev" id="lb-prev" aria-label="Previous">&lsaquo;</button>
-      <img id="lb-img" src="" alt="">
+      <img id="lb-img" alt="">
       <button class="lb-nav lb-next" id="lb-next" aria-label="Next">&rsaquo;</button>
     </div>
     <div class="lb-cap" id="lb-cap"></div>
@@ -538,6 +603,21 @@
       <p>Straight-talk guides on ADUs, permits, estimating, and building across Phoenix and the Valley — written by the team that pulls the permits.</p>
       <div style="margin-top:26px"><a class="btn btn-teal" href="blog/index.html">Read the blog →</a></div>
     </div>
+      <div class="free-guides reveal">
+        <a class="fg-card" href="/adu-guide">
+          <div class="fg-tag">Free guide &middot; Homeowners</div>
+          <h3>The Arizona Homeowner's Guide to Building a Casita</h3>
+          <p>HB 2720 rules, real costs, permits, and timelines â everything before you break ground.</p>
+          <span class="fg-go">Read the guide &rarr;</span>
+        </a>
+        <a class="fg-card" href="/investor-guide">
+          <div class="fg-tag">Free guide &middot; Investors</div>
+          <h3>The Investor's Guide to Phoenix ADUs</h3>
+          <p>Rent comps, build costs, and the numbers behind adding a second income stream to a rental.</p>
+          <span class="fg-go">Read the guide &rarr;</span>
+        </a>
+      </div>
+
   </div>
 </section>
 
@@ -576,6 +656,8 @@
         <a href="#serve">Who We Serve</a>
         <a href="guides/index.html">Permit Guides</a>
         <a href="blog/index.html">Blog</a>
+        <a href="/adu-guide">Homeowner&#39;s ADU Guide</a>
+        <a href="/investor-guide">Investor&#39;s ADU Guide</a>
         <a href="https://calendly.com/kris-sokodesigns/30min" target="_blank" rel="noopener">Book a Call</a>
         <a href="tel:4806603133">480-660-3133</a>
       </div>
@@ -593,5 +675,6 @@
 
   /* "Start a Project" buttons scroll to the embedded Monday form in the #start section (no off-site redirect). */
 </script>
+<script src="/site-nav.js" defer></script>
 </body>
 </html>

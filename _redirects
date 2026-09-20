@@ -22,3 +22,18 @@
 /blank          /    301
 /blank-1        /    301
 /blank-8-1      /    301
+
+# --- Old Wix store (retired; HVAC reports now quoted directly) ---
+# Specific HVAC products -> the HVAC service section on the homepage
+/product-page/manual-j-report*        /#services   301
+/product-page/manual-js*              /#services   301
+/product-page/manual-jsd*             /#services   301
+/product-page/mechanical-plan*        /#services   301
+/product-page/rescheck*               /#services   301
+/product-page/copy-of-rescheck*       /#services   301
+/product-page/bundle-*                /#services   301
+# Anything else from the old store
+/product-page/*                       /#services   301
+/category/*                           /#services   301
+/cart                                 /            301
+/checkout                             /            301

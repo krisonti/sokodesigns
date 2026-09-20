@@ -1,0 +1,47 @@
+/* ---- SOKO shared mobile navigation ---- */
+.nav-toggle{
+  display:none; align-items:center; justify-content:center;
+  width:44px; height:44px; margin-left:auto;
+  background:transparent; border:1px solid var(--line, #E3DED3); border-radius:4px;
+  cursor:pointer; padding:0; color:var(--ink, #1A1A1A);
+}
+.nav-toggle:hover{border-color:var(--teal, #4A7C7E); color:var(--teal, #4A7C7E)}
+.nav-toggle span{position:relative; display:block; width:20px; height:2px; background:currentColor; transition:transform .25s ease, background .25s ease}
+.nav-toggle span::before,.nav-toggle span::after{
+  content:""; position:absolute; left:0; width:20px; height:2px; background:currentColor;
+  transition:transform .25s ease, top .25s ease;
+}
+.nav-toggle span::before{top:-6px}
+.nav-toggle span::after{top:6px}
+.nav-toggle[aria-expanded="true"] span{background:transparent}
+.nav-toggle[aria-expanded="true"] span::before{top:0; transform:rotate(45deg)}
+.nav-toggle[aria-expanded="true"] span::after{top:0; transform:rotate(-45deg)}
+
+.mnav{
+  display:none; position:absolute; left:0; right:0; top:100%;
+  background:#fff; border-bottom:1px solid var(--line, #E3DED3);
+  box-shadow:0 14px 34px rgba(26,26,26,.13);
+  padding:10px 26px 22px; max-height:calc(100vh - 60px); overflow-y:auto;
+}
+.mnav.open{display:block}
+.mnav a{
+  display:block; text-decoration:none; color:var(--ink, #1A1A1A);
+  font-family:"Inter", system-ui, Arial, sans-serif; font-weight:500; font-size:17px;
+  padding:15px 2px; border-bottom:1px solid var(--line-soft, #ECE8DE);
+}
+.mnav a:hover{color:var(--teal, #4A7C7E)}
+.mnav .mnav-phone{font-weight:700; font-size:19px; color:var(--teal-deep, #3A6365)}
+.mnav .mnav-cta{
+  border-bottom:none; text-align:center; border-radius:3px;
+  padding:15px 20px; font-weight:600; font-size:16px; margin-top:14px;
+}
+.mnav .mnav-cta.solid{background:var(--teal, #4A7C7E); color:#fff}
+.mnav .mnav-cta.solid:hover{background:var(--teal-deep, #3A6365); color:#fff}
+.mnav .mnav-cta.ghost{border:1px solid var(--ink, #1A1A1A); color:var(--ink, #1A1A1A)}
+.mnav .mnav-cta.ghost:hover{background:var(--ink, #1A1A1A); color:#fff}
+
+@media(max-width:940px){
+  .nav-toggle{display:flex}
+  .nav-menu .link,.nav-menu .btn,.nav-menu .nav-phone,.nav-phone{display:none}
+  .nav-menu{margin-left:0}
+}
