@@ -91,10 +91,10 @@ async function createMondayLead({ name, email, phone, address, details, scope, t
       `Submitted: ${new Date().toISOString()}`,
     ].filter(Boolean).join(" | ").slice(0, 2000),
   };
-  if (address) {
-    columnValues.text_mm45qcc4 = String(address).slice(0, 250);
-    columnValues.location1ej8reiy = { address: String(address).slice(0, 250) };
-  }
+  // Note: don't write location1ej8reiy here. Monday's location column wants
+  // lat/lng as well as a label, and sending a bare address fails the whole
+  // create_item mutation — which loses the lead silently.
+  if (address) columnValues.text_mm45qcc4 = String(address).slice(0, 250);
   if (leadSource && VALID_LEAD_SOURCES.includes(leadSource)) {
     columnValues.dropdown_mm45aggs = { labels: [leadSource] };
   }
