@@ -129,6 +129,13 @@
   .foot-col a:hover{color:#fff}
   .foot-bottom{display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap; margin-top:20px; font-size:13px; color:#7C7A73}
   @media(max-width:760px){ .foot-top{grid-template-columns:1fr} }
+  .cta-alt{display:block; text-align:center; margin-top:12px; font-size:14px; color:var(--ink-soft); text-decoration:none}
+  .cta-alt:hover{color:var(--teal); text-decoration:underline}
+  .after-pay{background:var(--teal-tint); border:1px solid #CFE0E0; border-radius:6px; padding:26px 28px; margin-top:26px}
+  .after-pay h3{font-size:24px}
+  .after-pay ol{margin:14px 0 0 20px; color:var(--ink-soft); font-size:16px}
+  .after-pay li{margin-bottom:8px}
+
 </style>
 <link rel="stylesheet" href="/site-nav.css">
 </head>
@@ -185,7 +192,7 @@
           <li>Formatted for Arizona plan review</li>
           <li>Revisions included if the city comments</li>
         </ul>
-        <div class="cta"><a class="btn btn-teal" href="#request">Request this report</a></div>
+        <div class="cta"><a class="btn btn-teal pay-btn" href="https://connect.intuit.com/portal/app/CommerceNetwork/view/scs-v1-94aecc8c00a44bbead608d92431f2af9e3eb126246f044709fcb4029d04c0dd3d96314a8b44a45328f4c3552d458d126-1?locale=EN_US" target="_blank" rel="noopener" data-report="Manual J/S/D" data-amount="750">Pay $750 &amp; start &rarr;</a><a class="cta-alt" href="#request">or ask a question first</a></div>
       </div>
 
       <div class="price">
@@ -200,8 +207,18 @@
           <li>Formatted for Arizona plan review</li>
           <li>Revisions included if the city comments</li>
         </ul>
-        <div class="cta"><a class="btn btn-ghost" href="#request">Request this report</a></div>
+        <div class="cta"><a class="btn btn-teal pay-btn" href="https://connect.intuit.com/portal/app/CommerceNetwork/view/scs-v1-118cc7fedaf241f5b89bafb3770343c4eef07589874c4f389738b10ef041b814ea2e2011b3be4890bc1e65d884563a39-0?locale=EN_US" target="_blank" rel="noopener" data-report="ResCheck" data-amount="500">Pay $500 &amp; start &rarr;</a><a class="cta-alt" href="#request">or ask a question first</a></div>
       </div>
+    </div>
+
+    <div class="after-pay">
+      <h3>What happens after you pay</h3>
+      <ol>
+        <li>You'll get a QuickBooks receipt by email immediately.</li>
+        <li>Email your plans to <a href="mailto:kris@sokodesigns.com?subject=Plans%20for%20paid%20HVAC%20report" style="color:var(--teal);font-weight:600">kris@sokodesigns.com</a> &mdash; floor plans and elevations are usually enough. Include the jurisdiction.</li>
+        <li>We confirm receipt and give you a turnaround date, usually same or next business day.</li>
+      </ol>
+      <p style="margin-top:14px;font-size:15px;color:var(--ink-soft)"><b>Not sure your project fits the flat fee?</b> Ask first &mdash; we'll confirm before you pay. If a home turns out to be over 3,000 sq ft after payment, we'll quote the difference or refund you in full.</p>
     </div>
 
     <div class="note">
@@ -312,6 +329,18 @@
   </div>
 </footer>
 
+<script>
+  // Track checkout starts. To count these as Google Ads conversions, create a
+  // "Purchase" conversion action in Google Ads and add its label as ADS_PURCHASE_LABEL.
+  var ADS_PURCHASE_LABEL = "";   // e.g. "AW-18011803346/xxxxxxxxxxxxxxxx"
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest && e.target.closest(".pay-btn");
+    if (!a || typeof gtag !== "function") return;
+    var v = parseFloat(a.dataset.amount || "0");
+    gtag("event", "begin_checkout", { currency: "USD", value: v, items: [{ item_name: a.dataset.report }] });
+    if (ADS_PURCHASE_LABEL) gtag("event", "conversion", { send_to: ADS_PURCHASE_LABEL, value: v, currency: "USD" });
+  });
+</script>
 <script src="/site-nav.js" defer></script>
 </body>
 </html>
