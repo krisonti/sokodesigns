@@ -94,19 +94,39 @@
     document.querySelectorAll('.faq-q').forEach(function (q) {
       q.addEventListener('click', function () { q.closest('.faq-item').classList.toggle('open'); });
     });
-    var els = document.querySelectorAll('.reveal');
+    var els = [].slice.call(document.querySelectorAll('.reveal'));
     if (!els.length) return;
-    if (!('IntersectionObserver' in window)) {
-      els.forEach(function (el) { el.classList.add('in'); });
-      return;
+
+    // Plain geometry check rather than IntersectionObserver: these are paid ad
+    // landing pages, so the cost of the reveal silently failing is a blank page.
+    var ticking = false;
+    function check() {
+      ticking = false;
+      var h = window.innerHeight || document.documentElement.clientHeight;
+      for (var i = els.length - 1; i >= 0; i--) {
+        var r = els[i].getBoundingClientRect();
+        if (r.top < h * 0.92 && r.bottom > 0) {
+          els[i].classList.add('in');
+          els.splice(i, 1);
+        }
+      }
+      if (!els.length) teardown();
     }
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } });
-    }, { rootMargin: '0px 0px -8% 0px' });
-    els.forEach(function (el) { io.observe(el); });
+    function onScroll() {
+      if (ticking) return;
+      ticking = true;
+      (window.requestAnimationFrame || function (f) { setTimeout(f, 16); })(check);
+    }
+    function teardown() {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    check();
   }
 
-  function boot() { init(); extras(); }
+  function boot() { window.__sokoLP = true; init(); extras(); }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
   else boot();
 })();

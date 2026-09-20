@@ -26,6 +26,12 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/lp.css">
+<script>
+  /* Hide-then-reveal only while the animation script is alive. If lead-form.js
+     is blocked or errors, everything below the hero stays visible. */
+  document.documentElement.className += " js-anim";
+  setTimeout(function(){ if(!window.__sokoLP) document.documentElement.classList.remove("js-anim"); }, 2500);
+</script>
 <!-- Google tag (gtag.js) — Google Ads conversion tracking -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18011803346"></script>
 <script>
