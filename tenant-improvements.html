@@ -189,11 +189,13 @@
   .ti-clients .lbl{text-align:center; font-weight:600; font-size:12px; letter-spacing:.2em;
     text-transform:uppercase; color:var(--ink-soft)}
   .ti-logos{display:flex; flex-wrap:wrap; align-items:center; justify-content:center;
-    gap:20px 46px; margin-top:22px}
-  .ti-logos img{height:56px; width:auto; max-width:200px; object-fit:contain;
-    filter:grayscale(1); opacity:.58; transition:filter .25s, opacity .25s}
-  .ti-logos img:hover{filter:grayscale(0); opacity:1}
-  @media(max-width:600px){.ti-logos{gap:18px 30px} .ti-logos img{height:42px; max-width:120px}}
+    gap:26px 50px; margin-top:24px}
+  /* Full colour, full opacity. A greyscale wash suits twenty household names;
+     with seven local businesses it just made them unreadable. */
+  .ti-logos img{height:66px; width:auto; max-width:220px; object-fit:contain;
+    transition:transform .25s}
+  .ti-logos img:hover{transform:scale(1.06)}
+  @media(max-width:600px){.ti-logos{gap:22px 32px} .ti-logos img{height:52px; max-width:150px}}
 
   /* Image viewer */
   .til{position:fixed; inset:0; z-index:200; background:rgba(12,12,11,.95);
