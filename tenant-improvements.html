@@ -162,6 +162,176 @@
   </div>
 </section>
 
+<!-- ============ RECENT WORK ============ -->
+<style>
+  /* Tenant improvement portfolio — scoped to this page */
+  .ti-work{display:grid; grid-template-columns:repeat(3,1fr); gap:26px; margin-top:44px}
+  .ti-proj .shot{display:block; width:100%; padding:0; border:none; background:var(--sand);
+    border-radius:8px; overflow:hidden; aspect-ratio:4/3; cursor:zoom-in}
+  .ti-proj .shot img{width:100%; height:100%; object-fit:cover; display:block; transition:transform .5s ease}
+  .ti-proj .shot:hover img{transform:scale(1.04)}
+  .ti-thumbs{display:flex; gap:8px; margin-top:8px}
+  .ti-thumb{padding:0; border:2px solid transparent; border-radius:5px; overflow:hidden;
+    background:var(--sand); cursor:zoom-in; width:62px; height:46px; flex:none}
+  .ti-thumb img{width:100%; height:100%; object-fit:cover; display:block; opacity:.75; transition:opacity .2s}
+  .ti-thumb:hover img{opacity:1}
+  .ti-thumb:hover{border-color:var(--teal)}
+  .ti-proj h3{font-size:25px; margin-top:16px}
+  .ti-proj .meta{font-size:12px; letter-spacing:.09em; text-transform:uppercase;
+    color:var(--teal); font-weight:600; margin-top:6px}
+  .ti-proj p{color:var(--ink-soft); font-size:15.5px; margin-top:10px}
+  @media(max-width:900px){.ti-work{grid-template-columns:1fr 1fr}}
+  @media(max-width:600px){.ti-work{grid-template-columns:1fr}}
+
+  /* Client logo strip. Sits on white because several of these logos ship with a
+     baked-in white background — any tinted band shows them as pale boxes. */
+  .ti-clients{background:var(--white); padding:34px 0 38px; border-bottom:1px solid var(--line-soft)}
+  .ti-clients .lbl{text-align:center; font-weight:600; font-size:12px; letter-spacing:.2em;
+    text-transform:uppercase; color:var(--ink-soft)}
+  .ti-logos{display:flex; flex-wrap:wrap; align-items:center; justify-content:center;
+    gap:20px 46px; margin-top:22px}
+  .ti-logos img{height:56px; width:auto; max-width:200px; object-fit:contain;
+    filter:grayscale(1); opacity:.58; transition:filter .25s, opacity .25s}
+  .ti-logos img:hover{filter:grayscale(0); opacity:1}
+  @media(max-width:600px){.ti-logos{gap:18px 30px} .ti-logos img{height:42px; max-width:120px}}
+
+  /* Image viewer */
+  .til{position:fixed; inset:0; z-index:200; background:rgba(12,12,11,.95);
+    display:none; flex-direction:column; padding:18px}
+  .til.open{display:flex}
+  .til-top{display:flex; justify-content:flex-end; align-items:center; padding:0 4px 10px}
+  .til-close{background:none; border:none; color:#fff; font-size:34px; line-height:1;
+    cursor:pointer; padding:0 8px}
+  .til-stage{flex:1; display:flex; align-items:center; justify-content:center;
+    position:relative; min-height:0}
+  .til-stage img{max-width:100%; max-height:100%; object-fit:contain; border-radius:6px}
+  .til-nav{position:absolute; top:50%; transform:translateY(-50%); background:rgba(255,255,255,.14);
+    border:none; color:#fff; width:50px; height:50px; border-radius:50%; font-size:26px;
+    cursor:pointer; display:flex; align-items:center; justify-content:center}
+  .til-nav:hover{background:rgba(255,255,255,.28)}
+  .til-prev{left:6px} .til-next{right:6px}
+  .til-cap{color:#ECE9E2; text-align:center; font-size:14px; padding:14px 0 4px}
+  .til-cap b{color:#fff}
+</style>
+<section class="ti-clients">
+  <div class="wrap">
+    <div class="lbl">Businesses we've permitted</div>
+    <div class="ti-logos">
+      <img src="/images/logos/ti/the-golf-reserve.png" alt="The Golf Reserve" loading="lazy">
+      <img src="/images/logos/ti/cocky-rooster.webp" alt="The Cocky Rooster" loading="lazy">
+      <img src="/images/logos/ti/dmnd-kutz.png" alt="DMND KUTZ Barbershop" loading="lazy">
+      <img src="/images/logos/ti/az-orthopedic-pt.png" alt="Arizona Orthopedic Physical Therapy" loading="lazy">
+      <img src="/images/logos/ti/magellan-aerospace.png" alt="Magellan Aerospace" loading="lazy">
+      <img src="/images/logos/ti/tunnel-to-towers.png" alt="Tunnel to Towers Foundation" loading="lazy">
+      <img src="/images/logos/ti/seeds-for-autism.png" alt="Seeds for Autism" loading="lazy">
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head center reveal">
+      <div class="eyebrow">Recent work</div>
+      <h2>Spaces we got permitted and open.</h2>
+      <p>Restaurant, barbershop, and entertainment build-outs across the Valley — each one a different occupancy, a different set of code triggers, and a different city to answer to.</p>
+    </div>
+
+    <div class="ti-work reveal">
+      <div class="ti-proj" data-project="The Golf Reserve">
+        <button class="shot" type="button" data-i="0">
+          <img src="/images/work/ti/golf-reserve/lounge.jpg" alt="The Golf Reserve simulator lounge with leather seating and wood paneling" loading="lazy" width="1411" height="952">
+        </button>
+        <div class="ti-thumbs">
+          <button class="ti-thumb" type="button" data-i="0" aria-label="Simulator lounge"><img src="/images/work/ti/golf-reserve/lounge.jpg" alt="" loading="lazy"></button>
+          <button class="ti-thumb" type="button" data-i="1" aria-label="Simulator bay"><img src="/images/work/ti/golf-reserve/simulator-bay.jpg" alt="" loading="lazy"></button>
+          <button class="ti-thumb" type="button" data-i="2" aria-label="Corridor to the bays"><img src="/images/work/ti/golf-reserve/hallway.jpg" alt="" loading="lazy"></button>
+        </div>
+        <h3>The Golf Reserve</h3>
+        <div class="meta">Golf simulator lounge · Phoenix</div>
+        <p>A suite converted into a members' simulator lounge — bays, lounge seating, and a corridor of private rooms. Recreation build-outs bring their own occupancy, egress, and ceiling-height questions before a single club is swung.</p>
+      </div>
+
+      <div class="ti-proj" data-project="Cocky Rooster">
+        <button class="shot" type="button" data-i="0">
+          <img src="/images/work/ti/cocky-rooster/concept-black.jpg" alt="Cocky Rooster restaurant service counter design rendering in black and gold" loading="lazy" width="1600" height="813">
+        </button>
+        <div class="ti-thumbs">
+          <button class="ti-thumb" type="button" data-i="0" aria-label="Service counter rendering"><img src="/images/work/ti/cocky-rooster/concept-black.jpg" alt="" loading="lazy"></button>
+          <button class="ti-thumb" type="button" data-i="1" aria-label="Alternate color scheme rendering"><img src="/images/work/ti/cocky-rooster/concept-navy.jpg" alt="" loading="lazy"></button>
+        </div>
+        <h3>Cocky Rooster</h3>
+        <div class="meta">Restaurant TI · 275 W Fillmore, Phoenix</div>
+        <p>A quick-service restaurant build-out taken through design and City of Phoenix commercial review. Shown here as design renderings — food service means a health department submittal running alongside the building permit.</p>
+      </div>
+
+      <div class="ti-proj" data-project="DMND KUTZ">
+        <button class="shot" type="button" data-i="0">
+          <img src="/images/work/ti/dmnd-kutz/floor.jpg" alt="DMND KUTZ barbershop floor with barber chairs, mirrors, and stations" loading="lazy" width="680" height="545">
+        </button>
+        <div class="ti-thumbs">
+          <button class="ti-thumb" type="button" data-i="0" aria-label="Barbershop floor"><img src="/images/work/ti/dmnd-kutz/floor.jpg" alt="" loading="lazy"></button>
+          <button class="ti-thumb" type="button" data-i="1" aria-label="Interior signage"><img src="/images/work/ti/dmnd-kutz/interior-sign.jpg" alt="" loading="lazy"></button>
+          <button class="ti-thumb" type="button" data-i="2" aria-label="Exterior signage"><img src="/images/work/ti/dmnd-kutz/exterior-sign.jpg" alt="" loading="lazy"></button>
+        </div>
+        <h3>DMND KUTZ</h3>
+        <div class="meta">Barbershop TI · Surprise, Buckeye &amp; Phoenix</div>
+        <p>Multiple shops for the same owner across three different cities — stations, mirrors, and back-bar. Salon and barbershop work is a plumbing and ADA project as much as a finish project, and each jurisdiction wanted the restroom detailed its own way.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Image viewer -->
+<div class="til" id="til" role="dialog" aria-modal="true" aria-label="Project images">
+  <div class="til-top"><button class="til-close" id="til-close" aria-label="Close">&times;</button></div>
+  <div class="til-stage">
+    <button class="til-nav til-prev" id="til-prev" aria-label="Previous">&lsaquo;</button>
+    <img id="til-img" alt="">
+    <button class="til-nav til-next" id="til-next" aria-label="Next">&rsaquo;</button>
+  </div>
+  <div class="til-cap" id="til-cap"></div>
+</div>
+<script>
+(function(){
+  var box=document.getElementById('til'), pic=document.getElementById('til-img'),
+      cap=document.getElementById('til-cap'), imgs=[], name='', i=0;
+  if(!box) return;
+
+  function paint(){
+    var t=imgs[i];
+    pic.src=t.src; pic.alt=t.cap;
+    cap.innerHTML='<b>'+name+'</b> — '+t.cap+'  ('+(i+1)+' of '+imgs.length+')';
+  }
+  function open(proj,start){
+    name=proj.getAttribute('data-project');
+    imgs=[].slice.call(proj.querySelectorAll('.ti-thumb')).map(function(b){
+      return { src:b.querySelector('img').getAttribute('src'), cap:b.getAttribute('aria-label') };
+    });
+    if(!imgs.length) return;
+    i=Math.min(start,imgs.length-1); paint();
+    box.classList.add('open'); document.body.style.overflow='hidden';
+  }
+  function close(){ box.classList.remove('open'); document.body.style.overflow=''; }
+  function nav(d){ i=(i+d+imgs.length)%imgs.length; paint(); }
+
+  document.querySelectorAll('.ti-proj').forEach(function(proj){
+    proj.querySelectorAll('.shot, .ti-thumb').forEach(function(btn){
+      btn.addEventListener('click', function(){ open(proj, parseInt(btn.getAttribute('data-i'),10)||0); });
+    });
+  });
+  document.getElementById('til-close').addEventListener('click', close);
+  document.getElementById('til-prev').addEventListener('click', function(){ nav(-1); });
+  document.getElementById('til-next').addEventListener('click', function(){ nav(1); });
+  box.addEventListener('click', function(e){ if(e.target===box) close(); });
+  document.addEventListener('keydown', function(e){
+    if(!box.classList.contains('open')) return;
+    if(e.key==='Escape') close();
+    if(e.key==='ArrowLeft') nav(-1);
+    if(e.key==='ArrowRight') nav(1);
+  });
+})();
+</script>
+
 <!-- ============ WHAT'S IN THE SET ============ -->
 <section class="alt">
   <div class="wrap">

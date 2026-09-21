@@ -468,11 +468,7 @@
       { title:"4215 N 42nd", meta:"Custom Home · Phoenix", dir:"images/work/4215/", imgs:[
         ["exterior.jpg","Exterior facade"],["aerial.jpg","Aerial view"],["backyard.jpg","Backyard"],
         ["main-area.jpg","Main living area"],["kitchen.jpg","Kitchen"],["family-room.jpg","Family room"],
-        ["master-suite.jpg","Master suite"],["guest-bedroom.jpg","Guest bedroom"] ] },
-      { title:"Indianola", meta:"New Build · Phoenix", dir:"images/work/indianola/", imgs:[
-        ["front-yard.jpg","Front yard"],["back-yard.jpg","Back yard"],["back-patio.jpg","Back patio"],
-        ["living-room.jpg","Living room"],["master-bedroom.jpg","Master bedroom"],["master-shower.jpg","Master shower"],
-        ["bedroom-2.jpg","Bedroom 2"],["garage.jpg","Garage"] ] }
+        ["master-suite.jpg","Master suite"],["guest-bedroom.jpg","Guest bedroom"] ] }
     ]},
     { title:"ADUs & Casitas", cover:"/adu/ADU1%20Assets/Studio/Casita%20-%20Front%20View_web.jpg", projects:[
       { title:"Studio Casita", meta:"~400 sq ft · with floor plan", dir:"", imgs:[
@@ -495,8 +491,28 @@
         ["/adu/ADU1%20Assets/1%20Bedroom%20800sf/01%20GROUND%20FLOOR%20LAYOUT_web.jpg","Ground floor plan"],
         ["/adu/ADU1%20Assets/1%20Bedroom%20800sf/02%20SECOND%20FLOOR%20LAYOUT_web.jpg","Second floor plan"] ] }
     ]},
-    { title:"Additions & Remodels", cover:null, projects:[] },
-    { title:"Commercial & Tenant Improvements", cover:null, projects:[] }
+    { title:"Additions & Remodels", cover:"images/work/indianola/front-yard.jpg", projects:[
+      { title:"Indianola", meta:"Whole-Home Addition · Phoenix", dir:"images/work/indianola/", imgs:[
+        ["front-yard.jpg","Front elevation — design rendering"],
+        ["rear-landscape.jpg","Rear yard landscape at dusk — design rendering"],
+        ["back-yard.jpg","Back yard"],["back-patio.jpg","Rear patio off the great room"],
+        ["living-room.jpg","Great room and dining — vaulted ceiling"],
+        ["master-bedroom.jpg","New master bedroom"],["master-shower.jpg","Master bath and shower"],
+        ["bedroom-2.jpg","Bedroom 2"],["garage.jpg","Garage"],
+        ["landscape-plan.jpg","Backyard landscape plan and plant schedule"],
+        ["floor-plan.jpg","Floor plan — master suite, vaulted great room, roof raise"] ] }
+    ]},
+    { title:"Commercial & Tenant Improvements", cover:"images/work/ti/golf-reserve/lounge.jpg", projects:[
+      { title:"The Golf Reserve", meta:"Golf Simulator Lounge · Phoenix", dir:"images/work/ti/golf-reserve/", imgs:[
+        ["lounge.jpg","Simulator lounge and seating"],["simulator-bay.jpg","Simulator bay"],
+        ["hallway.jpg","Corridor to the bays"] ] },
+      { title:"Cocky Rooster", meta:"Restaurant TI · 275 W Fillmore, Phoenix", dir:"images/work/ti/cocky-rooster/", imgs:[
+        ["concept-black.jpg","Service counter — design rendering"],
+        ["concept-navy.jpg","Alternate color scheme — design rendering"] ] },
+      { title:"DMND KUTZ", meta:"Barbershop TI · Surprise, Buckeye &amp; Phoenix", dir:"images/work/ti/dmnd-kutz/", imgs:[
+        ["floor.jpg","Barbershop floor and stations"],["interior-sign.jpg","Illuminated interior signage"],
+        ["exterior-sign.jpg","Exterior storefront signage"] ] }
+    ]}
   ];
   const src = (p,f) => f.charAt(0)==='/' ? f : p.dir + f;
   const grid = document.getElementById('cat-grid');
