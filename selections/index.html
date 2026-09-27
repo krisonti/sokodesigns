@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your Finish Selections | SOKO Designs</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="theme-color" content="#4A7C7E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1A1A1A; --ink-soft:#5B5B57; --ink-faint:#8A8780;
+    --teal:#4A7C7E; --teal-deep:#3A6365; --teal-tint:#EAF0F0;
+    --cream:#F4F3F0; --sand:#EDE7DB; --white:#FFFFFF; --clay:#B67243; --gold:#B8892E;
+    --line:#E3DED3; --line-soft:#ECE8DE;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--cream); color:var(--ink); font-family:"Inter",system-ui,Arial,sans-serif; font-size:16px; line-height:1.55; -webkit-font-smoothing:antialiased}
+  h1,h2,h3{font-family:"Cormorant Garamond",Georgia,serif; line-height:1.08; font-weight:600}
+  button{font-family:inherit; font-size:inherit; color:inherit; cursor:pointer}
+  input,textarea{font-family:inherit; font-size:15px}
+  img{display:block; max-width:100%}
+  .eyebrow{font-weight:600; font-size:12px; letter-spacing:.18em; text-transform:uppercase; color:var(--teal)}
+
+  /* top bar */
+  .top{position:sticky; top:0; z-index:20; background:rgba(244,243,240,.94); backdrop-filter:blur(8px); border-bottom:1px solid var(--line)}
+  .top-in{max-width:1240px; margin:0 auto; padding:12px 20px; display:flex; align-items:center; gap:18px}
+  .top img{height:34px; width:auto}
+  .top .who{flex:1; min-width:0; font-size:13px; color:var(--ink-soft); white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+  .top .who b{color:var(--ink)}
+  .saved{font-size:12.5px; color:var(--ink-faint); white-space:nowrap}
+  .saved.ok{color:var(--teal)} .saved.err{color:var(--clay)}
+  .bar{height:4px; background:var(--line-soft)}
+  .bar i{display:block; height:100%; width:0; background:var(--teal); transition:width .35s}
+
+  .layout{max-width:1240px; margin:0 auto; padding:0 20px; display:grid; grid-template-columns:230px 1fr; gap:40px}
+  @media (max-width:980px){ .layout{grid-template-columns:minmax(0,1fr)} .side{display:none} }
+
+  /* step list */
+  .side{position:sticky; top:74px; align-self:start; padding:34px 0; max-height:calc(100vh - 74px); overflow:auto}
+  .side h4{font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--ink-faint); margin:18px 0 6px; font-weight:600}
+  .side button{display:flex; align-items:center; gap:9px; width:100%; text-align:left; background:none; border:none; padding:6px 8px; border-radius:6px; font-size:14px; color:var(--ink-soft)}
+  .side button:hover{background:var(--white)}
+  .side button.on{background:var(--white); color:var(--ink); font-weight:600; box-shadow:0 1px 0 var(--line)}
+  .side .dot{width:18px; height:18px; flex:none; border-radius:50%; border:1.5px solid var(--line); display:grid; place-items:center; font-size:11px; color:#fff}
+  .side .done .dot{background:var(--teal); border-color:var(--teal)}
+
+  main{padding:34px 0 130px; min-width:0}
+  .step-head{margin-bottom:22px}
+  .step-head h1{font-size:clamp(30px,4vw,42px); margin:6px 0 8px}
+  .step-head p.help{color:var(--ink-soft); max-width:720px}
+
+  /* quick actions */
+  .quick{display:flex; flex-wrap:wrap; gap:10px; margin:0 0 22px}
+  .qbtn{display:inline-flex; align-items:center; gap:8px; border:1px solid var(--line); background:var(--white); border-radius:999px; padding:9px 16px; font-size:14px; font-weight:500; transition:border-color .15s, background .15s}
+  .qbtn:hover{border-color:var(--teal)}
+  .qbtn.on{background:var(--teal); border-color:var(--teal); color:#fff}
+
+  /* option cards */
+  .grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:18px}
+  .card{position:relative; background:var(--white); border:2px solid transparent; border-radius:10px; overflow:hidden; box-shadow:0 1px 2px rgba(0,0,0,.05), 0 0 0 1px var(--line); display:flex; flex-direction:column; text-align:left; transition:transform .15s, box-shadow .15s, border-color .15s}
+  .card:hover{transform:translateY(-2px); box-shadow:0 8px 22px rgba(0,0,0,.08), 0 0 0 1px var(--line)}
+  .card.sel{border-color:var(--teal); box-shadow:0 8px 22px rgba(74,124,126,.18)}
+  .card .ph{position:relative; aspect-ratio:4/3; background:#fff; display:grid; place-items:center; overflow:hidden; cursor:zoom-in}
+  .card .ph img{width:100%; height:100%; object-fit:contain}
+  .card .ph.cover img{object-fit:cover}
+  .ph .bigtxt{font-family:"Cormorant Garamond",serif; font-size:56px; font-weight:600; color:var(--teal-deep)}
+  .card .ph:has(.bigtxt){background:var(--teal-tint); aspect-ratio:16/7}
+  .ph .noimg{color:var(--ink-faint); font-size:13px; text-align:center; padding:18px}
+  .card .body{padding:13px 15px 15px; display:flex; flex-direction:column; gap:6px; flex:1; cursor:pointer}
+  .card .name{font-weight:600; font-size:15.5px; line-height:1.3}
+  .card .specs{font-size:13px; color:var(--ink-soft)}
+  .card .why{font-size:13px; color:var(--teal-deep); background:var(--teal-tint); border-radius:6px; padding:7px 9px; margin-top:2px}
+  .card .choose{margin-top:auto; padding-top:8px; font-size:13px; font-weight:600; color:var(--teal)}
+  .card.sel .choose{color:var(--teal-deep)}
+  .tier{position:absolute; top:10px; left:10px; font-size:11px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; padding:4px 8px; border-radius:4px; background:rgba(255,255,255,.95); box-shadow:0 0 0 1px var(--line)}
+  .tier.Standard{color:var(--ink-soft)} .tier.Upgrade{color:var(--teal-deep)} .tier.Premium{color:var(--gold)}
+  .rec{position:absolute; top:10px; right:10px; font-size:11px; font-weight:700; padding:4px 8px; border-radius:4px; background:var(--gold); color:#fff}
+  .check{position:absolute; bottom:10px; right:10px; width:30px; height:30px; border-radius:50%; background:var(--teal); color:#fff; display:none; place-items:center; font-size:16px; box-shadow:0 2px 6px rgba(0,0,0,.2)}
+  .card.sel .check{display:grid}
+  @media (max-width:560px){
+    .grid{grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px}
+    .card .body{padding:10px 11px 12px}
+    .card .name{font-size:14px} .card .specs,.card .why{font-size:12px}
+    .tier{font-size:9.5px; padding:3px 6px; top:6px; left:6px}
+    .rec{font-size:9.5px; padding:3px 6px; top:auto; bottom:6px; right:auto; left:6px}
+    .check{width:24px; height:24px; font-size:13px; bottom:6px; right:6px}
+    .ph .bigtxt{font-size:38px}
+  }
+  .where{margin-top:6px}
+  .where input{width:100%; border:1px solid var(--line); border-radius:6px; padding:8px 10px}
+  .where label{font-size:12px; font-weight:600; color:var(--ink-soft)}
+
+  .own .ph{background:var(--sand); cursor:pointer}
+  .own .plus{font-family:"Cormorant Garamond",serif; font-size:64px; color:var(--teal); line-height:1}
+  .own-form{display:none; flex-direction:column; gap:8px; margin-top:4px}
+  .card.own.sel .own-form{display:flex}
+  .own-form textarea,.own-form input{width:100%; border:1px solid var(--line); border-radius:6px; padding:8px 10px; resize:vertical}
+  .own-form a{font-size:12.5px; color:var(--teal)}
+
+  .notes{margin-top:26px; max-width:720px}
+  .notes label{font-weight:600; font-size:14px}
+  .notes textarea{display:block; width:100%; margin-top:6px; border:1px solid var(--line); border-radius:8px; padding:10px 12px; min-height:64px; background:var(--white); resize:vertical}
+
+  .picked-by{display:inline-block; font-size:12.5px; margin-left:8px; color:var(--teal-deep); background:var(--teal-tint); padding:3px 9px; border-radius:999px}
+
+  /* welcome */
+  .hero{background:var(--white); border-radius:14px; overflow:hidden; box-shadow:0 0 0 1px var(--line); display:grid; grid-template-columns:1.1fr 1fr}
+  .hero .txt{padding:40px}
+  .hero h1{font-size:clamp(34px,4.4vw,50px); margin:10px 0 14px}
+  .hero .img{background:url(/images/selections/pkg-soko.jpg) center/cover, var(--sand); min-height:280px}
+  @media (max-width:760px){ .hero{grid-template-columns:1fr} .hero .img{min-height:200px; order:-1} .hero .txt{padding:26px} }
+  .how{display:grid; gap:12px; margin:22px 0 26px}
+  .how > div{display:flex; gap:12px; align-items:flex-start; font-size:15px}
+  .how span{flex:none; width:28px; height:28px; border-radius:50%; background:var(--teal-tint); color:var(--teal-deep); display:grid; place-items:center; font-weight:700; font-size:13px}
+
+  .btn{display:inline-flex; align-items:center; gap:8px; font-weight:600; font-size:15px; background:var(--ink); color:#fff; border:none; border-radius:4px; padding:13px 22px; transition:background .2s}
+  .btn:hover{background:var(--teal)}
+  .btn:disabled{opacity:.4; cursor:not-allowed; background:var(--ink)}
+  .btn-teal{background:var(--teal)} .btn-teal:hover{background:var(--teal-deep)}
+  .btn-ghost{background:transparent; color:var(--ink); border:1px solid var(--line)}
+  .btn-ghost:hover{background:var(--white); color:var(--ink)}
+
+  /* bottom nav */
+  .nav{position:fixed; left:0; right:0; bottom:0; z-index:20; background:rgba(255,255,255,.96); backdrop-filter:blur(8px); border-top:1px solid var(--line)}
+  .nav-in{max-width:1240px; margin:0 auto; padding:12px 20px; display:flex; align-items:center; gap:14px}
+  .nav .count{flex:1; text-align:center; font-size:13.5px; color:var(--ink-soft)}
+
+  /* review */
+  .rv-sec{margin-top:28px}
+  .rv-sec h2{font-size:26px; margin-bottom:10px}
+  .rv{display:grid; grid-template-columns:84px 1fr auto; gap:16px; align-items:center; background:var(--white); border-radius:10px; box-shadow:0 0 0 1px var(--line); padding:10px 14px 10px 10px; margin-bottom:10px}
+  .rv img,.rv .noph{width:84px; height:64px; object-fit:cover; border-radius:6px; background:var(--sand)}
+  .rv .t{font-size:12px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-faint)}
+  .rv .c{font-weight:600}
+  .rv .n{font-size:13px; color:var(--ink-soft)}
+  .rv.missing{box-shadow:0 0 0 2px var(--clay)}
+  .rv.missing .c{color:var(--clay)}
+  .rv button{background:none; border:none; color:var(--teal); font-weight:600; font-size:14px}
+  .sign{margin-top:34px; background:var(--white); border-radius:12px; box-shadow:0 0 0 1px var(--line); padding:26px; max-width:720px}
+  .sign h2{font-size:28px; margin-bottom:8px}
+  .sign input[type=text]{width:100%; border:1px solid var(--line); border-radius:6px; padding:12px; font-family:"Cormorant Garamond",serif; font-size:24px; margin:10px 0}
+  .sign label.chk{display:flex; gap:10px; align-items:flex-start; font-size:14px; color:var(--ink-soft); margin:6px 0 18px}
+  .sign label.chk input{margin-top:4px; width:18px; height:18px; accent-color:var(--teal)}
+  .banner{background:var(--teal-tint); color:var(--teal-deep); border-radius:10px; padding:14px 18px; margin-bottom:18px; font-size:15px}
+  .banner.warn{background:#F8EDE4; color:#8A4E26}
+  .err{color:var(--clay); font-size:14px; margin-top:10px}
+
+  /* lightbox */
+  .lb{position:fixed; inset:0; z-index:50; background:rgba(20,20,20,.82); display:none; align-items:center; justify-content:center; padding:20px}
+  .lb.open{display:flex}
+  .lb-box{background:#fff; border-radius:12px; max-width:880px; width:100%; max-height:92vh; overflow:auto; display:grid; grid-template-columns:1.3fr 1fr}
+  .lb-box img{width:100%; height:100%; max-height:80vh; object-fit:contain; background:#fff}
+  .lb-box .info{padding:26px; display:flex; flex-direction:column; gap:10px}
+  .lb-box h3{font-size:28px}
+  .lb-box .x{align-self:flex-end; background:none; border:none; font-size:26px; line-height:1; color:var(--ink-soft)}
+  @media (max-width:700px){ .lb-box{grid-template-columns:1fr} }
+
+  .center{max-width:560px; margin:80px auto; text-align:center; padding:0 20px}
+  .center h1{font-size:40px; margin-bottom:12px}
+  .spin{width:34px; height:34px; border:3px solid var(--line); border-top-color:var(--teal); border-radius:50%; animation:sp 1s linear infinite; margin:0 auto 16px}
+  @keyframes sp{to{transform:rotate(360deg)}}
+
+  @media print{
+    .top,.nav,.side,.no-print,.rv button{display:none !important}
+    .layout{display:block} main{padding:0}
+    body{background:#fff}
+    .rv{break-inside:avoid; box-shadow:0 0 0 1px #ccc}
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-in">
+    <img src="/soko-designs-logo.png" alt="SOKO Designs">
+    <div class="who" id="who"></div>
+    <div class="saved" id="saved"></div>
+  </div>
+  <div class="bar"><i id="barFill"></i></div>
+</header>
+
+<div id="app"><div class="center"><div class="spin"></div><p>Loading your selections…</p></div></div>
+
+<div class="lb" id="lb" role="dialog" aria-modal="true">
+  <div class="lb-box">
+    <img id="lbImg" alt="">
+    <div class="info">
+      <button class="x" onclick="closeLb()" aria-label="Close">×</button>
+      <div class="eyebrow" id="lbTier"></div>
+      <h3 id="lbName"></h3>
+      <p id="lbSpecs" style="color:var(--ink-soft)"></p>
+      <p id="lbWhy" class="card why" style="box-shadow:none; display:none"></p>
+      <a id="lbLink" target="_blank" rel="noopener" style="color:var(--teal); font-weight:600; display:none">See full product details ↗</a>
+      <button class="btn btn-teal" id="lbPick" style="margin-top:auto">Choose this</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   SOKO Designs — client finish selections
+   Catalog comes from the Google Sheet (via the selections function),
+   or from /selections/data/*.csv as a fallback.
+   ============================================================ */
+const API = "/.netlify/functions/selections";
+const qs = new URLSearchParams(location.search);
+const ID = qs.get("id"), KEY = qs.get("k");
+const DEMO = qs.has("demo") || !ID;
+const PHOTO_BASE = "/images/selections/";
+
+let CAT = [], OPT = [], PKG = [], client = {}, state = { v: 1, pkg: null, p: {} }, steps = [], cur = 0, locked = false;
+let saveTimer = null;
+
+/* ---------- CSV ---------- */
+function parseCSV(text) {
+  const rows = []; let row = [], f = "", q = false;
+  text = text.replace(/^﻿/, "");
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+    if (q) {
+      if (c === '"') { if (text[i + 1] === '"') { f += '"'; i++; } else q = false; }
+      else f += c;
+    } else if (c === '"') q = true;
+    else if (c === ",") { row.push(f); f = ""; }
+    else if (c === "\n" || c === "\r") { if (c === "\r" && text[i + 1] === "\n") i++; row.push(f); rows.push(row); row = []; f = ""; }
+    else f += c;
+  }
+  if (f !== "" || row.length) { row.push(f); rows.push(row); }
+  const head = (rows.shift() || []).map(h => h.trim().toLowerCase());
+  return rows.filter(r => r.some(v => v.trim() !== "")).map(r => Object.fromEntries(head.map((h, i) => [h, (r[i] || "").trim()])));
+}
+
+async function loadCatalog() {
+  let tabs = null;
+  if (!DEMO || qs.has("sheet")) {
+    try { const r = await fetch(API + "?action=catalog"); if (r.ok) tabs = await r.json(); } catch (e) {}
+  }
+  if (!tabs) {
+    tabs = {};
+    for (const t of ["Categories", "Options", "Packages"]) tabs[t] = await (await fetch(`/selections/data/${t}.csv?v=${Date.now()}`)).text();
+  }
+  const yes = v => !/^(n|no|false|0)$/i.test(v || "y");
+  CAT = parseCSV(tabs.Categories).filter(c => yes(c.active)).sort((a, b) => +a.sort - +b.sort);
+  OPT = parseCSV(tabs.Options).filter(o => yes(o.active)).sort((a, b) => +a.sort - +b.sort);
+  // Packages: first row of each package carries name/description/photo; the rest just map category -> option
+  const pk = {};
+  for (const r of parseCSV(tabs.Packages)) {
+    const id = r.package_id; if (!id) continue;
+    pk[id] = pk[id] || { id, name: "", description: "", photo: "", map: {} };
+    if (r.name) pk[id].name = r.name;
+    if (r.description) pk[id].description = r.description;
+    if (r.photo) pk[id].photo = r.photo;
+    if (r.category_id && r.option_id) pk[id].map[r.category_id] = r.option_id;
+  }
+  PKG = Object.values(pk);
+}
+
+/* ---------- project type filter ---------- */
+// Project types: New Build, ADU, Addition, Remodel. ADUs get everything marked "New Build" too.
+function typeKey(t) { t = (t || "").toLowerCase(); return t.includes("remodel") ? "remodel" : t.includes("addition") ? "addition" : t.includes("adu") || t.includes("casita") ? "adu" : "new build"; }
+function forType(pt) {
+  pt = (pt || "All").toLowerCase(); const k = typeKey(client.projectType);
+  return pt === "all" || pt.includes(k) || (k === "adu" && pt.includes("new build"));
+}
+
+/* ---------- helpers ---------- */
+const $ = s => document.querySelector(s);
+const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const photoSrc = p => !p ? "" : /^(https?:\/\/|text:)/.test(p) ? p : PHOTO_BASE + p;
+const isYes = v => /^(y|yes|true|1)$/i.test(v || "");
+function catById(id) { return CAT.find(c => c.category_id === id); }
+function optById(id) { return OPT.find(o => o.option_id === id); }
+function optsFor(cat) {
+  return OPT.filter(o => o.category_id === cat.category_id && forType(o.project_types) && showIfOk(o));
+}
+// Conditions: "a=x;a=y" means either one; "a=x&b=y" means both
+function condOk(str) {
+  return str.split(/[;|]/).some(any => any.split("&").every(cond => {
+    const [c, v] = cond.split("=").map(s => s.trim());
+    const pick = state.p[c]; if (!pick) return false;
+    return Array.isArray(pick.o) ? pick.o.includes(v) : pick.o === v;
+  }));
+}
+function showIfOk(o) { return !o.show_if || condOk(o.show_if); }
+// recommended is Y, or a condition like "cabinet-brand=cab-brand-sollid" (recommended only then)
+function isRec(o) { const r = o.recommended || ""; return isYes(r) || (r.includes("=") && condOk(r)); }
+function recFor(cat) { const os = optsFor(cat); return os.find(isRec) || os.find(o => o.tier === "Standard") || os[0]; }
+function stdFor(cat) { return optsFor(cat).find(o => o.tier === "Standard"); }
+function hasPick(catId) {
+  const p = state.p[catId]; if (!p) return false;
+  if (p.m === "none") return true;
+  if (p.m === "own") return !!(p.own || "").trim();
+  return Array.isArray(p.o) ? p.o.length > 0 || (p.ownOn && (p.own || "").trim()) : !!p.o;
+}
+function photoTag(src, alt) {
+  // "text:12 ft" in the sheet's photo column shows a big label instead of a photo
+  if (src.startsWith("text:")) return `<div class="bigtxt">${esc(src.slice(5))}</div>`;
+  return src ? `<img src="${esc(src)}" alt="${esc(alt)}" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'noimg',textContent:'Photo coming soon'}))">`
+             : `<div class="noimg">Photo coming soon</div>`;
+}
+
+/* ---------- steps ---------- */
+function buildSteps() {
+  const cats = CAT.filter(c => forType(c.project_types));
+  steps = [{ kind: "welcome", title: "Welcome" }, { kind: "package", title: "Pick a Look", section: "Start" }]
+    .concat(cats.map(c => ({ kind: "cat", id: c.category_id, title: c.title, section: c.section })))
+    .concat([{ kind: "review", title: "Review & Sign", section: "Finish" }]);
+}
+function catSteps() { return steps.filter(s => s.kind === "cat"); }
+
+/* ---------- rendering ---------- */
+function render() {
+  const s = steps[cur];
+  const done = catSteps().filter(x => hasPick(x.id)).length, total = catSteps().length;
+  $("#barFill").style.width = (locked ? 100 : Math.round(done / total * 100)) + "%";
+  let html = "";
+  if (locked && s.kind !== "review") { cur = steps.length - 1; return render(); }
+  if (s.kind === "welcome") html = viewWelcome();
+  else if (s.kind === "package") html = viewPackage();
+  else if (s.kind === "cat") html = viewCat(catById(s.id));
+  else html = viewReview();
+
+  const side = locked ? "" : viewSide();
+  $("#app").innerHTML = `<div class="layout">${side ? `<nav class="side">${side}</nav>` : `<div class="side"></div>`}<main>${html}</main></div>` + (locked || s.kind === "welcome" ? "" : viewNav(done, total));
+  window.scrollTo({ top: 0, behavior: "instant" in window ? "instant" : "auto" });
+}
+
+function viewSide() {
+  let out = "", sec = "";
+  steps.forEach((s, i) => {
+    if (s.kind === "welcome") return;
+    if (s.section && s.section !== sec) { sec = s.section; out += `<h4>${esc(sec)}</h4>`; }
+    const done = s.kind === "cat" ? hasPick(s.id) : s.kind === "package" ? !!state.pkg : false;
+    out += `<button class="${i === cur ? "on" : ""} ${done ? "done" : ""}" onclick="go(${i})"><span class="dot">${done ? "✓" : ""}</span>${esc(s.title)}</button>`;
+  });
+  return out;
+}
+
+function viewNav(done, total) {
+  const s = steps[cur];
+  const nextLabel = s.kind === "review" ? "" : cur === steps.length - 2 ? "Review &amp; sign →" : "Next →";
+  return `<div class="nav"><div class="nav-in">
+    <button class="btn btn-ghost" onclick="go(${cur - 1})">← Back</button>
+    <div class="count">${done} of ${total} chosen</div>
+    ${nextLabel ? `<button class="btn btn-teal" onclick="go(${cur + 1})">${nextLabel}</button>` : `<span style="width:96px"></span>`}
+  </div></div>`;
+}
+
+function viewWelcome() {
+  const first = (client.name || "").split(/[ &]/)[0];
+  const started = Object.keys(state.p).length > 0;
+  return `<div class="hero">
+    <div class="txt">
+      <div class="eyebrow">Your finish selections</div>
+      <h1>${first ? `Hi ${esc(first)}, let's` : "Let's"} pick your finishes.</h1>
+      <p style="color:var(--ink-soft)">${client.address ? `For <b>${esc(client.address)}</b>. ` : ""}Click through each step and tap the photo you like. It takes about 10 minutes.</p>
+      <div class="how">
+        <div><span>✓</span><div><b>Tap a photo to choose it.</b> Tap the photo itself to see it bigger.</div></div>
+        <div><span>★</span><div><b>SOKO Recommends</b> marks our favorite: the best value for the money.</div></div>
+        <div><span>✨</span><div>Not sure? Hit <b>Pick for me</b> and we'll choose for you. Or <b>Keep Standard</b> to stay with what's included.</div></div>
+        <div><span>💾</span><div>Everything <b>saves automatically.</b> Come back to this same link anytime, or share it with your partner.</div></div>
+      </div>
+      <button class="btn btn-teal" onclick="go(1)">${started ? "Pick up where I left off →" : "Let's get started →"}</button>
+      ${DEMO ? `<p style="margin-top:14px;font-size:13px;color:var(--clay)">Preview mode: picks are only saved in this browser.</p>` : ""}
+    </div>
+    <div class="img"></div>
+  </div>`;
+}
+
+function viewPackage() {
+  const cards = PKG.map(p => {
+    const sel = state.pkg === p.id;
+    return `<div class="card ${sel ? "sel" : ""}">
+      <div class="ph cover" onclick="choosePkg('${p.id}')">${photoTag(photoSrc(p.photo), p.name)}<div class="check">✓</div></div>
+      <div class="body" onclick="choosePkg('${p.id}')"><div class="name">${esc(p.name)}</div><div class="specs">${esc(p.description)}</div>
+      <div class="choose">${sel ? "✓ Selected" : "Choose this look"}</div></div></div>`;
+  }).join("");
+  const soko = state.pkg === "soko", self = state.pkg === "self";
+  return `<div class="step-head"><div class="eyebrow">Start here</div><h1>Pick a look you love</h1>
+    <p class="help">Choosing a look fills in matching finishes for you: metal finish, cabinets, doors and more. You can still change any single item as you go.</p></div>
+    <div class="grid">${cards}
+      <div class="card ${soko ? "sel" : ""}">
+        <div class="ph cover" onclick="choosePkg('soko')">${photoTag(photoSrc("pkg-soko.jpg"), "Let SOKO decide")}<div class="rec">★ Easiest</div><div class="check">✓</div></div>
+        <div class="body" onclick="choosePkg('soko')"><div class="name">Let SOKO decide</div><div class="specs">We fill in every choice with our recommended pick. Just review and sign.</div>
+        <div class="choose">${soko ? "✓ Selected" : "Choose for me"}</div></div></div>
+    </div>
+    <div class="quick" style="margin-top:20px"><button class="qbtn ${self ? "on" : ""}" onclick="choosePkg('self')">I'll choose everything myself</button></div>`;
+}
+
+function viewCat(cat) {
+  const pick = state.p[cat.category_id] || {};
+  const multi = cat.type === "multi";
+  const opts = optsFor(cat);
+  const std = stdFor(cat);
+  const modeLabel = { soko: "SOKO's pick", std: "Standard (included)", pkg: "From your look" }[pick.m];
+  const quick = [];
+  if (multi && isYes(cat.keep_standard)) quick.push(`<button class="qbtn ${pick.m === "none" ? "on" : ""}" onclick="noThanks('${cat.category_id}')">No thanks</button>`);
+  else if (isYes(cat.keep_standard) && std) quick.push(`<button class="qbtn ${pick.m === "std" ? "on" : ""}" onclick="keepStd('${cat.category_id}')">Keep Standard</button>`);
+  if (isYes(cat.pick_for_me)) quick.push(`<button class="qbtn ${pick.m === "soko" ? "on" : ""}" onclick="pickForMe('${cat.category_id}')">✨ Pick for me</button>`);
+
+  const cards = opts.map(o => {
+    const sel = multi ? (pick.o || []).includes(o.option_id) : pick.o === o.option_id && pick.m !== "own";
+    const tierBadge = cat.type === "tiered" && o.tier && o.tier !== "Style" ? `<div class="tier ${esc(o.tier)}">${o.tier === "Standard" ? "Standard · Included" : esc(o.tier)}</div>` : "";
+    const where = multi && sel ? `<div class="where" onclick="event.stopPropagation()"><label>Where?</label>
+        <input type="text" placeholder="${cat.category_id === "flooring" ? "e.g. everywhere except bathrooms" : "Where? Any details?"}" value="${esc((pick.w || {})[o.option_id] || "")}" oninput="setWhere('${cat.category_id}','${o.option_id}',this.value)"></div>` : "";
+    return `<div class="card ${sel ? "sel" : ""}">
+      <div class="ph ${/^(pkg|cc|cab|ct|fl|st|bs)-/.test(o.option_id) ? "cover" : ""}" onclick="openLb('${o.option_id}')">${photoTag(photoSrc(o.photo), o.name)}${tierBadge}${isRec(o) ? `<div class="rec">★ SOKO Recommends</div>` : ""}<div class="check">✓</div></div>
+      <div class="body" onclick="choose('${cat.category_id}','${o.option_id}')">
+        <div class="name">${esc(o.name)}</div>
+        ${o.specs ? `<div class="specs">${esc(o.specs)}</div>` : ""}
+        ${isRec(o) && o.why ? `<div class="why">${esc(o.why)}</div>` : ""}
+        ${where}
+        <div class="choose">${sel ? "✓ Selected" : multi ? "+ Add this" : "Choose this"}</div>
+      </div></div>`;
+  }).join("");
+
+  const ownSel = multi ? !!pick.ownOn : pick.m === "own";
+  const faucet = /faucet/.test(cat.category_id);
+  const own = isYes(cat.choose_own) ? `<div class="card own ${ownSel ? "sel" : ""}">
+      <div class="ph" onclick="chooseOwn('${cat.category_id}')"><div class="plus">+</div><div class="check">✓</div></div>
+      <div class="body">
+        <div class="name" onclick="chooseOwn('${cat.category_id}')">${multi ? "Other" : "Something else"}</div>
+        <div class="specs" onclick="chooseOwn('${cat.category_id}')">${faucet ? "Seen one you love? Tell us or paste a link. Some choices may cost extra." : "Tell us what you have in mind."}</div>
+        <div class="own-form">
+          <textarea rows="3" placeholder="${faucet ? "Paste a link or describe the faucet" : "Describe what you'd like, or paste a link"}" oninput="setOwn('${cat.category_id}',this.value)">${esc(pick.own || "")}</textarea>
+          ${faucet ? `<a href="https://www.build.com/search?term=${cat.category_id === "bath-faucet" ? "bathroom+sink+faucet" : "kitchen+faucet"}" target="_blank" rel="noopener">Browse faucets on Build.com ↗</a>` : ""}
+        </div>
+        <div class="choose" onclick="chooseOwn('${cat.category_id}')">${ownSel ? "✓ Selected" : "Choose my own"}</div>
+      </div></div>` : "";
+
+  const idx = catSteps().findIndex(s => s.id === cat.category_id) + 1;
+  return `<div class="step-head"><div class="eyebrow">${esc(cat.section)} · Step ${idx} of ${catSteps().length}</div>
+      <h1>${esc(cat.question || cat.title)}</h1>
+      ${cat.help ? `<p class="help">${esc(cat.help)}</p>` : ""}
+      ${modeLabel && hasPick(cat.category_id) ? `<span class="picked-by">${modeLabel}</span>` : ""}</div>
+    ${quick.length ? `<div class="quick">${quick.join("")}</div>` : ""}
+    <div class="grid">${cards}${own}</div>
+    ${!opts.length ? `<p class="banner warn">No options here yet for your project. Pick your cabinet line first, or tell us what you'd like in the notes.</p>` : ""}
+    <div class="notes"><label for="note">Anything we should know? <span style="font-weight:400;color:var(--ink-faint)">(optional)</span></label>
+      <textarea id="note" maxlength="300" placeholder="Questions, ideas, or special requests" oninput="setNote('${cat.category_id}',this.value)">${esc(pick.n || "")}</textarea></div>`;
+}
+
+function choiceText(cat) {
+  const p = state.p[cat.category_id]; if (!p) return "";
+  if (p.m === "none") return "No thanks";
+  if (cat.type === "multi") {
+    const parts = (p.o || []).map(id => { const o = optById(id); const w = (p.w || {})[id]; return o ? o.name + (w ? ` (${w})` : "") : ""; }).filter(Boolean);
+    if (p.ownOn && p.own) parts.push("Other: " + p.own);
+    return parts.join("; ");
+  }
+  if (p.m === "own") return "My own choice: " + (p.own || "");
+  const o = optById(p.o); return o ? o.name : "";
+}
+
+function summaryRows() {
+  const rows = [];
+  const pk = state.pkg && (state.pkg === "soko" ? "Let SOKO decide" : state.pkg === "self" ? "Chose everything myself" : (PKG.find(p => p.id === state.pkg) || {}).name);
+  if (pk) rows.push({ section: "Start", title: "Look", choice: pk, note: "" });
+  for (const s of catSteps()) {
+    const cat = catById(s.id), p = state.p[s.id] || {};
+    let choice = choiceText(cat) || "Not chosen";
+    if (p.m === "soko") choice += " (SOKO's pick)"; else if (p.m === "std") choice += " (Standard)";
+    rows.push({ section: cat.section, title: cat.title, choice, note: p.n || "" });
+  }
+  return rows;
+}
+
+function viewReview() {
+  let html = "", sec = "", missing = 0;
+  for (const s of catSteps()) {
+    const cat = catById(s.id), p = state.p[s.id] || {}, ok = hasPick(s.id);
+    if (!ok) missing++;
+    if (cat.section !== sec) { if (sec) html += `</div>`; sec = cat.section; html += `<div class="rv-sec"><h2>${esc(sec)}</h2>`; }
+    const firstOpt = optById(Array.isArray(p.o) ? p.o[0] : p.o);
+    const img = ok && p.m !== "own" && firstOpt ? `<img src="${esc(photoSrc(firstOpt.photo))}" alt="" onerror="this.style.visibility='hidden'">` : `<div class="noph"></div>`;
+    const tag = p.m === "soko" ? " · SOKO's pick" : p.m === "std" ? " · Standard" : "";
+    html += `<div class="rv ${ok ? "" : "missing"}">${img}<div>
+      <div class="t">${esc(cat.title)}${tag}</div>
+      <div class="c">${ok ? esc(choiceText(cat)) : "Not chosen yet"}</div>
+      ${p.n ? `<div class="n">Note: ${esc(p.n)}</div>` : ""}</div>
+      ${locked ? "" : `<button onclick="goCat('${s.id}')">${ok ? "Change" : "Choose"}</button>`}</div>`;
+  }
+  if (sec) html += `</div>`;
+
+  if (locked) {
+    return `<div class="step-head"><div class="eyebrow">Submitted</div><h1>Your selections are in. Thank you!</h1>
+      <p class="help">${state.signedBy ? `Signed by <b>${esc(state.signedBy)}</b>${state.submittedAt ? ` on ${new Date(state.submittedAt).toLocaleDateString()}` : ""}. ` : ""}We've emailed you a copy. Need to change something? Just call or email us.</p></div>
+      <button class="btn btn-ghost no-print" onclick="print()">Print / save as PDF</button>${html}`;
+  }
+  return `<div class="step-head"><div class="eyebrow">Last step</div><h1>Review &amp; sign</h1>
+      <p class="help">Check everything below. Tap <b>Change</b> on anything you want to switch.</p></div>
+    ${missing ? `<div class="banner warn">${missing} item${missing > 1 ? "s" : ""} still need${missing > 1 ? "" : "s"} a choice.
+      <button class="qbtn" style="margin-left:10px" onclick="sokoRest()">✨ Let SOKO pick the rest</button></div>` : `<div class="banner">Everything is chosen. Looks great!</div>`}
+    ${html}
+    <div class="sign">
+      <h2>Approve your selections</h2>
+      <p style="color:var(--ink-soft);font-size:14.5px">Type your full name to sign. After you submit, your picks are locked in and we'll start ordering. Changes after that may be handled as a change order.</p>
+      <input type="text" id="sigName" placeholder="Your full name" autocomplete="name">
+      <label class="chk"><input type="checkbox" id="sigOk"> I approve these finish selections for my project.</label>
+      <button class="btn btn-teal" id="submitBtn" onclick="submitAll()" ${missing ? "disabled" : ""}>Submit my selections</button>
+      ${missing ? `<p class="err">Please make a choice for every item first.</p>` : ""}
+      <p class="err" id="submitErr"></p>
+    </div>`;
+}
+
+/* ---------- actions ---------- */
+function go(i) { if (i < 0 || i >= steps.length) return; cur = i; state.step = i; render(); queueSave(); }
+function goCat(id) { go(steps.findIndex(s => s.id === id)); }
+
+function setPick(catId, val) { state.p[catId] = Object.assign({ n: (state.p[catId] || {}).n || "" }, val); }
+
+function choose(catId, optId) {
+  if (locked) return;
+  const cat = catById(catId), p = state.p[catId] || {};
+  if (cat.type === "multi") {
+    const list = Array.isArray(p.o) ? p.o.slice() : [];
+    const i = list.indexOf(optId); i >= 0 ? list.splice(i, 1) : list.push(optId);
+    state.p[catId] = Object.assign({}, p, { o: list, m: "pick" });
+  } else {
+    setPick(catId, { o: optId, m: "pick" });
+    afterChange(catId);
+  }
+  render(); queueSave();
+}
+function noThanks(catId) { setPick(catId, { o: [], m: "none" }); render(); queueSave(); }
+function keepStd(catId) { const o = stdFor(catById(catId)); if (!o) return; setPick(catId, { o: o.option_id, m: "std" }); afterChange(catId); render(); queueSave(); }
+function pickForMe(catId) {
+  const cat = catById(catId), o = recFor(cat); if (!o) return;
+  if (cat.type === "multi") setPick(catId, { o: [o.option_id], m: "soko", w: { [o.option_id]: "SOKO to recommend where" } });
+  else setPick(catId, { o: o.option_id, m: "soko" });
+  afterChange(catId); render(); queueSave();
+}
+function chooseOwn(catId) {
+  const cat = catById(catId), p = state.p[catId] || {};
+  if (cat.type === "multi") state.p[catId] = Object.assign({}, p, { ownOn: !p.ownOn, o: p.o || [] });
+  else setPick(catId, { o: null, m: "own", own: p.own || "" });
+  render(); queueSave();
+  setTimeout(() => { const t = document.querySelector(".own-form textarea"); if (t) t.focus(); }, 30);
+}
+function setOwn(catId, v) { const p = state.p[catId] || {}; p.own = v.slice(0, 300); state.p[catId] = p; queueSave(); }
+function setWhere(catId, optId, v) { const p = state.p[catId]; p.w = p.w || {}; p.w[optId] = v.slice(0, 120); queueSave(); }
+function setNote(catId, v) { const p = state.p[catId] || {}; p.n = v.slice(0, 300); state.p[catId] = p; queueSave(); }
+
+// When a parent choice changes (e.g. cabinet line), clear children that no longer apply.
+function afterChange(catId) {
+  for (const c of CAT) {
+    const p = state.p[c.category_id]; if (!p || !p.o || Array.isArray(p.o)) continue;
+    const o = optById(p.o);
+    if (o && o.show_if && o.show_if.includes(catId) && !showIfOk(o)) delete state.p[c.category_id];
+  }
+}
+
+function choosePkg(id) {
+  if (locked) return;
+  state.pkg = id;
+  if (id === "soko") {
+    for (const s of catSteps()) { const cat = catById(s.id); if (!hasPick(s.id) || ["pkg", "soko"].includes((state.p[s.id] || {}).m)) pickForMeSilent(cat); }
+  } else if (id !== "self") {
+    const pk = PKG.find(p => p.id === id);
+    // clear anything the previous look filled in, then apply this one in catalog order (parents before children)
+    for (const k of Object.keys(state.p)) if (state.p[k].m === "pkg") delete state.p[k];
+    for (const c of CAT) {
+      const optId = pk.map[c.category_id];
+      if (optId && optById(optId) && (!hasPick(c.category_id) || state.p[c.category_id].m !== "pick")) setPick(c.category_id, { o: optId, m: "pkg" });
+    }
+  }
+  render(); queueSave();
+  setTimeout(() => go(2), 350);
+}
+function pickForMeSilent(cat) {
+  // optional extras (no "Pick for me") default to "No thanks" rather than a random pick
+  if (!isYes(cat.pick_for_me)) { if (cat.type === "multi") setPick(cat.category_id, { o: [], m: "none" }); return; }
+  const o = recFor(cat); if (!o) return;
+  if (cat.type === "multi") setPick(cat.category_id, { o: [o.option_id], m: "soko", w: { [o.option_id]: "SOKO to recommend where" } });
+  else setPick(cat.category_id, { o: o.option_id, m: "soko" });
+}
+function sokoRest() { for (const s of catSteps()) if (!hasPick(s.id)) pickForMeSilent(catById(s.id)); render(); queueSave(); }
+
+/* ---------- lightbox ---------- */
+let lbOpt = null;
+function openLb(optId) {
+  const o = optById(optId); if (!o) return; lbOpt = o;
+  if (!o.photo || o.photo.startsWith("text:")) return choose(o.category_id, o.option_id);
+  $("#lbImg").src = photoSrc(o.photo); $("#lbImg").alt = o.name;
+  $("#lbName").textContent = o.name;
+  $("#lbTier").textContent = (o.tier && o.tier !== "Style" ? (o.tier === "Standard" ? "Standard · Included" : o.tier) : "") + (isRec(o) ? "  ★ SOKO Recommends" : "");
+  $("#lbSpecs").textContent = o.specs || "";
+  $("#lbWhy").style.display = isRec(o) && o.why ? "block" : "none"; $("#lbWhy").textContent = o.why || "";
+  $("#lbLink").style.display = o.details_link ? "inline" : "none"; $("#lbLink").href = o.details_link || "#";
+  $("#lbPick").style.display = locked ? "none" : "";
+  $("#lb").classList.add("open");
+}
+function closeLb() { $("#lb").classList.remove("open"); }
+$("#lbPick").onclick = () => { if (lbOpt) { closeLb(); choose(lbOpt.category_id, lbOpt.option_id); } };
+$("#lb").onclick = e => { if (e.target.id === "lb") closeLb(); };
+document.addEventListener("keydown", e => { if (e.key === "Escape") closeLb(); });
+
+/* ---------- saving ---------- */
+function setSaved(txt, cls) { const el = $("#saved"); el.textContent = txt; el.className = "saved " + (cls || ""); }
+function queueSave() {
+  if (locked) return;
+  try { localStorage.setItem("soko-sel-" + (ID || "demo"), JSON.stringify(state)); } catch (e) {}
+  if (DEMO) { setSaved("Saved in this browser", "ok"); return; }
+  setSaved("Saving…"); clearTimeout(saveTimer); saveTimer = setTimeout(saveNow, 1000);
+}
+async function saveNow() {
+  try {
+    const r = await fetch(API, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "save", id: ID, k: KEY, state }) });
+    const d = await r.json().catch(() => ({}));
+    if (r.status === 409 && d.locked) { locked = true; render(); return; }
+    if (!r.ok) throw new Error(d.error || "Save failed");
+    setSaved("✓ All changes saved", "ok");
+  } catch (e) { setSaved("Couldn't save. Retrying…", "err"); clearTimeout(saveTimer); saveTimer = setTimeout(saveNow, 5000); }
+}
+
+async function submitAll() {
+  const name = $("#sigName").value.trim(), err = $("#submitErr");
+  if (!name) { err.textContent = "Please type your full name to sign."; return; }
+  if (!$("#sigOk").checked) { err.textContent = "Please check the approval box."; return; }
+  const btn = $("#submitBtn"); btn.disabled = true; btn.textContent = "Submitting…"; err.textContent = "";
+  clearTimeout(saveTimer);
+  if (DEMO) { state.signedBy = name; state.submittedAt = new Date().toISOString(); locked = true; render(); return; }
+  try {
+    const r = await fetch(API, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "submit", id: ID, k: KEY, state, signature: name, summary: summaryRows() }) });
+    const d = await r.json().catch(() => ({}));
+    if (!r.ok && !d.locked) throw new Error(d.error || "Something went wrong.");
+    state.signedBy = name; state.submittedAt = new Date().toISOString(); locked = true; setSaved("✓ Submitted", "ok"); render();
+  } catch (e) { btn.disabled = false; btn.textContent = "Submit my selections"; err.textContent = e.message + " Please try again, or call us at 480-660-3133."; }
+}
+
+/* ---------- start ---------- */
+(async function init() {
+  try {
+    if (DEMO) {
+      client = { name: qs.get("name") || "", address: qs.get("address") || "", projectType: qs.get("type") || "New Build" };
+      try { const s = JSON.parse(localStorage.getItem("soko-sel-demo") || "null"); if (s) state = s; } catch (e) {}
+    } else {
+      const r = await fetch(`${API}?action=load&id=${encodeURIComponent(ID)}&k=${encodeURIComponent(KEY || "")}`);
+      const d = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error(d.error || "We couldn't load your selections.");
+      client = d; locked = !!d.locked;
+      if (d.state) state = d.state;
+    }
+    await loadCatalog();
+    buildSteps();
+    $("#who").innerHTML = client.name ? `<b>${esc(client.name)}</b>${client.address ? " · " + esc(client.address) : ""}` : "Finish selections";
+    cur = locked ? steps.length - 1 : Math.min(+state.step || 0, steps.length - 1);
+    if (locked) setSaved("✓ Submitted", "ok");
+    render();
+  } catch (e) {
+    $("#app").innerHTML = `<div class="center"><h1>Hmm, something's off.</h1><p style="color:var(--ink-soft)">${esc(e.message)}</p><p style="margin-top:16px">Call us at <a href="tel:4806603133" style="color:var(--teal)">480-660-3133</a>.</p></div>`;
+  }
+})();
+</script>
+</body>
+</html>

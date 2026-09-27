@@ -1,0 +1,33 @@
+package_id,name,description,photo,category_id,option_id
+modern,Modern,"Flat-slab wood cabinets, matte black fixtures, clean lines.",pkg-modern.jpg,finish,fin-black
+modern,,,,door-style,door-slab
+modern,,,,cabinet-brand,cab-brand-sollid
+modern,,,,cabinet-hardware,ch-bar
+modern,,,,lighting,light-4in
+farmhouse,Modern Farmhouse,"White shaker cabinets, black fixtures, warm wood accents.",pkg-farmhouse.jpg,finish,fin-black
+farmhouse,,,,door-style,door-5panel
+farmhouse,,,,cabinet-brand,cab-brand-sollid
+farmhouse,,,,cabinet-hardware,ch-cup
+farmhouse,,,,backsplash,bs-subway
+classic,Classic,"Soft gray shaker cabinets, brushed nickel, timeless details.",pkg-classic.jpg,finish,fin-nickel
+classic,,,,door-style,door-2panel
+classic,,,,cabinet-brand,cab-brand-sollid
+classic,,,,cabinet-hardware,ch-knob
+classic,,,,lighting,light-6in
+desert,Desert Modern,"Warm natural wood, brushed gold, Arizona warmth.",pkg-desert.jpg,finish,fin-gold
+desert,,,,door-style,door-1panel
+desert,,,,cabinet-brand,cab-brand-sollid
+desert,,,,cabinet-hardware,ch-bar
+desert,,,,lighting,light-4in
+modern,,,,window-color,wc-black
+farmhouse,,,,window-color,wc-black
+classic,,,,window-color,wc-white
+desert,,,,window-color,wc-bronze
+modern,,,,cabinet-style,cab-sollid-phoenix-sand-slab
+farmhouse,,,,cabinet-style,cab-sollid-miami-white
+classic,,,,cabinet-style,cab-sollid-alpine-slim-french-grey
+desert,,,,cabinet-style,cab-sollid-miami-sand
+modern,,,,cabinet-door,cab-door-slab
+farmhouse,,,,cabinet-door,cab-door-slim-shaker
+classic,,,,cabinet-door,cab-door-slim-shaker
+desert,,,,cabinet-door,cab-door-slim-shaker
