@@ -164,6 +164,27 @@
   .cell .v{font-family:"Cormorant Garamond",serif; font-weight:600; font-size:25px; margin-top:3px; line-height:1.1}
   .plate-cta{padding:16px 18px; border-top:1px solid var(--line)}
   @media(max-width:820px){ .model-grid{grid-template-columns:1fr} }
+  /* full photo sets live in the markup; only the first three show, the rest open in the viewer */
+  .gallery figure{cursor:zoom-in}
+  .gallery figure:nth-child(n+4){display:none}
+  .gallery figure:focus-visible{outline:3px solid var(--teal); outline-offset:2px}
+  .gallery .more{position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(20,20,18,.5); color:#fff; font-family:"Cormorant Garamond",serif; font-size:26px; font-weight:600; letter-spacing:.02em; transition:background .3s}
+  .gallery figure:hover .more{background:rgba(20,20,18,.35)}
+  .gallery .more + figcaption{display:none}
+  /* photo viewer */
+  .lb{position:fixed; inset:0; z-index:200; background:rgba(12,12,11,.94); display:flex; align-items:center; justify-content:center; padding:56px 64px}
+  .lb[hidden]{display:none}
+  .lb-fig{margin:0; max-width:100%; max-height:100%; display:flex; flex-direction:column; align-items:center}
+  .lb-fig img{max-width:100%; max-height:calc(100vh - 150px); object-fit:contain; border-radius:3px}
+  .lb-fig figcaption{display:flex; gap:16px; justify-content:space-between; width:100%; color:#E8E4DC; font-size:13px; letter-spacing:.1em; text-transform:uppercase; padding-top:12px}
+  .lb-count{color:#A9A59C}
+  .lb button{background:none; border:0; color:#fff; cursor:pointer; line-height:1}
+  .lb-close{position:absolute; top:12px; right:18px; font-size:40px; padding:6px}
+  .lb-nav{position:absolute; top:50%; transform:translateY(-50%); font-size:54px; padding:10px 14px; opacity:.8}
+  .lb-nav:hover,.lb-close:hover{opacity:1}
+  .lb-prev{left:6px} .lb-next{right:6px}
+  .lb button:focus-visible{outline:2px solid #CFE3E2; outline-offset:2px}
+  @media(max-width:640px){ .lb{padding:56px 16px} .lb-nav{top:auto; bottom:14px; transform:none; font-size:44px} .lb-fig figcaption{font-size:11.5px} }
 
   /* ---- INCOME / ROI ---- */
   .income{background:var(--sand)}
@@ -358,17 +379,25 @@
   <div class="wrap">
     <div class="sec-head reveal">
       <div class="eyebrow">The lineup</div>
-      <h2>Three floor plans, one small footprint.</h2>
-      <p>Pre-designed, permit-ready plans we adapt to your lot — so you skip the blank-page cost and get to build faster.</p>
+      <h2>Five designs, from studio casita to showroom garage.</h2>
+      <p>Pre-designed, permit-ready plans we adapt to your lot — so you skip the blank-page cost and get to build faster. Tap any photo to see the full set.</p>
     </div>
 
-    <!-- Studio -->
+    <!-- Studio (Drive: ADU and Casitas/ADU3) -->
     <div class="model">
       <div class="model-grid">
-        <div class="gallery reveal">
+        <div class="gallery reveal" data-model="The Studio">
           <figure class="big"><img src="ADU1%20Assets/Studio/Casita%20-%20Front%20View_web.jpg" alt="Studio casita exterior" loading="lazy"><figcaption>Exterior</figcaption></figure>
           <figure><img src="ADU1%20Assets/Studio/Casita%20-%20Living%20Room_web.jpg" alt="Studio living room" loading="lazy"><figcaption>Living</figcaption></figure>
           <figure><img src="ADU1%20Assets/Studio/Casita%20-%20Kitchen_web.jpg" alt="Studio kitchen" loading="lazy"><figcaption>Kitchen</figcaption></figure>
+          <figure><img src="ADU1%20Assets/Studio/Casita%20-%20Interior%201_web.jpg" alt="Studio open living and sleeping area" loading="lazy"><figcaption>Interior</figcaption></figure>
+          <figure><img src="ADU1%20Assets/Studio/Casita%20-%20Interior_web.jpg" alt="Studio living, dining and kitchen" loading="lazy"><figcaption>Living &amp; dining</figcaption></figure>
+          <figure><img src="ADU1%20Assets/Studio/Casita%20-%20Living%20Sleeping_web.jpg" alt="Studio living area looking toward the bed" loading="lazy"><figcaption>Living &amp; sleeping</figcaption></figure>
+          <figure><img src="ADU1%20Assets/Studio/Casita%20-%20Sleeping%20Area_web.jpg" alt="Studio sleeping area" loading="lazy"><figcaption>Sleeping area</figcaption></figure>
+          <figure><img src="ADU1%20Assets/Studio/ADU3%20White%20Kitchen_web.jpg" alt="Studio kitchen in a white cabinet finish" loading="lazy"><figcaption>Kitchen · white finish option</figcaption></figure>
+          <figure><img src="ADU1%20Assets/Studio/ADU3%20Stucco_web.jpg" alt="Studio casita with stucco and tile roof exterior" loading="lazy"><figcaption>Exterior · stucco option</figcaption></figure>
+          <figure><img src="ADU1%20Assets/Studio/ADU%203%20Stucco_web.jpg" alt="Studio casita stucco exterior, front angle" loading="lazy"><figcaption>Exterior · stucco option</figcaption></figure>
+          <figure><img src="ADU1%20Assets/Studio/Casita%20-%20Floor%20Plan_web.jpg" alt="Studio casita floor plan" loading="lazy"><figcaption>Floor plan</figcaption></figure>
         </div>
         <div class="model-info reveal">
           <div class="eyebrow">Model 01</div>
@@ -388,13 +417,16 @@
       </div>
     </div>
 
-    <!-- One-Bedroom 600 -->
+    <!-- One-Bedroom 600 (Drive: ADU and Casitas/ADU1) -->
     <div class="model">
       <div class="model-grid">
-        <div class="gallery reveal">
+        <div class="gallery reveal" data-model="The One-Bedroom">
           <figure class="big"><img src="ADU1%20Assets/1%20Bedroom%20600sf/EXTERIOR%201%20(2)_web.jpg" alt="One-bedroom ADU exterior" loading="lazy"><figcaption>Exterior</figcaption></figure>
           <figure><img src="ADU1%20Assets/1%20Bedroom%20600sf/MAIN%20AREA%202%20(1)_web.jpg" alt="One-bedroom main living area" loading="lazy"><figcaption>Main area</figcaption></figure>
           <figure><img src="ADU1%20Assets/1%20Bedroom%20600sf/BEDROOM_web.jpg" alt="One-bedroom bedroom" loading="lazy"><figcaption>Bedroom</figcaption></figure>
+          <figure><img src="ADU1%20Assets/1%20Bedroom%20600sf/EXTERIOR%202_web.jpg" alt="One-bedroom ADU exterior, second angle" loading="lazy"><figcaption>Exterior</figcaption></figure>
+          <figure><img src="ADU1%20Assets/1%20Bedroom%20600sf/J%26J%20BATH%20(1)_web.jpg" alt="One-bedroom bathroom" loading="lazy"><figcaption>Bathroom</figcaption></figure>
+          <figure><img src="ADU1%20Assets/1%20Bedroom%20600sf/LAUNDRY%20(1)_web.jpg" alt="One-bedroom laundry" loading="lazy"><figcaption>Laundry</figcaption></figure>
         </div>
         <div class="model-info reveal">
           <div class="eyebrow">Model 02</div>
@@ -414,13 +446,19 @@
       </div>
     </div>
 
-    <!-- Two-Level 800 -->
+    <!-- Two-Level 800 (Drive: ADU and Casitas/ADU2) -->
     <div class="model">
       <div class="model-grid">
-        <div class="gallery reveal">
+        <div class="gallery reveal" data-model="The Two-Level">
           <figure class="big"><img src="ADU1%20Assets/1%20Bedroom%20800sf/03%20EXTERIOR%201_web.jpg" alt="Two-level ADU exterior" loading="lazy"><figcaption>Exterior</figcaption></figure>
           <figure><img src="ADU1%20Assets/1%20Bedroom%20800sf/LIVING%20AREA_web.jpg" alt="Two-level living area" loading="lazy"><figcaption>Living</figcaption></figure>
           <figure><img src="ADU1%20Assets/1%20Bedroom%20800sf/07%20KITCHEN_web.jpg" alt="Two-level kitchen" loading="lazy"><figcaption>Kitchen</figcaption></figure>
+          <figure><img src="ADU1%20Assets/1%20Bedroom%20800sf/04%20MAIN%20AREA%201_web.jpg" alt="Two-level main area" loading="lazy"><figcaption>Main area</figcaption></figure>
+          <figure><img src="ADU1%20Assets/1%20Bedroom%20800sf/05%20MAIN%20AREA%202_web.jpg" alt="Two-level main area, second view" loading="lazy"><figcaption>Main area</figcaption></figure>
+          <figure><img src="ADU1%20Assets/1%20Bedroom%20800sf/08%20KITCHEN%202_web.jpg" alt="Two-level kitchen, second view" loading="lazy"><figcaption>Kitchen</figcaption></figure>
+          <figure><img src="ADU1%20Assets/1%20Bedroom%20800sf/06%20BEDROOM_web.jpg" alt="Two-level upstairs bedroom" loading="lazy"><figcaption>Bedroom</figcaption></figure>
+          <figure><img src="ADU1%20Assets/1%20Bedroom%20800sf/01%20GROUND%20FLOOR%20LAYOUT_web.jpg" alt="Two-level ground floor plan" loading="lazy"><figcaption>Ground floor plan</figcaption></figure>
+          <figure><img src="ADU1%20Assets/1%20Bedroom%20800sf/02%20SECOND%20FLOOR%20LAYOUT_web.jpg" alt="Two-level second floor plan" loading="lazy"><figcaption>Second floor plan</figcaption></figure>
         </div>
         <div class="model-info reveal">
           <div class="eyebrow">Model 03</div>
@@ -440,8 +478,77 @@
       </div>
     </div>
 
+    <!-- Desert Modern (Drive: ADU and Casitas/ADU4) -->
+    <div class="model">
+      <div class="model-grid">
+        <div class="gallery reveal" data-model="The Desert Modern">
+          <figure class="big"><img src="ADU1%20Assets/Desert%20Modern/Desert%20Modern%20-%20Elevation_web.jpg" alt="Desert modern ADU exterior" loading="lazy"><figcaption>Exterior</figcaption></figure>
+          <figure><img src="ADU1%20Assets/Desert%20Modern/Desert%20Modern%20-%20Living_web.jpg" alt="Desert modern open living and kitchen" loading="lazy"><figcaption>Living</figcaption></figure>
+          <figure><img src="ADU1%20Assets/Desert%20Modern/Desert%20Modern%20-%20Kitchen_web.jpg" alt="Desert modern kitchen with island" loading="lazy"><figcaption>Kitchen</figcaption></figure>
+          <figure><img src="ADU1%20Assets/Desert%20Modern/Desert%20Modern%20-%20East%20Wall_web.jpg" alt="Desert modern living room with sliding glass wall" loading="lazy"><figcaption>Living</figcaption></figure>
+          <figure><img src="ADU1%20Assets/Desert%20Modern/Desert%20Modern%20-%20Dining_web.jpg" alt="Desert modern dining area" loading="lazy"><figcaption>Dining</figcaption></figure>
+          <figure><img src="ADU1%20Assets/Desert%20Modern/Desert%20Modern%20-%20Hallway_web.jpg" alt="Desert modern hallway and entry" loading="lazy"><figcaption>Hallway</figcaption></figure>
+          <figure><img src="ADU1%20Assets/Desert%20Modern/Desert%20Modern%20-%20Bedroom_web.jpg" alt="Desert modern bedroom" loading="lazy"><figcaption>Bedroom</figcaption></figure>
+          <figure><img src="ADU1%20Assets/Desert%20Modern/Desert%20Modern%20-%20Bathroom_web.jpg" alt="Desert modern bathroom with walk-in shower" loading="lazy"><figcaption>Bathroom</figcaption></figure>
+          <figure><img src="ADU1%20Assets/Desert%20Modern/Desert%20Modern%20-%20Charcoal%20Oak%20Kitchen_web.jpg" alt="Charcoal and oak kitchen option" loading="lazy"><figcaption>Kitchen · charcoal &amp; oak option</figcaption></figure>
+          <figure><img src="ADU1%20Assets/Desert%20Modern/Desert%20Modern%20-%20Charcoal%20Oak%20L-Shaped%20Kitchen_web.jpg" alt="Charcoal and oak L-shaped kitchen option" loading="lazy"><figcaption>Kitchen · L-shaped option</figcaption></figure>
+        </div>
+        <div class="model-info reveal">
+          <div class="eyebrow">Model 04</div>
+          <h3>The Desert Modern</h3>
+          <div class="tag">One-bedroom · open plan, glass wall to the yard</div>
+          <div class="plate">
+            <div class="plate-top"><span class="t">Desert Modern</span><span class="n">SOKO / 04</span></div>
+            <div class="plate-grid">
+              <div class="cell"><div class="k">Bed / Bath</div><div class="v">1 / 1</div></div>
+              <div class="cell"><div class="k">Kitchen</div><div class="v">Full + island</div></div>
+              <div class="cell"><div class="k">Layout</div><div class="v">Open plan</div></div>
+              <div class="cell"><div class="k">Shower</div><div class="v">Walk-in glass</div></div>
+            </div>
+            <div class="plate-cta"><a class="btn btn-teal" href="#qualify" style="width:100%;text-align:center">See if it fits my lot</a></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Garage Suite (Drive: ADU and Casitas/ADU5 - Scottsdale Garage) -->
+    <div class="model">
+      <div class="model-grid">
+        <div class="gallery reveal" data-model="The Garage Suite">
+          <figure class="big"><img src="ADU1%20Assets/Garage%20Suite/Exterior%201_web.jpg" alt="Garage suite exterior with covered patio" loading="lazy"><figcaption>Exterior</figcaption></figure>
+          <figure><img src="ADU1%20Assets/Garage%20Suite/Lounge%20area_web.jpg" alt="Garage suite entertainment lounge" loading="lazy"><figcaption>Entertainment lounge</figcaption></figure>
+          <figure><img src="ADU1%20Assets/Garage%20Suite/Cabinets_web.jpg" alt="Showroom garage with glass pocket doors" loading="lazy"><figcaption>Showroom garage</figcaption></figure>
+          <figure><img src="ADU1%20Assets/Garage%20Suite/Exterior%202_web.jpg" alt="Garage suite patio opening to the lawn" loading="lazy"><figcaption>Patio</figcaption></figure>
+          <figure><img src="ADU1%20Assets/Garage%20Suite/FLOOR%20LAYOUT_web.jpg" alt="Garage suite floor plan: two-car garage with seating, storage, powder room and entertainment area" loading="lazy"><figcaption>Floor plan</figcaption></figure>
+        </div>
+        <div class="model-info reveal">
+          <div class="eyebrow">Model 05</div>
+          <h3>The Garage Suite</h3>
+          <div class="tag">Scottsdale · showroom garage + entertainment lounge</div>
+          <div class="plate">
+            <div class="plate-top"><span class="t">Garage Suite</span><span class="n">SOKO / 05</span></div>
+            <div class="plate-grid">
+              <div class="cell"><div class="k">Footprint</div><div class="v">85' × 18'</div></div>
+              <div class="cell"><div class="k">Garage</div><div class="v">2-car + seating</div></div>
+              <div class="cell"><div class="k">Lounge</div><div class="v">23' × 18'</div></div>
+              <div class="cell"><div class="k">Bath</div><div class="v">Powder room</div></div>
+            </div>
+            <div class="plate-cta"><a class="btn btn-teal" href="#qualify" style="width:100%;text-align:center">See if it fits my lot</a></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </section>
+
+<!-- Photo viewer for the model galleries -->
+<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Photo viewer" hidden>
+  <button class="lb-close" type="button" aria-label="Close">&times;</button>
+  <button class="lb-nav lb-prev" type="button" aria-label="Previous photo">&#8249;</button>
+  <figure class="lb-fig"><img alt=""><figcaption><span class="lb-cap"></span><span class="lb-count"></span></figcaption></figure>
+  <button class="lb-nav lb-next" type="button" aria-label="Next photo">&#8250;</button>
+</div>
 
 <!-- ============ INCOME ============ -->
 <section class="income">
@@ -542,6 +649,66 @@
     entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} });
   },{threshold:.12});
   document.querySelectorAll('.reveal').forEach((el)=>io.observe(el));
+</script>
+
+<script>
+  /* model galleries: "+N photos" tile + full-screen viewer */
+  (function(){
+    const lb = document.getElementById('lb');
+    const img = lb.querySelector('img'), cap = lb.querySelector('.lb-cap'), count = lb.querySelector('.lb-count');
+    let set = [], i = 0, name = '', opener = null;
+
+    function show(){
+      const f = set[i];
+      img.removeAttribute('src');   // don't leave the previous photo up while the next one loads
+      img.src = f.querySelector('img').src;
+      img.alt = f.querySelector('img').alt;
+      cap.textContent = name + ' · ' + f.querySelector('figcaption').textContent;
+      count.textContent = (i + 1) + ' / ' + set.length;
+    }
+    function open(gallery, idx){
+      set = [...gallery.querySelectorAll('figure')]; i = idx; name = gallery.dataset.model || '';
+      opener = document.activeElement;
+      show(); lb.hidden = false; document.body.style.overflow = 'hidden';
+      lb.querySelector('.lb-close').focus();
+    }
+    function close(){ lb.hidden = true; document.body.style.overflow = ''; if(opener) opener.focus(); }
+    function step(d){ i = (i + d + set.length) % set.length; show(); }
+
+    document.querySelectorAll('.gallery').forEach(g=>{
+      const figs = [...g.querySelectorAll('figure')];
+      figs.forEach((f, idx)=>{
+        f.tabIndex = 0; f.setAttribute('role','button');
+        f.setAttribute('aria-label', 'View ' + (g.dataset.model || '') + ' photos: ' + f.querySelector('figcaption').textContent);
+        f.addEventListener('click', ()=>open(g, idx));
+        f.addEventListener('keydown', e=>{ if(e.key==='Enter' || e.key===' '){ e.preventDefault(); open(g, idx); } });
+      });
+      if(figs.length > 3){
+        const more = document.createElement('span');
+        more.className = 'more';
+        more.textContent = '+' + (figs.length - 3) + ' photos';
+        figs[2].insertBefore(more, figs[2].querySelector('figcaption'));
+      }
+    });
+
+    lb.querySelector('.lb-close').addEventListener('click', close);
+    lb.querySelector('.lb-prev').addEventListener('click', ()=>step(-1));
+    lb.querySelector('.lb-next').addEventListener('click', ()=>step(1));
+    lb.addEventListener('click', e=>{ if(e.target === lb) close(); });
+    document.addEventListener('keydown', e=>{
+      if(lb.hidden) return;
+      if(e.key==='Escape') close();
+      else if(e.key==='ArrowLeft') step(-1);
+      else if(e.key==='ArrowRight') step(1);
+    });
+    let x0 = null;
+    lb.addEventListener('touchstart', e=>{ x0 = e.touches[0].clientX; }, {passive:true});
+    lb.addEventListener('touchend', e=>{
+      if(x0 === null) return;
+      const dx = e.changedTouches[0].clientX - x0; x0 = null;
+      if(Math.abs(dx) > 40) step(dx < 0 ? 1 : -1);
+    });
+  })();
 </script>
 
 <script>
