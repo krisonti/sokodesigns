@@ -24,7 +24,11 @@ const crypto = require("crypto");
 
 const MONDAY_API_URL = "https://api.monday.com/v2";
 const BOARD_ID = "18432870755"; // "Client Selections"
-const SITE = "https://www.sokodesigns.com";
+// New client links point at the SOKO Development site. The same link also works on
+// www.sokodesigns.com/selections (same page, same key).
+const SITE = "https://sokodevelopmentaz.com";
+const ALLOWED_ORIGINS = ["https://sokodevelopmentaz.com", "https://www.sokodevelopmentaz.com", "https://www.sokodesigns.com", "https://sokodesigns.com"];
+let corsOrigin = ""; // set per request
 const DEFAULT_FROM = "SOKO Designs <kris@sokodesigns.com>";
 const DEFAULT_NOTIFY = "kris@sokodesigns.com";
 
@@ -41,6 +45,9 @@ const COL = {
 const CHUNK = 1900; // Monday long-text columns cap out around 2,000 characters
 
 exports.handler = async function (event) {
+  const origin = (event.headers && (event.headers.origin || event.headers.Origin)) || "";
+  corsOrigin = ALLOWED_ORIGINS.includes(origin) ? origin : "";
+  if (event.httpMethod === "OPTIONS") return { statusCode: 204, headers: cors({}), body: "" };
   try {
     if (event.httpMethod === "GET") {
       const q = event.queryStringParameters || {};
@@ -76,7 +83,7 @@ async function catalog() {
     if (!res.ok || text.trim().startsWith("<")) return json(502, { error: `Could not read the ${tab} tab` });
     tabs[tab] = text;
   }
-  return { statusCode: 200, headers: { "Content-Type": "application/json", "Cache-Control": "public, max-age=60" }, body: JSON.stringify(tabs) };
+  return { statusCode: 200, headers: cors({ "Content-Type": "application/json", "Cache-Control": "public, max-age=60" }), body: JSON.stringify(tabs) };
 }
 
 // ---------- client page ----------
@@ -101,7 +108,7 @@ async function save({ id, k, state }) {
   return json(200, { ok: true });
 }
 
-async function submit({ id, k, state, signature, summary }) {
+async function submit({ id, k, state, signature, summary, site }) {
   if (!validKey(id, k)) return json(403, { error: "Invalid link" });
   const name = String(signature || "").trim().slice(0, 120);
   if (!name) return json(400, { error: "Please type your name to sign." });
@@ -125,7 +132,7 @@ async function submit({ id, k, state, signature, summary }) {
     `mutation ($id: ID!, $body: String!) { create_update (item_id: $id, body: $body) { id } }`,
     { id: String(id), body: `<p><b>Selections submitted and signed by ${esc(name)}</b></p>${summaryHtml(rows)}` });
 
-  await emailConfirmation(item, name, rows);
+  await emailConfirmation(item, name, rows, site === "development" ? "SOKO Development" : "SOKO Designs");
   return json(200, { ok: true });
 }
 
@@ -218,7 +225,7 @@ function summaryHtml(rows) {
   return html;
 }
 
-async function emailConfirmation(item, name, rows) {
+async function emailConfirmation(item, name, rows, brand) {
   const key = process.env.RESEND_API_KEY;
   if (!key) { console.error("Missing RESEND_API_KEY — skipping selections email"); return; }
   const to = [process.env.LEAD_NOTIFY_EMAIL || DEFAULT_NOTIFY];
@@ -227,7 +234,7 @@ async function emailConfirmation(item, name, rows) {
     method: "POST",
     headers: { "Content-Type": "application/json", Authorization: `Bearer ${key}` },
     body: JSON.stringify({
-      from: process.env.FROM_EMAIL || DEFAULT_FROM,
+      from: (process.env.FROM_EMAIL || DEFAULT_FROM).replace(/^[^<]*</, `${brand} <`),
       to,
       subject: `Finish selections — ${item.name}${item.address ? `, ${item.address}` : ""}`,
       html: `<div style="font-family:system-ui,Arial,sans-serif;font-size:15px;color:#1A1A1A;max-width:620px">
@@ -246,6 +253,11 @@ function esc(s) {
   return String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 }
 
+function cors(headers) {
+  if (!corsOrigin) return headers;
+  return { ...headers, "Access-Control-Allow-Origin": corsOrigin, "Access-Control-Allow-Methods": "GET, POST, OPTIONS", "Access-Control-Allow-Headers": "Content-Type", Vary: "Origin" };
+}
+
 function json(statusCode, body) {
-  return { statusCode, headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) };
+  return { statusCode, headers: cors({ "Content-Type": "application/json" }), body: JSON.stringify(body) };
 }

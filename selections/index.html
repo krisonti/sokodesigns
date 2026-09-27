@@ -113,7 +113,7 @@
   .hero{background:var(--white); border-radius:14px; overflow:hidden; box-shadow:0 0 0 1px var(--line); display:grid; grid-template-columns:1.1fr 1fr}
   .hero .txt{padding:40px}
   .hero h1{font-size:clamp(34px,4.4vw,50px); margin:10px 0 14px}
-  .hero .img{background:url(/images/selections/pkg-soko.jpg) center/cover, var(--sand); min-height:280px}
+  .hero .img{background:var(--hero-img) center/cover, var(--sand); min-height:280px}
   @media (max-width:760px){ .hero{grid-template-columns:1fr} .hero .img{min-height:200px; order:-1} .hero .txt{padding:26px} }
   .how{display:grid; gap:12px; margin:22px 0 26px}
   .how > div{display:flex; gap:12px; align-items:flex-start; font-size:15px}
@@ -178,7 +178,7 @@
 
 <header class="top">
   <div class="top-in">
-    <img src="/soko-designs-logo.png" alt="SOKO Designs">
+    <img id="logo" src="/soko-designs-logo.png" alt="SOKO Designs">
     <div class="who" id="who"></div>
     <div class="saved" id="saved"></div>
   </div>
@@ -208,11 +208,18 @@
    Catalog comes from the Google Sheet (via the selections function),
    or from /selections/data/*.csv as a fallback.
    ============================================================ */
-const API = "/.netlify/functions/selections";
+// The same file runs on sokodesigns.com and sokodevelopmentaz.com. Both use the backend,
+// photos and catalog hosted on sokodesigns.com, so there is one Sheet and one Monday board.
+const DEV = /sokodevelopment/i.test(location.hostname);
+const BASE = DEV ? "https://www.sokodesigns.com" : "";
+const BRAND = DEV
+  ? { name: "SOKO Development", logo: "/assets/soko-development-logo.png", phone: "602-878-8087", site: "development" }
+  : { name: "SOKO Designs", logo: "/soko-designs-logo.png", phone: "480-660-3133", site: "designs" };
+const API = BASE + "/.netlify/functions/selections";
 const qs = new URLSearchParams(location.search);
 const ID = qs.get("id"), KEY = qs.get("k");
 const DEMO = qs.has("demo") || !ID;
-const PHOTO_BASE = "/images/selections/";
+const PHOTO_BASE = BASE + "/images/selections/";
 
 let CAT = [], OPT = [], PKG = [], client = {}, state = { v: 1, pkg: null, p: {} }, steps = [], cur = 0, locked = false;
 let saveTimer = null;
@@ -243,7 +250,7 @@ async function loadCatalog() {
   }
   if (!tabs) {
     tabs = {};
-    for (const t of ["Categories", "Options", "Packages"]) tabs[t] = await (await fetch(`/selections/data/${t}.csv?v=${Date.now()}`)).text();
+    for (const t of ["Categories", "Options", "Packages"]) tabs[t] = await (await fetch(`${BASE}/selections/data/${t}.csv?v=${Date.now()}`)).text();
   }
   const yes = v => !/^(n|no|false|0)$/i.test(v || "y");
   CAT = parseCSV(tabs.Categories).filter(c => yes(c.active)).sort((a, b) => +a.sort - +b.sort);
@@ -627,14 +634,20 @@ async function submitAll() {
   clearTimeout(saveTimer);
   if (DEMO) { state.signedBy = name; state.submittedAt = new Date().toISOString(); locked = true; render(); return; }
   try {
-    const r = await fetch(API, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "submit", id: ID, k: KEY, state, signature: name, summary: summaryRows() }) });
+    const r = await fetch(API, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "submit", id: ID, k: KEY, state, signature: name, summary: summaryRows(), site: BRAND.site }) });
     const d = await r.json().catch(() => ({}));
     if (!r.ok && !d.locked) throw new Error(d.error || "Something went wrong.");
     state.signedBy = name; state.submittedAt = new Date().toISOString(); locked = true; setSaved("✓ Submitted", "ok"); render();
-  } catch (e) { btn.disabled = false; btn.textContent = "Submit my selections"; err.textContent = e.message + " Please try again, or call us at 480-660-3133."; }
+  } catch (e) { btn.disabled = false; btn.textContent = "Submit my selections"; err.textContent = e.message + " Please try again, or call us at " + BRAND.phone + "."; }
 }
 
 /* ---------- start ---------- */
+(function brand() {
+  const l = document.getElementById("logo"); l.src = BRAND.logo; l.alt = BRAND.name;
+  document.title = "Your Finish Selections | " + BRAND.name;
+  document.documentElement.style.setProperty("--hero-img", `url(${PHOTO_BASE}pkg-soko.jpg)`);
+})();
+
 (async function init() {
   try {
     if (DEMO) {
@@ -654,7 +667,7 @@ async function submitAll() {
     if (locked) setSaved("✓ Submitted", "ok");
     render();
   } catch (e) {
-    $("#app").innerHTML = `<div class="center"><h1>Hmm, something's off.</h1><p style="color:var(--ink-soft)">${esc(e.message)}</p><p style="margin-top:16px">Call us at <a href="tel:4806603133" style="color:var(--teal)">480-660-3133</a>.</p></div>`;
+    $("#app").innerHTML = `<div class="center"><h1>Hmm, something's off.</h1><p style="color:var(--ink-soft)">${esc(e.message)}</p><p style="margin-top:16px">Call us at <a href="tel:${BRAND.phone.replace(/-/g, "")}" style="color:var(--teal)">${BRAND.phone}</a>.</p></div>`;
   }
 })();
 </script>
