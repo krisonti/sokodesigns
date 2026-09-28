@@ -186,3 +186,15 @@ footer{background:#111110; color:#B7B4AC; padding:52px 0 38px; margin-top:0}
 .guide-banner .codes-chip{background:rgba(255,255,255,.14); color:#eaf5f3; border-color:rgba(255,255,255,.3)}
 .guide-banner .city-badge{filter:drop-shadow(0 6px 16px rgba(0,0,0,.25))}
 @media print{ .guide-banner{-webkit-print-color-adjust:exact; print-color-adjust:exact} }
+
+/* pricing tables (ADU utility-connection series) */
+.article .tbl-wrap{overflow-x:auto; margin:6px 0 26px; background:var(--white); border:1px solid var(--line); border-radius:10px}
+.article .tbl{width:100%; border-collapse:collapse; font-size:15px}
+.article .tbl th,.article .tbl td{padding:11px 14px; text-align:left; vertical-align:top; border-bottom:1px solid var(--line)}
+.article .tbl th{background:var(--teal-tint); color:var(--teal-deep); font-weight:600; font-size:14px; letter-spacing:.01em}
+.article .tbl tr:last-child td{border-bottom:none}
+.article .tbl td:nth-child(2){white-space:nowrap; font-weight:600; color:var(--ink)}
+.article .tbl td:nth-child(3){color:var(--ink-soft)}
+.article .example{background:var(--teal-tint); border-left:4px solid var(--teal); padding:16px 18px; border-radius:6px; margin:0 0 26px; font-size:16px}
+.article .example p{margin:0}
+@media(max-width:560px){ .article .tbl{font-size:14px} .article .tbl th,.article .tbl td{padding:9px 10px} }
