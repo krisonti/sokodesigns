@@ -45,6 +45,39 @@
   .ti-hero__copy{padding:0 26px 52px; margin-top:-44px}
 }
 
+/* Illustrated hero (used until a project photo exists): a blueprint that draws itself */
+.ti-hero__media.bp{background:radial-gradient(70% 60% at 60% 45%,#1C2B36 0%,var(--ti-night) 70%)}
+.ti-hero__media.bp::before{display:none}
+.ti-hero__media.bp svg{position:absolute; inset:0; width:100%; height:100%; z-index:0}
+.ti-hero__media.bp .grid line{stroke:rgba(255,255,255,.05); stroke-width:1}
+.ti-hero__media.bp .ink *{fill:none; stroke:var(--ti-gold); stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round; stroke-dasharray:1400; stroke-dashoffset:1400; animation:ti-draw-bp 5.5s cubic-bezier(.3,.6,.3,1) forwards}
+.ti-hero__media.bp .ink .d1{animation-delay:.3s} .ti-hero__media.bp .ink .d2{animation-delay:1.1s} .ti-hero__media.bp .ink .d3{animation-delay:1.9s} .ti-hero__media.bp .ink .d4{animation-delay:2.7s} .ti-hero__media.bp .ink .d5{animation-delay:3.4s}
+.ti-hero__media.bp .soft *{stroke:rgba(255,255,255,.35); stroke-width:1}
+.ti-hero__media.bp .lbl{font-family:"Inter",sans-serif; font-size:11px; letter-spacing:.14em; fill:rgba(255,255,255,.55); text-transform:uppercase; opacity:0; animation:ti-up 1s 3.6s forwards}
+.ti-hero__media.bp .lbl.gold{fill:var(--ti-gold)}
+@keyframes ti-draw-bp{to{stroke-dashoffset:0}}
+.ti-hero__media.bp .dim{stroke:rgba(255,255,255,.3) !important; stroke-width:1 !important}
+@media (prefers-reduced-motion: reduce){ .ti-hero__media.bp .ink *{stroke-dashoffset:0; animation:none} .ti-hero__media.bp .lbl{opacity:1; animation:none} }
+
+/* Signature calculator panel (reused: office fit, station planner, rack check, seat count) */
+.ti-calc{background:var(--ti-night-2); color:#fff; padding:70px 0}
+.ti-calc .wrap{display:grid; grid-template-columns:1fr 1fr; gap:48px; align-items:center}
+.ti-calc .eyebrow{color:var(--ti-gold)}
+.ti-calc h2{color:#fff; font-size:clamp(31px,4.3vw,48px); margin-top:12px}
+.ti-calc p{color:#D7DEE3; font-size:17px; margin-top:14px; max-width:48ch}
+.ti-calc__panel{background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.14); border-radius:10px; padding:28px 26px}
+.ti-calc__panel label{display:flex; justify-content:space-between; align-items:baseline; font-size:13px; letter-spacing:.08em; text-transform:uppercase; color:#B9C4CC; margin-top:6px}
+.ti-calc__panel label output{font-family:"Cormorant Garamond",Georgia,serif; font-size:26px; color:#fff; letter-spacing:0; text-transform:none}
+.ti-calc__panel input[type=range]{width:100%; margin:12px 0 20px; accent-color:var(--ti-gold)}
+.ti-calc__toggle{display:flex; align-items:center; gap:10px; font-size:14px; color:#E6ECEF; margin:4px 0 20px; cursor:pointer}
+.ti-calc__toggle input{accent-color:var(--ti-gold); width:18px; height:18px}
+.ti-calc__out{display:grid; gap:10px}
+.ti-calc__out div{background:rgba(0,0,0,.25); border-radius:6px; padding:12px 14px; display:flex; justify-content:space-between; gap:14px; align-items:baseline; font-size:14px; color:#D7DEE3}
+.ti-calc__out b{font-family:"Cormorant Garamond",Georgia,serif; font-size:24px; color:var(--ti-gold); font-weight:600; text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap}
+.ti-calc__out div.flag{border:1px solid rgba(217,183,122,.45)}
+.ti-calc__fine{font-size:12.5px; color:#8E9BA4; margin-top:14px}
+@media(max-width:860px){ .ti-calc .wrap{grid-template-columns:1fr; gap:28px} }
+
 /* ===== START (form) SECTION ===== */
 .ti-start{position:relative; overflow:hidden; color:#fff; padding:92px 0}
 .ti-start__bg{position:absolute; left:0; right:0; top:-22%; bottom:-22%; background:var(--ti-night-2) center/cover no-repeat; will-change:transform; z-index:0}

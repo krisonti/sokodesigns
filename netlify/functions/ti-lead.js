@@ -56,6 +56,9 @@ exports.handler = async (event) => {
     industry: s("industry", 60), business: s("business", 200), role: s("role", 60),
     lease: s("lease", 60), sqft: s("sqft", 40), prevUse: s("prevUse", 80), concept: s("concept", 80),
     rent: s("rent", 40), drawings: s("drawings", 80), details: s("details", 2000), gcIntro: s("gcIntro", 10),
+    // Industry-specific step-2 fields (whichever the page sends).
+    headcount: s("headcount", 40), stations: s("stations", 40), services: s("services", 80), use: s("use", 80),
+    racking: s("racking", 40), mezzanine: s("mezzanine", 40), seats: s("seats", 40),
     source: s("source", 120), leadSource: s("leadSource", 40), gclid: s("gclid", 200),
   };
   if (!lead.name || !lead.email || !lead.phone) return json(400, { error: "Name, email, and phone are required." });
@@ -107,7 +110,11 @@ async function createMondayLead(lead) {
     lead.business ? `Business: ${lead.business}` : null, `Space: ${where}`,
     lead.sqft ? `Size: ${lead.sqft}` : null, lead.lease ? `Lease: ${lead.lease}` : null,
     lead.rent ? `Rent clock: ${lead.rent}` : null, lead.prevUse ? `Previous use: ${lead.prevUse}` : null,
-    lead.concept ? `Concept: ${lead.concept}` : null, lead.drawings ? `Drawings: ${lead.drawings}` : null,
+    lead.concept ? `Concept: ${lead.concept}` : null, lead.use ? `Use: ${lead.use}` : null,
+    lead.headcount ? `Headcount: ${lead.headcount}` : null, lead.stations ? `Stations: ${lead.stations}` : null,
+    lead.services ? `Services: ${lead.services}` : null, lead.racking ? `Racking: ${lead.racking}` : null,
+    lead.mezzanine ? `Mezzanine: ${lead.mezzanine}` : null, lead.seats ? `Seats: ${lead.seats}` : null,
+    lead.drawings ? `Drawings: ${lead.drawings}` : null,
     lead.gcIntro === "yes" ? `Wants a GC introduction: yes` : null,
     lead.details ? `Details: ${lead.details}` : null,
     `Came from: ${lead.source}${lead.leadSource ? ` / ${lead.leadSource}` : ""}${lead.gclid ? ` / gclid ${lead.gclid}` : ""}`,
@@ -153,7 +160,9 @@ async function notifyKris(lead) {
     ["Industry", lead.industry], ["Name", lead.name], ["Role", lead.role], ["Business", lead.business],
     ["Phone", lead.phone], ["Email", lead.email], ["Space", [lead.address, lead.city, lead.zip].filter(Boolean).join(", ")],
     ["Size", lead.sqft], ["Lease", lead.lease], ["Rent clock", lead.rent], ["Previous use", lead.prevUse],
-    ["Concept", lead.concept], ["Drawings", lead.drawings], ["GC intro", lead.gcIntro === "yes" ? "Yes" : ""],
+    ["Concept", lead.concept], ["Use", lead.use], ["Headcount", lead.headcount], ["Stations", lead.stations], ["Services", lead.services],
+    ["Racking", lead.racking], ["Mezzanine", lead.mezzanine], ["Seats", lead.seats],
+    ["Drawings", lead.drawings], ["GC intro", lead.gcIntro === "yes" ? "Yes" : ""],
     ["Details", lead.details], ["Came from", [lead.source, lead.leadSource].filter(Boolean).join(" / ")],
   ].filter(([, v]) => v).map(([k, v]) => `<tr><td style="padding:6px 14px 6px 0;color:#5B5B57;vertical-align:top">${k}</td><td style="padding:6px 0"><b>${esc(v)}</b></td></tr>`).join("");
   const hot = lead.rent === "Already paying rent" || lead.rent === "Within 30 days";

@@ -143,7 +143,7 @@
       var ol = done.querySelector('.path ol');
       var title = done.querySelector('.path h3');
       if (ind && ol) {
-        var ctx = { city: data.city, portal: T.portalFor(data.city, data.jurisdiction), prevUse: data.prevUse, sqft: data.sqft, lease: data.lease };
+        var ctx = Object.assign({}, data, { portal: T.portalFor(data.city, data.jurisdiction) });
         if (title) title.textContent = 'Your ' + ind.title + ' in ' + data.city;
         ol.innerHTML = '';
         ind.steps(ctx).forEach(function (s) {
