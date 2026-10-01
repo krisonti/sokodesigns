@@ -9,7 +9,7 @@
 .ti-hero{position:relative; padding:0; background:var(--ti-night); color:#fff; overflow:hidden; display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.1fr); min-height:min(86vh,840px)}
 .ti-hero__copy{position:relative; z-index:2; display:flex; flex-direction:column; justify-content:center; padding:clamp(52px,7vw,96px) clamp(24px,4vw,56px) clamp(56px,6vw,80px) max(26px,calc((100vw - var(--maxw))/2 + 26px))}
 .ti-hero .eyebrow{color:var(--ti-gold); opacity:0; animation:ti-up .8s .05s cubic-bezier(.2,.7,.2,1) forwards}
-.ti-h1{font-size:clamp(36px,4.4vw,60px); line-height:1.04; margin-top:16px; letter-spacing:-.01em; color:#fff}
+.ti-h1{font-size:clamp(34px,3.9vw,54px); line-height:1.06; margin-top:16px; letter-spacing:-.01em; color:#fff}
 .ti-h1 .l{display:block; opacity:0; transform:translateY(28px); animation:ti-up .95s cubic-bezier(.2,.7,.2,1) forwards}
 .ti-h1 .l:nth-child(1){animation-delay:.15s} .ti-h1 .l:nth-child(2){animation-delay:.38s} .ti-h1 .l:nth-child(3){animation-delay:.6s}
 .ti-h1 .l.gold{color:var(--ti-gold); font-style:italic; font-weight:500}
