@@ -1,0 +1,1119 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>New Facility Questionnaire — SOKO Designs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1A1A1A; --ink-soft:#5B5B57; --muted:#8A877F;
+  --teal:#4A7C7E; --teal-deep:#3A6365; --teal-tint:#EAF0F0;
+  --cream:#F4F3F0; --sand:#EDE7DB; --white:#FFFFFF; --clay:#B67243;
+  --line:#E3DED3; --line-strong:#CFC8BA;
+  --ok:#2F7D4F; --ok-tint:#E7F3EB;
+  --bad:#B3261E; --bad-tint:#FBEAE8;
+  --warn:#8A5A12; --warn-tint:#FBF1DE;
+  --radius:8px; --tray-h:0px; --top-h:0px;
+}
+*{box-sizing:border-box; margin:0; padding:0}
+html{-webkit-text-size-adjust:100%; overflow-x:clip}
+body{background:var(--cream); color:var(--ink); font:16px/1.55 "Inter",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif; -webkit-font-smoothing:antialiased; padding-bottom:calc(var(--tray-h) + 24px)}
+h1,h2{font-family:"Cormorant Garamond",Georgia,serif; font-weight:600; line-height:1.1}
+button,input,textarea{font:inherit; color:inherit}
+a{color:var(--teal-deep)}
+.vh{position:absolute!important; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0}
+[hidden]{display:none!important}
+
+/* ---------- header + progress ---------- */
+.top{position:sticky; top:0; z-index:20; background:var(--white); border-bottom:1px solid var(--line)}
+.top-row{max-width:1080px; margin:0 auto; padding:10px 16px; display:flex; align-items:center; gap:12px}
+.brand{font-size:12px; font-weight:600; letter-spacing:.18em; text-transform:uppercase; white-space:nowrap}
+.brand small{display:block; font-size:11px; letter-spacing:.04em; text-transform:none; color:var(--ink-soft); font-weight:500}
+.top-actions{margin-left:auto; display:flex; align-items:center; gap:10px; min-width:0}
+.saved{font-size:12px; color:var(--muted); white-space:nowrap; transition:color .3s; min-width:0; overflow:hidden; text-overflow:ellipsis}
+.saved.flash{color:var(--ok)}
+.saved.off{color:var(--warn)}
+.prog{max-width:1080px; margin:0 auto; padding:0 16px 10px}
+.prog-txt{font-size:13px; color:var(--ink-soft); margin-bottom:6px}
+.prog-txt b{color:var(--ink); font-weight:600}
+.segs{list-style:none; display:flex; gap:4px}
+.segs li{flex:1; min-width:0}
+.seg{display:block; width:100%; background:none; border:0; cursor:pointer; padding:6px 0 0; text-align:left}
+.seg .bar{display:block; height:5px; border-radius:3px; background:var(--line)}
+.seg.touched .bar{background:var(--teal)}
+.seg.current .bar{background:var(--ink)}
+.seg .lbl{display:none; font-size:11px; color:var(--muted); margin-top:5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.seg.current .lbl{color:var(--ink); font-weight:600}
+.seg:focus-visible{outline:2px solid var(--teal); outline-offset:2px; border-radius:3px}
+@media (min-width:760px){ .seg .lbl{display:block} }
+
+/* ---------- layout ---------- */
+.wrap{max-width:680px; margin:0 auto; padding:20px 16px 0}
+@media (min-width:1024px){
+  .wrap{max-width:1080px; display:grid; grid-template-columns:minmax(0,1fr) 320px; gap:36px; align-items:start; padding-top:28px}
+  body{padding-bottom:40px}
+}
+
+/* ---------- buttons ---------- */
+.btn{display:inline-flex; align-items:center; justify-content:center; gap:8px; min-height:48px; padding:12px 20px; border-radius:6px; border:1px solid var(--ink); background:var(--ink); color:var(--white); font-weight:600; font-size:15px; cursor:pointer; text-decoration:none; transition:background .15s, transform .1s}
+.btn:hover{background:#000}
+.btn:active{transform:translateY(1px)}
+.btn.ghost{background:transparent; color:var(--ink); border-color:var(--line-strong)}
+.btn.ghost:hover{background:var(--white)}
+.btn.teal{background:var(--teal); border-color:var(--teal)}
+.btn.teal:hover{background:var(--teal-deep)}
+.btn.sm{min-height:36px; padding:6px 12px; font-size:13px; white-space:nowrap}
+@media (max-width:420px){ .top .btn.sm{font-size:12px; padding:6px 9px} .brand small{font-size:10.5px} }
+.btn:disabled{opacity:.55; cursor:default}
+.btn:focus-visible{outline:3px solid var(--teal); outline-offset:2px}
+.linkbtn{background:none; border:0; padding:0; color:var(--teal-deep); text-decoration:underline; cursor:pointer; font-size:inherit}
+
+/* ---------- notices ---------- */
+.notice{border-radius:var(--radius); padding:12px 14px; font-size:14px; margin-bottom:16px; border:1px solid}
+.notice.info{background:var(--teal-tint); border-color:#CFE0E0}
+.notice.warn{background:var(--warn-tint); border-color:#EED9AE; color:#5C3D0C}
+.notice.bad{background:var(--bad-tint); border-color:#F0C9C4; color:#7A1A14}
+.notice b{font-weight:600}
+.notice ul{margin:6px 0 0 18px}
+
+/* ---------- sections + questions ---------- */
+.sec h1{font-size:34px; margin-bottom:6px}
+.sec .intro{color:var(--ink-soft); margin-bottom:22px}
+.q{background:var(--white); border:1px solid var(--line); border-radius:var(--radius); padding:16px; margin-bottom:12px}
+.q > label, .q legend, .q .qlabel{display:block; font-weight:600; font-size:15px; margin-bottom:8px; padding:0}
+.q fieldset{border:0; min-width:0}
+.req{font-size:11px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:var(--clay); margin-left:6px}
+.help{font-size:13px; color:var(--ink-soft); margin:-4px 0 10px}
+.inrow{display:flex; gap:8px; align-items:flex-start}
+.inrow > input, .inrow > textarea{flex:1; min-width:0}
+input[type=text],input[type=email],input[type=tel],textarea{width:100%; font-size:16px; padding:12px 13px; border:1px solid var(--line-strong); border-radius:6px; background:var(--white); appearance:none}
+textarea{min-height:96px; resize:vertical}
+input:focus,textarea:focus{outline:none; border-color:var(--teal); box-shadow:0 0 0 3px rgba(74,124,126,.18)}
+.sure{flex:none; min-height:48px; padding:0 12px; border-radius:6px; border:1px dashed var(--line-strong); background:var(--cream); font-size:13px; color:var(--ink-soft); cursor:pointer; white-space:nowrap}
+.sure[aria-pressed=true]{border-style:solid; border-color:var(--teal); background:var(--teal-tint); color:var(--teal-deep); font-weight:600}
+.q.invalid{border-color:var(--bad)}
+.err{color:var(--bad); font-size:13px; margin-top:6px}
+.opts{display:flex; flex-wrap:wrap; gap:8px}
+.opt{position:relative}
+.opt input{position:absolute; opacity:0; width:1px; height:1px}
+.opt span{display:inline-flex; align-items:center; min-height:44px; padding:9px 14px; border:1px solid var(--line-strong); border-radius:22px; font-size:14px; cursor:pointer; background:var(--white); user-select:none; transition:background .12s, border-color .12s}
+.opt input:checked + span{background:var(--ink); border-color:var(--ink); color:var(--white)}
+.opt input:focus-visible + span{outline:3px solid var(--teal); outline-offset:2px}
+.opt.sure-opt span{border-style:dashed}
+.opt.sure-opt input:checked + span{background:var(--teal); border-color:var(--teal); border-style:solid}
+
+/* ---------- uploads ---------- */
+.drop{border:2px dashed var(--line-strong); border-radius:var(--radius); padding:16px; text-align:center; background:var(--cream); transition:background .15s, border-color .15s}
+.drop.over{border-color:var(--teal); background:var(--teal-tint)}
+.drop .btns{display:flex; flex-wrap:wrap; gap:8px; justify-content:center}
+.drop .btns label{cursor:pointer}
+.drop .fine{font-size:12px; color:var(--muted); margin-top:10px}
+.flist{list-style:none; margin-top:10px; display:grid; gap:8px}
+.fi{display:grid; grid-template-columns:28px minmax(0,1fr) auto; gap:10px; align-items:center; padding:10px 10px 10px 12px; border:1px solid var(--line); border-radius:6px; background:var(--white)}
+.fi .nm{font-size:14px; font-weight:500; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.fi .sub{font-size:12px; color:var(--ink-soft); display:flex; flex-wrap:wrap; gap:0 6px}
+.fi .sub .tag{color:var(--muted)}
+.fi .msg{font-size:12px; margin-top:2px}
+.fi .bar{height:4px; border-radius:2px; background:var(--line); margin-top:6px; overflow:hidden}
+.fi .bar i{display:block; height:100%; width:0; background:var(--teal); transition:width .2s linear}
+.fi .acts{display:flex; gap:6px; align-items:center}
+.fi .x{width:36px; height:36px; border-radius:50%; border:1px solid var(--line); background:var(--white); cursor:pointer; font-size:18px; line-height:1; color:var(--ink-soft)}
+.fi .x:hover{border-color:var(--ink-soft); color:var(--ink)}
+.ico{width:26px; height:26px; border-radius:50%; display:flex; align-items:center; justify-content:center; border:2px solid var(--line-strong)}
+.ico svg{width:15px; height:15px}
+.s-done{border-color:#CBE3D3}
+.s-done .ico{background:var(--ok); border-color:var(--ok); color:#fff}
+.s-done .msg{color:var(--ok)}
+.s-uploading .ico{border-color:var(--teal-tint); border-top-color:var(--teal); animation:spin .9s linear infinite}
+.s-failed,.s-rejected,.s-interrupted{border-color:#F0C9C4; background:#FFFBFA}
+.s-failed .ico,.s-rejected .ico,.s-interrupted .ico{background:var(--bad); border-color:var(--bad); color:#fff}
+.s-failed .msg,.s-rejected .msg,.s-interrupted .msg{color:var(--bad)}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){ .s-uploading .ico{animation:none} .fi .bar i{transition:none} }
+
+/* ---------- follow-up questions ---------- */
+.q.follow{margin-left:14px; border-left:3px solid var(--teal); margin-top:-6px}
+
+/* ---------- equipment table (one card per row) ---------- */
+.eqhelp{margin:0 0 14px}
+.eqrow{background:var(--white); border:1px solid var(--line); border-radius:var(--radius); padding:12px 14px 14px; margin-bottom:12px}
+.eqrow-h{display:flex; align-items:center; gap:10px; margin-bottom:10px}
+.eqnum{flex:none; width:28px; height:28px; border-radius:50%; background:var(--sand); font-size:13px; font-weight:600; display:flex; align-items:center; justify-content:center}
+.eqrow-h .eqname{flex:1; min-width:0; font-weight:600; font-size:17px; padding:10px 12px}
+.eqrow-h .x{flex:none; width:36px; height:36px; border-radius:50%; border:1px solid var(--line); background:var(--white); cursor:pointer; font-size:18px; color:var(--ink-soft)}
+.eqgrid{display:grid; grid-template-columns:1fr 1fr; gap:10px 10px}
+.eqgrid .cell{display:block; min-width:0; border:0}
+.eqgrid .cell:first-child, .eqgrid .cell.wide, .eqgrid .cell:last-child{grid-column:1 / -1}
+.eqgrid .cell > span, .eqgrid legend, .cell-l{display:block; font-size:13px; font-weight:500; color:var(--ink-soft); margin-bottom:5px; padding:0}
+.eqgrid .cell small{font-weight:400; color:var(--muted)}
+.eqgrid input[type=text]{padding:10px 12px}
+.eqgrid .opt span{min-height:40px; padding:7px 13px}
+.eqspec{margin-top:12px}
+.drop.sm{padding:10px; text-align:left}
+.drop.sm .btns{justify-content:flex-start}
+.addrow{width:100%; border-style:dashed; margin-bottom:16px}
+@media (min-width:640px){
+  .eqgrid{grid-template-columns:repeat(3, 1fr)}
+  .eqgrid .cell:last-child{grid-column:auto}
+}
+
+/* ---------- step nav ---------- */
+.nav{display:flex; gap:10px; justify-content:space-between; margin:22px 0 8px}
+.nav .btn{flex:1}
+.nav .btn.ghost{flex:0 0 auto}
+
+/* ---------- running file list (tray) ---------- */
+#tray{position:fixed; left:0; right:0; bottom:0; z-index:15; background:var(--white); border-top:1px solid var(--line-strong); box-shadow:0 -6px 20px rgba(0,0,0,.06); padding-bottom:env(safe-area-inset-bottom)}
+.tray-head{display:flex; width:100%; align-items:center; gap:10px; padding:11px 16px; background:none; border:0; cursor:pointer; text-align:left}
+.tray-head .ttl{font-weight:600; font-size:14px; white-space:nowrap}
+.tray-head .counts{font-size:12px; color:var(--ink-soft); flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.tray-head .chev{transition:transform .2s; color:var(--muted)}
+#tray.collapsed .chev{transform:rotate(180deg)}
+.tray-body{max-height:30vh; overflow-y:auto; padding:0 16px 12px}
+#tray.collapsed .tray-body{display:none}
+.tray-body .flist{margin-top:0}
+.tray-body .fi{padding:8px 8px 8px 10px}
+.tray-empty{font-size:13px; color:var(--muted); padding:2px 0 4px}
+@media (min-width:1024px){
+  #tray{position:sticky; top:calc(var(--top-h) + 24px); left:auto; right:auto; bottom:auto; border:1px solid var(--line); border-radius:var(--radius); box-shadow:none; padding-bottom:0}
+  .tray-head{cursor:default; padding:14px 16px 10px}
+  .tray-head .chev{display:none}
+  #tray.collapsed .tray-body{display:block}
+  .tray-body{max-height:calc(100vh - var(--top-h) - 120px)}
+}
+
+/* ---------- review + confirmation ---------- */
+.sum{background:var(--white); border:1px solid var(--line); border-radius:var(--radius); margin-bottom:12px; overflow:hidden}
+.sum-h{display:flex; align-items:center; justify-content:space-between; padding:12px 16px; border-bottom:1px solid var(--line); background:#FBFAF8}
+.sum-h h2{font-size:22px}
+.sum dl{padding:4px 16px 10px}
+.sum .row{padding:8px 0; border-bottom:1px solid var(--line)}
+.sum .row:last-child{border-bottom:0}
+.sum dt{font-size:13px; color:var(--ink-soft)}
+.sum dd{font-size:15px; white-space:pre-wrap; overflow-wrap:anywhere}
+.sum dd.none{color:var(--muted); font-style:italic}
+.sum .flist{padding:0 16px 14px}
+.submit-box{background:var(--white); border:1px solid var(--line); border-radius:var(--radius); padding:16px; margin-top:18px}
+.submit-box .btn{width:100%}
+.submit-box .small{font-size:13px; color:var(--ink-soft); margin-top:10px; text-align:center}
+.done-hero{text-align:center; padding:12px 0 22px}
+.big-check{width:64px; height:64px; border-radius:50%; background:var(--ok); color:#fff; display:flex; align-items:center; justify-content:center; margin:0 auto 14px}
+.big-check svg{width:32px; height:32px}
+.done-hero h1{font-size:38px; margin-bottom:8px}
+.done-hero p{color:var(--ink-soft)}
+.done-actions{display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin-top:16px}
+.ref{font-variant-numeric:tabular-nums; letter-spacing:.04em}
+
+/* ---------- print ---------- */
+#print-sheet{display:none}
+@media print{
+  @page{margin:14mm}
+  body{background:#fff; padding:0; font-size:10.5pt; color:#000}
+  .top,.wrap,#tray{display:none!important}
+  #print-sheet{display:block!important}
+  #print-sheet h1{font-size:22pt; margin-bottom:2pt}
+  #print-sheet .meta{font-size:9.5pt; color:#444; margin-bottom:14pt}
+  #print-sheet h2{font-family:"Inter",Arial,sans-serif; font-size:11pt; text-transform:uppercase; letter-spacing:.08em; border-bottom:1.5pt solid #000; padding-bottom:3pt; margin:14pt 0 4pt; break-after:avoid}
+  #print-sheet table{width:100%; border-collapse:collapse}
+  #print-sheet td,#print-sheet th{text-align:left; vertical-align:top; padding:4pt 6pt 4pt 0; border-bottom:.5pt solid #ccc; break-inside:avoid}
+  #print-sheet th{font-weight:600; width:42%; color:#333}
+  #print-sheet td{white-space:pre-wrap}
+  #print-sheet .na{color:#888; font-style:italic}
+  #print-sheet .warn{color:#9a1c14; font-weight:600}
+}
+</style>
+</head>
+<body>
+
+<header class="top" id="top">
+  <div class="top-row">
+    <div class="brand">SOKO Designs<small>New facility questionnaire</small></div>
+    <div class="top-actions">
+      <span class="saved" id="saved" aria-live="polite"></span>
+      <button type="button" class="btn ghost sm" data-print>Print / Save as PDF</button>
+    </div>
+  </div>
+  <div class="prog" id="prog"></div>
+</header>
+
+<div class="wrap">
+  <main id="main">
+    <div id="notices"></div>
+    <form id="form" novalidate autocomplete="on"></form>
+    <section id="done" hidden></section>
+  </main>
+
+  <aside id="tray" aria-label="Your uploaded files">
+    <button type="button" class="tray-head" id="tray-head" aria-expanded="true" aria-controls="tray-body">
+      <span class="ttl">Your files</span>
+      <span class="counts" id="tray-counts"></span>
+      <svg class="chev" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 10l4-4 4 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+    <div class="tray-body" id="tray-body" aria-live="polite"></div>
+  </aside>
+</div>
+
+<div id="print-sheet"></div>
+
+<script>
+'use strict';
+/* =====================================================================
+   SETTINGS — the only lines you need to edit
+   ===================================================================== */
+
+// 1) GOOGLE APPS SCRIPT WEB APP URL
+//    Apps Script → Deploy → New deployment → Web app → copy the URL ending in /exec
+//    Until this is filled in, the page runs in PREVIEW mode (uploads are simulated).
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz55fDwHsJ-BBqLcCYwtC-ofFvWtSG439PcTpOp6u4kBcR99aOzfJd3bpQCchsYZ4RaGQ/exec';
+
+// 2) GOOGLE DRIVE PARENT FOLDER ID
+//    Open the folder in Google Drive. The ID is the part of the address after /folders/
+//    Each submission gets its own subfolder inside it.
+//    This MUST match PARENT_FOLDER_ID at the top of the Apps Script.
+const PARENT_FOLDER_ID = '1bcM6-d2yekgR9R40J71mOfz_ydUM-KKv';
+
+// Shown to the client as the backup if a file can't upload.
+const BACKUP_EMAIL = 'kris@sokodesigns.com';
+
+/* =====================================================================
+   QUESTIONS — every answer is optional except name + email.
+   Types: text, email, tel, textarea, radio, check, upload, equipment
+   showIf:{ f:'<question id>', v:'<answer>' } hides a follow-up until that answer is picked.
+   ===================================================================== */
+const SECTIONS = [
+  { id:'contact', title:'Your information', intro:'Who should we talk to about this project?', fields:[
+    { id:'name', label:'Your name', type:'text', required:true, autocomplete:'name', noSure:true },
+    { id:'company', label:'Company name', type:'text', autocomplete:'organization', noSure:true },
+    { id:'email', label:'Email', type:'email', required:true, autocomplete:'email', noSure:true },
+    { id:'phone', label:'Phone', type:'tel', autocomplete:'tel', noSure:true },
+    { id:'best_time', label:'Best time to reach you', type:'check', options:['Morning','Midday','Afternoon','Evening','Any time','Not sure'] },
+  ]},
+  { id:'equipment', title:'Your equipment', intro:'List every piece of equipment going into the new facility. Leave blank anything you don’t know.', fields:[
+    { id:'equipment', type:'equipment', label:'Equipment',
+      help:'For each one, attach the spec sheet if you have it. That’s usually a PDF from the manufacturer. A photo of the data plate on the machine works just as well.',
+      prefill:['Corn oven','Corn grinder','Mixer','Cooling conveyor','Gas water heater','Exhaust hood','Air compressor'] },
+    { id:'eq_other', label:'Is there anything else going in that isn’t on this list?', type:'textarea' },
+  ]},
+  { id:'cooking', title:'How you cook', fields:[
+    { id:'process', label:'Walk us through what happens on the production line, from raw material to finished product.', type:'textarea' },
+    { id:'methods', label:'Which of these do you use? (check all)', type:'check', options:['Comal or griddle','Fryer','Open flame','Fully enclosed oven only','Steamer','Other','Not sure'] },
+    { id:'methods_other', label:'What other cooking method?', type:'text', showIf:{ f:'methods', v:'Other' } },
+    { id:'smoke', label:'Does any of your cooking produce grease, smoke, or visible vapor?', type:'radio', options:['Yes','No','Not sure'],
+      help:'This is what determines the type of exhaust hood the city requires. It’s one of the largest cost items on the project, so a detailed answer here saves you money.' },
+    { id:'smoke_detail', label:'Which equipment, and what do you see coming off it?', type:'textarea', showIf:{ f:'smoke', v:'Yes' } },
+  ]},
+  { id:'grinder', title:'Corn grinder', intro:'You’ve told us you purchase masa flour.', fields:[
+    { id:'grinder_use', label:'What do you use the corn grinder for?', type:'textarea' },
+    { id:'grinder_moving', label:'Is the grinder coming to the Phoenix location?', type:'radio', options:['Yes','No','Not sure'] },
+  ]},
+  { id:'cold', title:'Refrigeration, packaging & storage', fields:[
+    { id:'walkin', label:'Will you have a walk-in cooler or freezer?', type:'radio', options:['Yes','No','Not sure'] },
+    { id:'walkin_detail', label:'How many, and roughly what size?', type:'text', showIf:{ f:'walkin', v:'Yes' } },
+    { id:'reachins', label:'How many reach-in refrigerators or freezers?', type:'text', inputmode:'numeric' },
+    { id:'packaging', label:'List any equipment that bags, seals, labels or wraps your product.', type:'textarea' },
+    { id:'storage', label:'How is your flour and masa stored?', type:'radio', options:['Bags on pallets','Bulk bins','Other','Not sure'] },
+    { id:'storage_other', label:'How else is it stored?', type:'text', showIf:{ f:'storage', v:'Other' } },
+    { id:'storage_qty', label:'How much do you keep on hand at one time?', type:'text', placeholder:'e.g. 40 bags, 2 pallets' },
+  ]},
+  { id:'cleaning', title:'Cleaning', fields:[
+    { id:'clean_method', label:'How is the equipment cleaned? (check all)', type:'check', options:['Hosed down','Wiped down','Taken apart and washed in sinks','Other','Not sure'] },
+    { id:'clean_other', label:'How else is it cleaned?', type:'text', showIf:{ f:'clean_method', v:'Other' } },
+    { id:'wash_where', label:'Where does the washing happen?', type:'textarea' },
+    { id:'hot_water', label:'Which stations need hot water?', type:'textarea' },
+  ]},
+  { id:'people', title:'People & vehicles', fields:[
+    { id:'floor_staff', label:'How many employees work on the floor during a shift?', type:'text', inputmode:'numeric' },
+    { id:'shifts', label:'How many shifts per day, and what hours?', type:'text', placeholder:'e.g. 2 shifts, 4am–12pm and 12pm–8pm' },
+    { id:'office_staff', label:'How many office staff?', type:'text', inputmode:'numeric' },
+    { id:'vehicles', label:'Will delivery vehicles be parked on site?', type:'radio', options:['Yes','No','Not sure'] },
+    { id:'vehicles_detail', label:'How many, and what size?', type:'text', placeholder:'e.g. 2 box trucks, 1 cargo van', showIf:{ f:'vehicles', v:'Yes' } },
+  ]},
+  { id:'tempe', title:'Your Tempe facility', intro:'Your existing plans save us time and save you money. Anything you can send helps.', fields:[
+    { id:'tempe_plans', label:'Do you have the approved permit plans from your Tempe build-out?', type:'radio', options:['Yes','No','Not sure'] },
+    { id:'up_plans', short:'Tempe plans', label:'Attach your Tempe permit plans', type:'upload', camera:true, help:'Add as many files as you have. The mechanical and plumbing sheets are the most useful.' },
+    { id:'hood_type', label:'What type of exhaust hood is installed in Tempe?', type:'radio', options:['Type I — handles grease','Type II — steam and heat only','Not sure'],
+      help:'If you’re not sure, a photo of the hood and its label (in the photos below) is perfect.' },
+    { id:'suppression', label:'Does the Tempe hood have a built-in fire suppression system?', type:'radio', options:['Yes','No','Not sure'] },
+    { id:'grease_trap', label:'What size is your grease trap in Tempe? (gallons)', type:'text', placeholder:'“Not sure” is fine' },
+    { id:'up_tempe_photos', short:'Tempe photos', label:'Attach photos of your Tempe setup', type:'upload', camera:true, photos:true, help:'The equipment, the hood (and its label), and the production line.' },
+  ]},
+  { id:'final', title:'Before you submit', fields:[
+    { id:'notes', label:'Is there anything about your operation you think we should know that we haven’t asked about?', type:'textarea', noSure:true },
+  ]},
+];
+
+/* =====================================================================
+   Internals — no need to edit below this line
+   ===================================================================== */
+const MAX_BYTES = 25 * 1024 * 1024;
+const CHUNK = 2 * 1024 * 1024;            // must stay a multiple of 256 KB (Google Drive rule)
+const OK_EXT = ['pdf','jpg','jpeg','png','heic','heif','doc','docx','xls','xlsx'];
+const PHOTO_EXT = ['jpg','jpeg','png','heic','heif'];
+const MIME = { pdf:'application/pdf', jpg:'image/jpeg', jpeg:'image/jpeg', png:'image/png', heic:'image/heic', heif:'image/heif',
+  doc:'application/msword', docx:'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  xls:'application/vnd.ms-excel', xlsx:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' };
+const ACCEPT_DOCS = OK_EXT.map(e => '.' + e).join(',') + ',' + [...new Set(Object.values(MIME))].join(',');
+const ACCEPT_PHOTOS = PHOTO_EXT.map(e => '.' + e).join(',') + ',image/jpeg,image/png,image/heic,image/heif';
+const STORE_KEY = 'soko-facility-questionnaire-v1';
+const PREVIEW = !/^https:\/\/script\.google(usercontent)?\.com\//.test(APPS_SCRIPT_URL);
+const FAIL_TEST = PREVIEW ? ((location.search.match(/[?&]fail=(all|1)/) || [])[1] || '') : '';   // preview only: ?fail=1 flaky wifi, ?fail=all dead wifi
+const STEPS = SECTIONS.map(s => s.title).concat('Review');
+const FIELDS = SECTIONS.flatMap(s => s.fields);
+const EQ_FIELD = FIELDS.find(f => f.type === 'equipment');
+// Each equipment row has its own spec-sheet upload field, "eqrow_<row key>".
+const eqRows = () => (EQ_FIELD && Array.isArray(S.answers[EQ_FIELD.id])) ? S.answers[EQ_FIELD.id] : [];
+function fieldById(id){
+  if (String(id).indexOf('eqrow_') === 0){
+    const row = eqRows().find(r => 'eqrow_' + r.key === id);
+    return { id, type:'upload', camera:true, short:'Spec sheet' + (row && row.name ? ' - ' + row.name : '') };
+  }
+  return FIELDS.find(f => f.id === id);
+}
+const uploadFieldIds = () => FIELDS.filter(q => q.type === 'upload').map(q => q.id).concat(eqRows().map(r => 'eqrow_' + r.key));
+function isShown(q){
+  if (!q.showIf) return true;
+  const v = S.answers[q.showIf.f];
+  return Array.isArray(v) ? v.includes(q.showIf.v) : v === q.showIf.v;
+}
+
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const extOf = n => (String(n).split('.').pop() || '').toLowerCase();
+function newId(n = 6){
+  const a = 'abcdefghjkmnpqrstuvwxyz23456789', r = new Uint32Array(n);
+  try { crypto.getRandomValues(r) } catch (e) { for (let i = 0; i < n; i++) r[i] = Math.random() * 1e9 }
+  return Array.from(r, x => a[x % a.length]).join('');
+}
+function fmtSize(b){
+  if (b < 1024) return b + ' B';
+  if (b < 1024 * 1024) return Math.round(b / 1024) + ' KB';
+  return (b / 1048576).toFixed(b < 10485760 ? 1 : 0) + ' MB';
+}
+const ICON = {
+  check:'<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  bang:'<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3.5v5.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><circle cx="8" cy="12.3" r="1.4" fill="currentColor"/></svg>',
+};
+
+/* ---------- storage (always optional) ---------- */
+const store = {
+  ok: (() => { try { localStorage.setItem('__soko_t', '1'); localStorage.removeItem('__soko_t'); return true } catch (e) { return false } })(),
+  get(){ try { return JSON.parse(localStorage.getItem(STORE_KEY) || 'null') } catch (e) { return null } },
+  set(v){ try { localStorage.setItem(STORE_KEY, JSON.stringify(v)); return true } catch (e) { return false } },
+  clear(){ try { localStorage.removeItem(STORE_KEY) } catch (e) {} },
+};
+
+/* ---------- state ---------- */
+const S = { answers:{}, sid:newId(), folderId:'', folderUrl:'', files:[], step:0, submitted:false, submittedAt:'', failedAtSubmit:[] };
+let restored = false;
+(function restore(){
+  const d = store.get();
+  if (!d || typeof d !== 'object') return;
+  for (const k of Object.keys(S)) if (k in d) S[k] = d[k];
+  if (!S.answers || typeof S.answers !== 'object') S.answers = {};
+  if (!Array.isArray(S.files)) S.files = [];
+  // The browser can't keep the actual file between visits. Anything not finished must be re-picked.
+  S.files = S.files.filter(f => f && f.name && f.key).map(f =>
+    f.status === 'done' || f.status === 'rejected' ? f : Object.assign({}, f, { status:'interrupted', error:'' }));
+  S.step = Math.min(Math.max(0, S.step | 0), STEPS.length - 1);
+  restored = Object.keys(S.answers).length > 0 || S.files.length > 0;
+})();
+const EQ_COLS = ['name','model','source','volts','phase','amps','btu'];
+const newEqRow = name => ({ key:newId(5), name:name || '', model:'', source:'', volts:'', phase:'', amps:'', btu:'' });
+if (EQ_FIELD && !Array.isArray(S.answers[EQ_FIELD.id])) S.answers[EQ_FIELD.id] = (EQ_FIELD.prefill || []).map(newEqRow);
+// Only greet as "welcome back" if they actually entered something (not just the pre-filled equipment names).
+restored = restored && SECTIONS.some((_, i) => touched(i));
+
+let saveTimer, savedTimer;
+function save(now){
+  clearTimeout(saveTimer);
+  const go = () => {
+    const ok = store.set({
+      answers:S.answers, sid:S.sid, folderId:S.folderId, folderUrl:S.folderUrl, step:S.step,
+      submitted:S.submitted, submittedAt:S.submittedAt, failedAtSubmit:S.failedAtSubmit,
+      files:S.files.map(f => ({ key:f.key, field:f.field, name:f.name, size:f.size, type:f.type, status:f.status, fileId:f.fileId || '', session:f.session || '', error:f.status === 'rejected' ? f.error : '', brief:f.brief || '' })),
+    });
+    const el = $('#saved');
+    if (!ok){ el.textContent = 'Autosave off'; el.className = 'saved off'; return }
+    el.textContent = 'Saved ✓'; el.className = 'saved flash';
+    clearTimeout(savedTimer); savedTimer = setTimeout(() => { el.className = 'saved'; el.textContent = 'Saved' }, 1400);
+  };
+  now ? go() : (saveTimer = setTimeout(go, 300));
+}
+
+/* ---------- server calls ---------- */
+async function api(payload){
+  if (PREVIEW) return mockApi(payload);
+  const ctrl = new AbortController();
+  const t = setTimeout(() => ctrl.abort(), 90000);
+  try {
+    // text/plain keeps this a "simple" request, so Apps Script needs no CORS preflight.
+    const res = await fetch(APPS_SCRIPT_URL, { method:'POST', redirect:'follow', signal:ctrl.signal,
+      headers:{ 'Content-Type':'text/plain;charset=utf-8' }, body:JSON.stringify(Object.assign({ parent:PARENT_FOLDER_ID }, payload)) });
+    let j;
+    try { j = await res.json() } catch (e) { throw new Error('The upload server sent back an unexpected reply.') }
+    if (!j.ok) throw new Error(j.error || 'The upload server reported an error.');
+    return j;
+  } finally { clearTimeout(t) }
+}
+async function apiRetry(payload, tries = 3){
+  for (let i = 1; ; i++){
+    try { return await api(payload) }
+    catch (e) { if (i >= tries || /SESSION_EXPIRED/.test(e.message)) throw e; await sleep(1500 * i) }
+  }
+}
+function friendly(e){
+  const m = String(e && e.message || e);
+  if (e && e.name === 'AbortError') return 'The connection timed out.';
+  if (/Failed to fetch|NetworkError|Load failed|network/i.test(m)) return 'Lost the connection.';
+  if (e && e.name === 'NotReadableError') return 'Couldn’t read the file. Choose it again.';
+  return m;
+}
+
+/* Preview mode: simulates the server so the page can be tried before Apps Script is set up. */
+const mock = { sessions:{} };
+async function mockApi(p){
+  await sleep(200 + Math.random() * 300);
+  if (FAIL_TEST && p.action === 'chunk' && (FAIL_TEST === 'all' || Math.random() < 0.35)) throw new TypeError('Failed to fetch');
+  switch (p.action){
+    case 'init': return { ok:true, folderId:'preview-folder', folderUrl:'#' };
+    case 'start': { const s = 'mock-' + newId(); mock.sessions[s] = { received:0, size:p.size }; return { ok:true, session:s } }
+    case 'status': {
+      const m = mock.sessions[p.session]; if (!m) throw new Error('SESSION_EXPIRED');
+      return m.received >= m.size ? { ok:true, done:true, fileId:'preview-' + newId(), received:m.size } : { ok:true, done:false, received:m.received };
+    }
+    case 'chunk': {
+      const m = mock.sessions[p.session]; if (!m) throw new Error('SESSION_EXPIRED');
+      await sleep(Math.min(3000, (p.end - p.offset) / 900));   // ~0.9 MB/s "warehouse wifi"
+      m.received = p.end;
+      return m.received >= m.size ? { ok:true, done:true, fileId:'preview-' + newId(), received:m.size } : { ok:true, done:false, received:m.received };
+    }
+    case 'list': return { ok:true, files:null };
+    case 'remove': return { ok:true };
+    case 'submit': return { ok:true, folderId:'preview-folder', folderUrl:'#' };
+  }
+  throw new Error('Unknown action');
+}
+
+/* ---------- uploads: one file at a time, in 2 MB chunks, resumable ---------- */
+let pumping = false, folderPromise = null, waiters = [];
+const isActive = f => f.status === 'queued' || f.status === 'uploading';
+
+function ensureFolder(){
+  if (S.folderId) return Promise.resolve();
+  if (!folderPromise){
+    folderPromise = apiRetry({ action:'init', sid:S.sid, name:S.answers.name || '', company:S.answers.company || '' })
+      .then(r => { S.folderId = r.folderId; S.folderUrl = r.folderUrl || ''; save(true) })
+      .finally(() => { folderPromise = null });
+  }
+  return folderPromise;
+}
+
+async function pump(){
+  if (pumping) return;
+  const f = S.files.find(x => x.status === 'queued');
+  if (!f){ waiters.splice(0).forEach(fn => fn()); return }
+  pumping = true;
+  try { await uploadOne(f) } finally { pumping = false; pump() }
+}
+
+async function uploadOne(f){
+  f.status = 'uploading'; f.error = ''; f.shown = f.shown || 0;
+  renderFiles();
+  try {
+    await ensureFolder();
+    for (let restarts = 0; ; restarts++){
+      try { await sendFile(f); break }
+      catch (e){
+        if (/SESSION_EXPIRED/.test(e.message) && restarts < 1 && !f.cancel){ f.session = ''; f.offset = 0; continue }
+        throw e;
+      }
+    }
+    if (f.cancel){ if (f.fileId) api({ action:'remove', folderId:S.folderId, fileId:f.fileId }).catch(() => {}); return }
+    f.status = 'done'; f.shown = 1;
+  } catch (e){
+    if (f.cancel) return;
+    f.status = 'failed'; f.error = friendly(e);
+  }
+  save(true); renderFiles();
+}
+
+async function sendFile(f){
+  const field = fieldById(f.field);
+  if (!f.session){
+    const r = await apiRetry({ action:'start', folderId:S.folderId, name:f.name, size:f.size, mime:f.type, field:(field && field.short) || '' });
+    f.session = r.session; f.offset = 0; save(true);
+  } else {
+    // Resuming: ask Drive how much it already has.
+    const r = await apiRetry({ action:'status', session:f.session, size:f.size });
+    if (r.done){ f.fileId = r.fileId; return }
+    f.offset = r.received || 0;
+  }
+  let fails = 0;
+  for (;;){
+    if (f.cancel) throw new Error('cancelled');
+    const end = Math.min(f.offset + CHUNK, f.size);
+    f.inflight = end;
+    let r;
+    try {
+      const data = await toB64(f.file.slice(f.offset, end));
+      r = await api({ action:'chunk', session:f.session, offset:f.offset, end, size:f.size, data });
+      fails = 0;
+    } catch (e){
+      if (/SESSION_EXPIRED/.test(e.message) || f.cancel) throw e;
+      if (++fails > 4) throw e;
+      f.retrying = true; paintProgress(f);
+      await sleep([0, 1500, 4000, 8000, 15000][fails]);
+      try {   // re-sync with Drive before trying again, so no bytes are lost or doubled
+        const s = await api({ action:'status', session:f.session, size:f.size });
+        if (s.done){ f.fileId = s.fileId; return }
+        f.offset = s.received || 0;
+      } catch (_) {}
+      continue;
+    }
+    f.retrying = false;
+    if (r.done){ f.fileId = r.fileId; f.offset = f.size; return }
+    f.offset = r.received; save();
+  }
+}
+
+function toB64(blob){
+  return new Promise((res, rej) => {
+    const rd = new FileReader();
+    rd.onload = () => { const s = String(rd.result); res(s.slice(s.indexOf(',') + 1)) };
+    rd.onerror = () => rej(rd.error || new Error('Couldn’t read the file.'));
+    rd.readAsDataURL(blob);
+  });
+}
+
+// Smooth the bar between 2 MB checkpoints so it never looks frozen.
+setInterval(() => {
+  for (const f of S.files){
+    if (f.status !== 'uploading' || !f.size) continue;
+    const real = (f.offset || 0) / f.size;
+    const cap = ((f.inflight || f.offset || 0) / f.size) * 0.97;
+    let shown = Math.max(f.shown || 0, real);
+    if (shown < cap) shown += (cap - shown) * 0.05;
+    f.shown = Math.min(shown, 1);
+    paintProgress(f);
+  }
+}, 200);
+
+function paintProgress(f){
+  const pct = Math.floor((f.shown || 0) * 100);
+  $$(`[data-k="${f.key}"]`).forEach(li => {
+    const bar = $('.bar i', li), msg = $('.msg', li);
+    if (bar) bar.style.width = pct + '%';
+    if (msg) msg.textContent = f.retrying ? `Weak signal, retrying… ${pct}%` : `Uploading ${pct}%  ·  ${fmtSize(Math.round(f.size * (f.shown || 0)))} of ${fmtSize(f.size)}`;
+  });
+}
+
+function addFiles(fieldId, list){
+  const field = fieldById(fieldId);
+  for (const file of Array.from(list || [])){
+    const name = file.name || 'photo.jpg', ext = extOf(name);
+    const base = { key:newId(8), field:fieldId, name, size:file.size, type:file.type || MIME[ext] || 'application/octet-stream' };
+    const allowed = field.photos ? PHOTO_EXT : OK_EXT;
+    if (!allowed.includes(ext)){
+      S.files.push(Object.assign(base, { status:'rejected', brief:'File type not accepted', error: field.photos ? 'Only photos (JPG, PNG, HEIC) here. Put documents under Anything else.' : 'This file type can’t be uploaded. Use PDF, JPG, PNG, HEIC, Word or Excel.' }));
+      continue;
+    }
+    if (file.size > MAX_BYTES){
+      S.files.push(Object.assign(base, { status:'rejected', brief:`Over 25 MB. Email it to ${BACKUP_EMAIL}`, error:`This file is ${fmtSize(file.size)}. The limit is 25 MB per file. Please email it to ${BACKUP_EMAIL}, or split it into smaller files.` }));
+      continue;
+    }
+    if (!file.size){ S.files.push(Object.assign(base, { status:'rejected', brief:'Empty file', error:'This file is empty.' })); continue }
+    // Re-picking a file whose upload was interrupted resumes it instead of starting over.
+    const prev = S.files.find(x => x.status === 'interrupted' && x.field === fieldId && x.name === name && x.size === file.size);
+    if (prev){ Object.assign(prev, { file, status:'queued', error:'' }); continue }
+    if (S.files.some(x => x.field === fieldId && x.name === name && x.size === file.size && (x.status === 'done' || isActive(x)))) continue;
+    S.files.push(Object.assign(base, { file, status:'queued', offset:0, shown:0 }));
+  }
+  if ($('#tray').classList.contains('collapsed')){ $('#tray').classList.remove('collapsed'); $('#tray-head').setAttribute('aria-expanded', 'true') }
+  save(); renderFiles(); pump(); updateProgress();
+}
+
+async function removeFile(key){
+  const f = S.files.find(x => x.key === key);
+  if (!f) return;
+  if (f.status === 'done'){
+    if (!confirm(`Remove “${f.name}”? It will be deleted from what you’ve sent us.`)) return;
+    f.removing = true; renderFiles();
+    try { await apiRetry({ action:'remove', folderId:S.folderId, fileId:f.fileId }) }
+    catch (e){ f.removing = false; renderFiles(); alert('Couldn’t remove that file right now (' + friendly(e) + '). Please try again.'); return }
+  }
+  if (f.status === 'uploading') f.cancel = true;
+  S.files = S.files.filter(x => x !== f);
+  save(); renderFiles(); updateProgress(); pump();
+}
+
+function retryFile(key){
+  const f = S.files.find(x => x.key === key);
+  if (!f || !f.file) return;
+  f.status = 'queued'; f.error = '';
+  renderFiles(); pump();
+}
+
+window.addEventListener('online', () => {
+  S.files.forEach(f => { if (f.status === 'failed' && f.file){ f.status = 'queued'; f.error = '' } });
+  renderFiles(); pump();
+});
+window.addEventListener('beforeunload', e => {
+  if (S.files.some(isActive)){ e.preventDefault(); e.returnValue = '' }
+});
+
+/* ---------- file rows ---------- */
+function fileRow(f, opts = {}){
+  const field = fieldById(f.field);
+  const label = (field && field.short) || '';
+  let msg = '', ico = '';
+  switch (f.status){
+    case 'done': msg = f.removing ? 'Removing…' : 'Uploaded'; ico = ICON.check; break;
+    case 'queued': msg = 'Waiting to upload…'; break;
+    case 'uploading': msg = 'Uploading…'; break;
+    case 'failed': msg = opts.compact ? 'Upload failed. Tap Retry.' : 'Upload failed: ' + (f.error || 'unknown error') + ' Tap Retry.'; ico = ICON.bang; break;
+    case 'rejected': msg = opts.compact ? (f.brief || 'Not uploaded') : f.error; ico = ICON.bang; break;
+    case 'interrupted': msg = opts.compact ? 'Interrupted. Add it again to finish.' : (f.error || 'Interrupted when you left. Choose this file again to finish it.'); ico = ICON.bang; break;
+  }
+  const canRemove = !opts.readonly && !f.removing;
+  return `<li class="fi s-${f.status}" data-k="${esc(f.key)}">
+    <span class="ico">${ico}</span>
+    <div>
+      <div class="nm" title="${esc(f.name)}">${esc(f.name)}</div>
+      <div class="sub"><span>${fmtSize(f.size)}</span>${opts.showField && label ? `<span class="tag">· ${esc(label)}</span>` : ''}</div>
+      <div class="msg">${esc(msg)}</div>
+      ${isActive(f) ? '<div class="bar"><i></i></div>' : ''}
+    </div>
+    <div class="acts">
+      ${f.status === 'failed' && f.file && !opts.readonly ? `<button type="button" class="btn sm teal" data-retry="${esc(f.key)}">Retry</button>` : ''}
+      ${canRemove ? `<button type="button" class="x" data-remove="${esc(f.key)}" aria-label="Remove ${esc(f.name)}">×</button>` : ''}
+    </div>
+  </li>`;
+}
+
+function renderFiles(){
+  for (const fid of uploadFieldIds()){
+    const ul = document.getElementById('list-' + fid);
+    if (ul) ul.innerHTML = S.files.filter(f => f.field === fid).map(f => fileRow(f)).join('');
+  }
+  const done = S.files.filter(f => f.status === 'done');
+  const active = S.files.filter(isActive);
+  const bad = S.files.filter(f => ['failed','rejected','interrupted'].includes(f.status));
+  const parts = [];
+  if (done.length) parts.push(`${done.length} uploaded (${fmtSize(done.reduce((a, f) => a + f.size, 0))})`);
+  if (active.length) parts.push(`${active.length} uploading`);
+  if (bad.length) parts.push(`${bad.length} need${bad.length === 1 ? 's' : ''} attention`);
+  $('#tray-counts').textContent = parts.join(' · ') || 'None yet';
+  // newest first, problems on top
+  const order = f => ['failed','rejected','interrupted'].includes(f.status) ? 0 : isActive(f) ? 1 : 2;
+  const list = S.files.slice().reverse().sort((a, b) => order(a) - order(b));
+  $('#tray-body').innerHTML = list.length
+    ? `<ul class="flist">${list.map(f => fileRow(f, { showField:true, compact:true })).join('')}</ul>`
+    : '<p class="tray-empty">Nothing uploaded yet. Every file you add shows up here.</p>';
+  S.files.filter(isActive).forEach(paintProgress);
+  if (S.step === STEPS.length - 1 && !S.submitted) renderReview();
+  sizeTray();
+}
+
+/* ---------- form rendering ---------- */
+const optsHTML = (name, type, options, vals, idBase, data = '') => `<div class="opts">${
+  options.map((o, i) => `<label class="opt${/^Not sure$/.test(o) ? ' sure-opt' : ''}"><input type="${type}" name="${esc(name)}" value="${esc(o)}" id="${esc(idBase)}-${i}"${data}${vals.includes(o) ? ' checked' : ''}><span>${esc(o)}</span></label>`).join('')
+}</div>`;
+
+function uploadBlock(q, small){
+  const accept = q.photos ? ACCEPT_PHOTOS : ACCEPT_DOCS;
+  return `<div class="drop${small ? ' sm' : ''}" data-drop="${q.id}">
+      <div class="btns">
+        ${q.camera ? `<label class="btn teal${small ? ' sm' : ''}"><input class="vh" type="file" accept="image/*" capture="environment" data-up="${q.id}">Take a photo</label>` : ''}
+        <label class="btn${q.camera ? ' ghost' : ''}${small ? ' sm' : ''}"><input class="vh" type="file" multiple accept="${esc(accept)}" data-up="${q.id}">${q.photos ? 'Choose photos' : 'Choose files'}</label>
+      </div>
+      ${small ? '' : `<p class="fine">${q.photos ? 'JPG, PNG or HEIC' : 'PDF, JPG, PNG, HEIC, Word or Excel'} · up to 25 MB each · add as many as you like</p>`}
+    </div>
+    <ul class="flist" id="list-${q.id}" aria-live="polite"></ul>`;
+}
+
+function eqRowHTML(r, n){
+  const k = esc(r.key), d = col => ` data-eq="${k}" data-col="${col}"`;
+  const txt = (col, label, extra = '') => `<label class="cell"><span>${label}</span><input type="text" value="${esc(r[col])}"${d(col)}${extra}></label>`;
+  return `<div class="eqrow" data-row="${k}">
+    <div class="eqrow-h">
+      <span class="eqnum">${n}</span>
+      <input type="text" class="eqname" value="${esc(r.name)}" placeholder="Equipment name" aria-label="Equipment ${n} name"${d('name')}>
+      <button type="button" class="x" data-delrow="${k}" aria-label="Remove ${esc(r.name || 'this equipment')}">×</button>
+    </div>
+    <div class="eqgrid">
+      ${txt('model', 'Make and model')}
+      <fieldset class="cell wide"><legend>Coming from Tempe or buying new?</legend>${optsHTML('eqsrc_' + r.key, 'radio', ['From Tempe','Buying new','Not sure'], [r.source], 'eqsrc-' + r.key, d('source'))}</fieldset>
+      <fieldset class="cell wide"><legend>Phase</legend>${optsHTML('eqph_' + r.key, 'radio', ['1','3','Not sure'], [r.phase], 'eqph-' + r.key, d('phase'))}</fieldset>
+      ${txt('volts', 'Volts', ' inputmode="decimal" placeholder="e.g. 208"')}
+      ${txt('amps', 'Amps or HP', ' placeholder="e.g. 30 A or 5 HP"')}
+      ${txt('btu', 'Gas BTU/hr <small>(blank if electric)</small>', ' inputmode="numeric"')}
+    </div>
+    <div class="eqspec"><span class="cell-l">Spec sheet or data-plate photo</span>${uploadBlock(fieldById('eqrow_' + r.key), true)}</div>
+  </div>`;
+}
+function renderEqRows(){
+  const box = $('#eq-rows'); if (!box) return;
+  box.innerHTML = eqRows().map((r, i) => eqRowHTML(r, i + 1)).join('');
+  renderFiles();
+}
+
+function renderQuestion(q){
+  const v = S.answers[q.id];
+  const req = q.required ? '<span class="req">Required</span>' : '';
+  const help = q.help ? `<p class="help">${esc(q.help)}</p>` : '';
+  const id = 'f-' + q.id;
+  const wrap = (cls, inner) => `<div class="q${cls}${q.showIf ? ' follow' : ''}" data-q="${q.id}"${isShown(q) ? '' : ' hidden'}>${inner}</div>`;
+  if (q.type === 'equipment'){
+    return `<p class="help eqhelp">${esc(q.help || '')}</p><div id="eq-rows"></div>
+      <button type="button" class="btn ghost addrow" data-addrow>+ Add another piece of equipment</button>`;
+  }
+  if (q.type === 'radio' || q.type === 'check'){
+    const vals = Array.isArray(v) ? v : (v ? [v] : []);
+    return wrap('', `<fieldset><legend>${esc(q.label)}${req}</legend>${help}${optsHTML(q.id, q.type === 'radio' ? 'radio' : 'checkbox', q.options, vals, id)}</fieldset>`);
+  }
+  if (q.type === 'upload') return wrap(' up', `<div class="qlabel">${esc(q.label)}</div>${help}${uploadBlock(q)}`);
+  const attrs = `id="${id}" name="${q.id}"${q.autocomplete ? ` autocomplete="${q.autocomplete}"` : ''}${q.placeholder ? ` placeholder="${esc(q.placeholder)}"` : ''}${q.inputmode ? ` inputmode="${q.inputmode}"` : ''}${q.required ? ' aria-required="true"' : ''}`;
+  const input = q.type === 'textarea'
+    ? `<textarea ${attrs}>${esc(v || '')}</textarea>`
+    : `<input type="${q.type}" ${attrs} value="${esc(v || '')}">`;
+  const sure = q.noSure ? '' : `<button type="button" class="sure" data-sure="${q.id}" aria-pressed="${v === 'Not sure'}">Not sure</button>`;
+  return wrap('', `<label for="${id}">${esc(q.label)}${req}</label>${help}<div class="inrow">${input}${sure}</div><p class="err" id="err-${q.id}" hidden></p>`);
+}
+function applyShowIf(){
+  FIELDS.filter(q => q.showIf).forEach(q => { const el = $(`[data-q="${q.id}"]`); if (el) el.hidden = !isShown(q) });
+}
+
+function renderForm(){
+  $('#form').innerHTML = SECTIONS.map((sec, i) => `
+    <section class="sec" data-step="${i}" hidden aria-labelledby="h-${sec.id}">
+      <h1 id="h-${sec.id}" tabindex="-1">${esc(sec.title)}</h1>
+      ${sec.intro ? `<p class="intro">${esc(sec.intro)}</p>` : ''}
+      ${sec.fields.map(renderQuestion).join('')}
+      <div class="nav">
+        ${i > 0 ? `<button type="button" class="btn ghost" data-go="${i - 1}">← Back</button>` : '<span></span>'}
+        <button type="button" class="btn" data-go="${i + 1}">${i === SECTIONS.length - 1 ? 'Review & submit →' : 'Next: ' + esc(SECTIONS[i + 1].title) + ' →'}</button>
+      </div>
+    </section>`).join('') + `
+    <section class="sec" data-step="${SECTIONS.length}" hidden aria-labelledby="h-review">
+      <h1 id="h-review" tabindex="-1">Review & submit</h1>
+      <p class="intro">Check it over. Tap Edit to change anything. Blank answers are fine.</p>
+      <div id="review-body"></div>
+      <div class="submit-box" id="submit-box"></div>
+      <div class="nav"><button type="button" class="btn ghost" data-go="${SECTIONS.length - 1}">← Back</button><span></span></div>
+    </section>`;
+  renderEqRows();
+}
+
+function readAnswer(name){
+  const q = fieldById(name); if (!q) return;
+  if (q.type === 'check') S.answers[name] = $$(`input[name="${name}"]:checked`).map(i => i.value);
+  else if (q.type === 'radio'){ const c = $(`input[name="${name}"]:checked`); S.answers[name] = c ? c.value : '' }
+  else S.answers[name] = $(`[name="${name}"]`).value;
+  const sure = $(`[data-sure="${name}"]`);
+  if (sure) sure.setAttribute('aria-pressed', String(S.answers[name] === 'Not sure'));
+}
+
+/* ---------- steps + progress ---------- */
+function touched(i){
+  if (i >= SECTIONS.length) return S.submitted;
+  return SECTIONS[i].fields.some(q => {
+    if (q.type === 'upload') return S.files.some(f => f.field === q.id && f.status === 'done');
+    if (q.type === 'equipment') return eqRows().some(r => EQ_COLS.some(c => c !== 'name' && r[c]))
+      || S.files.some(f => f.field.indexOf('eqrow_') === 0 && f.status === 'done');
+    const v = S.answers[q.id]; return Array.isArray(v) ? v.length > 0 : !!(v && String(v).trim());
+  });
+}
+function updateProgress(){
+  if (S.submitted){ $('#prog').innerHTML = '<div class="prog-txt"><b>Submitted</b> · thank you</div>'; return }
+  $('#prog').innerHTML = `<div class="prog-txt"><b>Step ${S.step + 1} of ${STEPS.length}</b> · ${esc(STEPS[S.step])}</div>
+    <ol class="segs">${STEPS.map((t, i) => `<li><button type="button" class="seg${i === S.step ? ' current' : ''}${touched(i) ? ' touched' : ''}" data-go="${i}" aria-label="Step ${i + 1}: ${esc(t)}${touched(i) ? ' (started)' : ''}"${i === S.step ? ' aria-current="step"' : ''}><span class="bar"></span><span class="lbl">${esc(t)}</span></button></li>`).join('')}</ol>`;
+  sizeTray();
+}
+function goTo(i, focus = true){
+  S.step = Math.min(Math.max(0, i), STEPS.length - 1);
+  $$('#form .sec').forEach(s => { s.hidden = Number(s.dataset.step) !== S.step });
+  if (S.step === STEPS.length - 1) renderReview();
+  updateProgress(); save();
+  window.scrollTo(0, 0);
+  if (focus){ const h = $(`#form .sec[data-step="${S.step}"] h1`); if (h) h.focus({ preventScroll:true }) }
+}
+
+/* ---------- summary (review, confirmation, print, server) ---------- */
+const fmtAns = v => Array.isArray(v) ? v.join(', ') : String(v || '').trim();
+function eqSummary(r, n){
+  const specs = S.files.filter(f => f.field === 'eqrow_' + r.key && f.status === 'done').length;
+  const parts = [
+    r.model && 'Make/model: ' + r.model,
+    r.source && (r.source === 'Not sure' ? 'From Tempe or new: not sure' : r.source),
+    r.volts && r.volts + ' V',
+    r.phase && (r.phase === 'Not sure' ? 'Phase: not sure' : r.phase + '-phase'),
+    r.amps && 'Amps/HP: ' + r.amps,
+    r.btu && 'Gas: ' + r.btu + ' BTU/hr',
+    specs && specs + ' spec sheet' + (specs > 1 ? 's' : '') + ' attached',
+  ].filter(Boolean);
+  return { q:n + '. ' + (r.name || 'Unnamed equipment'), a:parts.join(' · ') };
+}
+function summary(){
+  return SECTIONS.map((sec, i) => ({ step:i, title:sec.title,
+    items: sec.fields.filter(q => q.type !== 'upload' && isShown(q)).flatMap(q =>
+      q.type === 'equipment' ? eqRows().map((r, n) => eqSummary(r, n + 1)) : [{ q:q.label, a:fmtAns(S.answers[q.id]) }]) }));
+}
+const doneFiles = () => S.files.filter(f => f.status === 'done');
+const problemFiles = () => S.files.filter(f => f.status !== 'done');
+
+function summaryHTML(editable){
+  return summary().map(sec => `<div class="sum">
+    <div class="sum-h"><h2>${esc(sec.title)}</h2>${editable ? `<button type="button" class="btn ghost sm" data-go="${sec.step}">Edit</button>` : ''}</div>
+    <dl>${sec.items.map(it => `<div class="row"><dt>${esc(it.q)}</dt><dd${it.a ? '' : ' class="none"'}>${it.a ? esc(it.a) : 'Not answered'}</dd></div>`).join('')}</dl>
+  </div>`).join('');
+}
+function filesHTML(readonly){
+  const done = doneFiles();
+  return `<div class="sum"><div class="sum-h"><h2>Files received (${done.length})</h2></div>
+    ${done.length ? `<ul class="flist">${done.map(f => fileRow(f, { showField:true, readonly })).join('')}</ul>` : '<dl><div class="row"><dd class="none">No files uploaded.</dd></div></dl>'}
+  </div>`;
+}
+
+function renderReview(){
+  $('#review-body').innerHTML = summaryHTML(true) + filesHTML(false);
+  renderSubmitBox();
+}
+
+let submitState = 'idle', submitError = '', skipWait = false;
+function renderSubmitBox(){
+  const box = $('#submit-box'); if (!box) return;
+  const active = S.files.filter(isActive).length;
+  const probs = S.files.filter(f => ['failed','rejected','interrupted'].includes(f.status));
+  let html = '';
+  if (probs.length) html += `<div class="notice warn"><b>${probs.length} file${probs.length > 1 ? 's' : ''} didn’t upload.</b> You can still submit. We’ll list ${probs.length > 1 ? 'them' : 'it'} on your confirmation so you can email ${probs.length > 1 ? 'them' : 'it'} to <a href="mailto:${esc(BACKUP_EMAIL)}">${esc(BACKUP_EMAIL)}</a>.</div>`;
+  if (submitState === 'waiting') html += `<div class="notice info"><b>Finishing ${active} upload${active === 1 ? '' : 's'}…</b> We’ll send everything the moment ${active === 1 ? 'it lands' : 'they land'}. <button type="button" class="linkbtn" data-skipwait>Submit now without ${active === 1 ? 'it' : 'them'}</button></div>`;
+  if (submitState === 'error') html += `<div class="notice bad"><b>We couldn’t send your answers.</b> ${esc(submitError)} Your answers are still saved here. Try again, or <a href="${mailtoAnswers()}">email them to us</a> instead.</div>`;
+  const label = submitState === 'sending' ? 'Sending…' : submitState === 'waiting' ? 'Waiting for uploads…' : submitState === 'error' ? 'Try again' : 'Submit';
+  html += `<button type="button" class="btn teal" data-submit${submitState === 'sending' || submitState === 'waiting' ? ' disabled' : ''}>${label}</button>
+    <p class="small">Only your name and email are required.${active && submitState === 'idle' ? ` ${active} file${active === 1 ? ' is' : 's are'} still uploading. We’ll wait for ${active === 1 ? 'it' : 'them'}.` : ''}</p>`;
+  box.innerHTML = html;
+}
+
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+function validate(){
+  const errs = {};
+  if (!String(S.answers.name || '').trim()) errs.name = 'Please enter your name.';
+  if (!EMAIL_RE.test(String(S.answers.email || '').trim())) errs.email = S.answers.email ? 'That email doesn’t look right.' : 'Please enter your email.';
+  for (const id of ['name','email']){
+    const q = $(`[data-q="${id}"]`), e = $('#err-' + id);
+    q.classList.toggle('invalid', !!errs[id]); e.hidden = !errs[id]; e.textContent = errs[id] || '';
+    $('#f-' + id).setAttribute('aria-invalid', String(!!errs[id]));
+  }
+  return Object.keys(errs).length ? errs : null;
+}
+
+async function submit(){
+  if (submitState === 'sending' || submitState === 'waiting') return;
+  const errs = validate();
+  if (errs){ goTo(0, false); $('#f-' + Object.keys(errs)[0]).focus(); return }
+  skipWait = false;
+  if (S.files.some(isActive)){
+    submitState = 'waiting'; renderSubmitBox();
+    await new Promise(res => { waiters.push(res); skipWaitResolve = res });
+  }
+  submitState = 'sending'; renderSubmitBox();
+  const failed = problemFiles().map(f => ({ name:f.name, size:f.size, field:(fieldById(f.field) || {}).short || '',
+    reason: isActive(f) ? 'Still uploading when the form was submitted' : (f.brief || f.error || (f.status === 'interrupted' ? 'Upload interrupted' : 'Upload failed')) }));
+  const payload = {
+    action:'submit', sid:S.sid, folderId:S.folderId,
+    name:String(S.answers.name || '').trim(), company:String(S.answers.company || '').trim(),
+    email:String(S.answers.email || '').trim(), phone:String(S.answers.phone || '').trim(),
+    sections:summary().map(s => ({ title:s.title, items:s.items })),
+    files:doneFiles().map(f => ({ name:f.name, size:f.size, field:(fieldById(f.field) || {}).short || '', fileId:f.fileId })),
+    failed,
+  };
+  try {
+    const r = await apiRetry(payload, 3);
+    S.folderId = r.folderId || S.folderId; S.folderUrl = r.folderUrl || S.folderUrl;
+    S.files.filter(isActive).forEach(f => { f.cancel = true });   // only if they chose not to wait
+    S.submitted = true; S.submittedAt = new Date().toISOString(); S.failedAtSubmit = failed;
+    submitState = 'idle'; save(true);
+    showDone();
+  } catch (e){
+    submitState = 'error'; submitError = friendly(e); renderSubmitBox();
+  }
+}
+let skipWaitResolve = null;
+
+function mailtoAnswers(){
+  const lines = [`Intake reference #${S.sid}`, ''];
+  for (const s of summary()){ lines.push(s.title.toUpperCase()); s.items.forEach(it => it.a && lines.push(`${it.q}: ${it.a}`)); lines.push('') }
+  let body = lines.join('\n');
+  if (body.length > 1800) body = body.slice(0, 1800) + '\n…(use Print / Save as PDF for the full list)';
+  return `mailto:${BACKUP_EMAIL}?subject=${encodeURIComponent('Facility questionnaire #' + S.sid + ' — ' + (S.answers.name || ''))}&body=${encodeURIComponent(body)}`;
+}
+
+/* ---------- confirmation screen ---------- */
+function showDone(){
+  $('#form').hidden = true; $('#notices').innerHTML = ''; $('#tray').hidden = true;
+  document.documentElement.style.setProperty('--tray-h', '0px');
+  updateProgress();
+  const first = String(S.answers.name || '').trim().split(/\s+/)[0];
+  const failed = S.failedAtSubmit || [];
+  const when = S.submittedAt ? new Date(S.submittedAt).toLocaleString([], { dateStyle:'medium', timeStyle:'short' }) : '';
+  const mail = `mailto:${BACKUP_EMAIL}?subject=${encodeURIComponent('Files for intake #' + S.sid + ' — ' + (S.answers.name || ''))}&body=${encodeURIComponent('Attached are the files that wouldn’t upload:\n' + failed.map(f => '- ' + f.name).join('\n'))}`;
+  $('#done').innerHTML = `
+    <div class="done-hero">
+      <div class="big-check">${ICON.check}</div>
+      <h1>Thanks${first ? ', ' + esc(first) : ''}. We’ve got it.</h1>
+      <p>We’ll review everything and reach out soon.<br>Reference <b class="ref">#${esc(S.sid)}</b>${when ? ' · ' + esc(when) : ''}${PREVIEW ? '<br><b>Preview mode:</b> nothing was actually sent.' : ''}</p>
+      <div class="done-actions">
+        <button type="button" class="btn" data-print>Print / Save as PDF</button>
+      </div>
+    </div>
+    ${failed.length ? `<div class="notice bad"><b>${failed.length} file${failed.length > 1 ? 's' : ''} didn’t make it:</b>
+      <ul>${failed.map(f => `<li>${esc(f.name)} (${fmtSize(f.size)}) — ${esc(f.reason)}</li>`).join('')}</ul>
+      <p style="margin-top:8px">Please email ${failed.length > 1 ? 'them' : 'it'} to <a href="${mail}"><b>${esc(BACKUP_EMAIL)}</b></a> and mention reference #${esc(S.sid)}.</p></div>` : ''}
+    ${filesHTML(true)}
+    <h2 style="font-size:28px; margin:26px 0 12px">Your answers</h2>
+    ${summaryHTML(false)}
+    <div class="done-actions" style="margin:22px 0 10px">
+      <button type="button" class="btn ghost" data-print>Print / Save as PDF</button>
+      <button type="button" class="btn ghost" data-new>Start a new form</button>
+    </div>`;
+  $('#done').hidden = false;
+  window.scrollTo(0, 0);
+}
+
+/* ---------- print ---------- */
+function buildPrint(){
+  const now = new Date().toLocaleString([], { dateStyle:'medium', timeStyle:'short' });
+  const done = doneFiles(), bad = S.submitted ? (S.failedAtSubmit || []) : problemFiles().map(f => ({ name:f.name, size:f.size, reason:f.error || f.status }));
+  $('#print-sheet').innerHTML = `
+    <h1>New Facility Questionnaire</h1>
+    <p class="meta">SOKO Designs · Reference #${esc(S.sid)} · ${S.submitted ? 'Submitted ' + esc(new Date(S.submittedAt).toLocaleString([], { dateStyle:'medium', timeStyle:'short' })) : 'Draft, not yet submitted'} · Printed ${esc(now)}</p>
+    ${summary().map(s => `<h2>${esc(s.title)}</h2><table>${s.items.map(it => `<tr><th>${esc(it.q)}</th><td${it.a ? '' : ' class="na"'}>${it.a ? esc(it.a) : 'Not answered'}</td></tr>`).join('')}</table>`).join('')}
+    <h2>Files received (${done.length})</h2>
+    <table>${done.length ? done.map(f => `<tr><th>${esc(f.name)}</th><td>${fmtSize(f.size)} · ${esc((fieldById(f.field) || {}).short || '')}</td></tr>`).join('') : '<tr><td class="na">None</td></tr>'}</table>
+    ${bad.length ? `<h2>Files that did not upload (${bad.length})</h2><table>${bad.map(f => `<tr><th class="warn">${esc(f.name)}</th><td>${fmtSize(f.size)} · ${esc(f.reason || '')} · email to ${esc(BACKUP_EMAIL)}</td></tr>`).join('')}</table>` : ''}`;
+}
+window.addEventListener('beforeprint', buildPrint);
+
+/* ---------- tray sizing (keeps the fixed file list from covering the form) ---------- */
+function sizeTray(){
+  const top = $('#top').offsetHeight;
+  document.documentElement.style.setProperty('--top-h', top + 'px');
+  const mobile = !window.matchMedia('(min-width:1024px)').matches;
+  document.documentElement.style.setProperty('--tray-h', mobile && !$('#tray').hidden ? $('#tray').offsetHeight + 'px' : '0px');
+}
+if ('ResizeObserver' in window) new ResizeObserver(sizeTray).observe($('#tray'));
+window.addEventListener('resize', sizeTray);
+
+/* ---------- events ---------- */
+const form = $('#form');
+form.addEventListener('submit', e => e.preventDefault());
+form.addEventListener('input', e => {
+  if (e.target.dataset.eq){   // equipment table cell
+    const row = eqRows().find(r => r.key === e.target.dataset.eq);
+    if (row){ row[e.target.dataset.col] = e.target.value; save(); updateProgress() }
+    return;
+  }
+  const n = e.target.name; if (!n || e.target.type === 'file') return;
+  const q = fieldById(n);
+  // "Not sure" / "None of these" are exclusive in pick-all-that-apply lists
+  if (q && q.type === 'check' && e.target.checked){
+    const excl = v => /^(Not sure|None of these)$/.test(v);
+    $$(`input[name="${n}"]`).forEach(i => { if (i !== e.target && (excl(e.target.value) || excl(i.value))) i.checked = false });
+  }
+  readAnswer(n);
+  if (q && FIELDS.some(f => f.showIf && f.showIf.f === n)) applyShowIf();
+  if ((n === 'name' || n === 'email') && $(`[data-q="${n}"]`).classList.contains('invalid')) validate();
+  save(); updateProgress();
+});
+form.addEventListener('change', e => {
+  if (e.target.matches('input[type=file][data-up]')){ addFiles(e.target.dataset.up, e.target.files); e.target.value = '' }
+});
+form.addEventListener('dragover', e => { const d = e.target.closest('[data-drop]'); if (d){ e.preventDefault(); d.classList.add('over') } });
+form.addEventListener('dragleave', e => { const d = e.target.closest('[data-drop]'); if (d) d.classList.remove('over') });
+form.addEventListener('drop', e => {
+  const d = e.target.closest('[data-drop]'); if (!d) return;
+  e.preventDefault(); d.classList.remove('over'); addFiles(d.dataset.drop, e.dataTransfer.files);
+});
+document.addEventListener('click', e => {
+  const t = e.target.closest('button, a'); if (!t) return;
+  if (t.dataset.go != null){ goTo(Number(t.dataset.go)); return }
+  if (t.dataset.sure){
+    const inp = $(`[name="${t.dataset.sure}"]`);
+    inp.value = inp.value === 'Not sure' ? '' : 'Not sure';
+    readAnswer(t.dataset.sure); save(); updateProgress(); return;
+  }
+  if (t.hasAttribute('data-addrow')){
+    eqRows().push(newEqRow('')); save(); renderEqRows(); updateProgress();
+    const rows = $$('.eqrow'); const last = rows[rows.length - 1];
+    if (last){ last.scrollIntoView({ block:'center' }); $('.eqname', last).focus({ preventScroll:true }) }
+    return;
+  }
+  if (t.dataset.delrow){
+    const key = t.dataset.delrow, fid = 'eqrow_' + key;
+    const row = eqRows().find(r => r.key === key);
+    if (S.files.some(f => f.field === fid && (f.status === 'done' || isActive(f)))){
+      alert('This one has a spec sheet attached. Remove the spec sheet first, then remove the row.'); return;
+    }
+    if (row && EQ_COLS.some(c => c !== 'name' && row[c]) && !confirm(`Remove “${row.name || 'this equipment'}” and what you entered for it?`)) return;
+    S.answers[EQ_FIELD.id] = eqRows().filter(r => r.key !== key);
+    S.files = S.files.filter(f => f.field !== fid);
+    save(); renderEqRows(); updateProgress(); return;
+  }
+  if (t.dataset.remove){ removeFile(t.dataset.remove); return }
+  if (t.dataset.retry){ retryFile(t.dataset.retry); return }
+  if (t.hasAttribute('data-submit')){ submit(); return }
+  if (t.hasAttribute('data-skipwait')){ const r = skipWaitResolve; waiters = waiters.filter(w => w !== r); r && r(); return }
+  if (t.hasAttribute('data-print')){ buildPrint(); window.print(); return }
+  if (t.hasAttribute('data-new')){
+    if (confirm('Start a new, blank form? Your sent answers are safe with us.')){ store.clear(); location.href = location.pathname }
+    return;
+  }
+  if (t.id === 'tray-head' && !window.matchMedia('(min-width:1024px)').matches){
+    const c = $('#tray').classList.toggle('collapsed'); t.setAttribute('aria-expanded', String(!c)); sizeTray();
+  }
+});
+
+/* ---------- start ---------- */
+function notices(){
+  const n = [];
+  if (PREVIEW) n.push(`<div class="notice warn"><b>Preview mode.</b> Uploads are simulated because the Apps Script URL isn’t set yet. Nothing is sent anywhere.</div>`);
+  if (!store.ok) n.push(`<div class="notice warn"><b>This browser won’t let us save your answers.</b> Please keep this tab open until you submit. Uploaded files are still safe on our side.</div>`);
+  if (restored && !S.submitted){
+    const done = S.files.filter(f => f.status === 'done'), lost = S.files.filter(f => f.status === 'interrupted');
+    n.push(`<div class="notice info"><b>Welcome back.</b> We kept your answers.${done.length ? ` <b>${done.length} file${done.length > 1 ? 's are' : ' is'} already in</b>, no need to send ${done.length > 1 ? 'them' : 'it'} again.` : ''}${lost.length ? ` ${lost.length} upload${lost.length > 1 ? 's were' : ' was'} interrupted. Choose ${lost.length > 1 ? 'those files' : 'that file'} again and ${lost.length > 1 ? 'they’ll' : 'it’ll'} pick up where ${lost.length > 1 ? 'they' : 'it'} left off.` : ''}
+      <button type="button" class="linkbtn" data-new>Start over</button></div>`);
+  }
+  $('#notices').innerHTML = n.join('');
+}
+
+// On return, double-check with Drive that the files we think are in really are.
+async function reconcile(){
+  if (PREVIEW || !S.folderId || !S.files.some(f => f.status === 'done')) return;
+  try {
+    const r = await api({ action:'list', folderId:S.folderId });
+    if (!Array.isArray(r.files)) return;
+    const ids = new Set(r.files.map(f => f.fileId));
+    let changed = false;
+    S.files.forEach(f => { if (f.status === 'done' && !ids.has(f.fileId)){ f.status = 'interrupted'; f.error = 'We can’t find this file on our side. Please add it again.'; f.session = ''; changed = true } });
+    if (changed){ save(true); renderFiles(); notices() }
+  } catch (e) { /* offline: trust what we saved */ }
+}
+
+if (S.submitted){ renderForm(); showDone() }
+else {
+  renderForm(); notices(); goTo(S.step, false);
+  $('#saved').textContent = store.ok ? (restored ? 'Saved' : '') : 'Autosave off';
+  if (!store.ok) $('#saved').className = 'saved off';
+  if (window.matchMedia('(max-width:1023px)').matches && !S.files.length){ $('#tray').classList.add('collapsed'); $('#tray-head').setAttribute('aria-expanded', 'false') }
+  reconcile();
+}
+sizeTray();
+</script>
+</body>
+</html>
