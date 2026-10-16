@@ -98,20 +98,32 @@ exports.handler = async (event) => {
     if (on) num(cols, s.price, d.services[s.key].price);
   });
 
-  let itemId;
-  try {
-    itemId = await createItem(token, jobName, cols);
-  } catch (err) {
-    console.error("Monday create failed:", err && err.message);
-    return json(502, { error: "Monday rejected the submission. Nothing was saved." });
+  // The board emails Stacey the moment the item is created, and that email
+  // includes the address column — so the address has to be on the item before
+  // create, not patched in after, or she gets a blank line. But Monday's
+  // location column can reject a bare address, which would fail the whole
+  // mutation. So: try with it, and if that is what failed, create without it
+  // and patch after. The intake is never lost either way.
+  const address = (d.address || "").trim();
+  let itemId = null;
+  let addressPending = false;
+
+  if (address) {
+    try {
+      itemId = await createItem(token, jobName, Object.assign({}, cols, {
+        [COL.address]: { address: address },
+      }));
+    } catch (err) { console.error("Create with address failed:", err && err.message); }
+    if (!itemId) addressPending = true;
+  }
+
+  if (!itemId) {
+    try { itemId = await createItem(token, jobName, cols); }
+    catch (err) { console.error("Monday create failed:", err && err.message); }
   }
   if (!itemId) return json(502, { error: "Monday rejected the submission. Nothing was saved." });
 
-  // The location column wants lat/lng alongside the label and rejects a bare
-  // address, which would fail the whole create. Set it once the item exists so
-  // a bad address can never lose the intake.
-  const address = (d.address || "").trim();
-  if (address) {
+  if (addressPending) {
     try { await setColumn(token, itemId, COL.address, { address: address }); }
     catch (err) { console.error("Address column skipped:", err && err.message); }
   }
