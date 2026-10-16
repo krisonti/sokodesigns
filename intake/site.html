@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Site Intake — SOKO internal</title>
+<meta name="robots" content="noindex,nofollow,noarchive">
+<meta name="referrer" content="no-referrer">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="theme-color" content="#3A6365">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1A1A1A; --ink-soft:#5B5B57;
+    --teal:#4A7C7E; --teal-deep:#3A6365; --teal-tint:#EAF0F0;
+    --cream:#F4F3F0; --sand:#EDE7DB; --white:#fff; --clay:#B67243;
+    --line:#E3DED3; --line-soft:#ECE8DE; --bad:#C0392B;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--cream); color:var(--ink); font-family:"Inter",system-ui,Arial,sans-serif;
+       font-size:16px; line-height:1.55; -webkit-font-smoothing:antialiased; padding-bottom:96px}
+  .wrap{max-width:760px; margin:0 auto; padding:0 16px}
+
+  header{background:var(--teal-deep); color:#fff; padding:20px 0 18px; position:sticky; top:0; z-index:40}
+  header .wrap{display:flex; align-items:baseline; gap:12px; flex-wrap:wrap}
+  header h1{font-family:"Cormorant Garamond",Georgia,serif; font-size:30px; font-weight:700; line-height:1}
+  header .tag{font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:#9FC3C4; font-weight:600}
+  header p{flex-basis:100%; color:#DCEAE9; font-size:14px; margin-top:6px}
+
+  section{background:var(--white); border:1px solid var(--line); border-radius:8px; padding:20px 18px; margin-top:16px}
+  section h2{font-family:"Inter",sans-serif; font-size:12px; letter-spacing:.14em; text-transform:uppercase;
+             color:var(--teal); font-weight:700; margin-bottom:4px}
+  section .sub{font-size:13px; color:var(--ink-soft); margin-bottom:16px}
+
+  .f{margin-bottom:16px}
+  .f:last-child{margin-bottom:0}
+  .f label{display:block; font-size:14px; font-weight:600; margin-bottom:5px}
+  .f .hint{font-size:12.5px; color:var(--ink-soft); font-weight:400; margin-bottom:6px}
+  .req{color:var(--clay)}
+  input[type=text],input[type=number],input[type=url],select,textarea{
+    width:100%; font-family:inherit; font-size:16px; color:var(--ink); background:#fff;
+    border:1px solid var(--line); border-radius:5px; padding:12px 12px;
+  }
+  input:focus,select:focus,textarea:focus{outline:none; border-color:var(--teal); box-shadow:0 0 0 3px rgba(74,124,126,.14)}
+  textarea{min-height:96px; resize:vertical; line-height:1.5}
+  textarea.big{min-height:130px}
+  [aria-invalid="true"]{border-color:var(--bad); background:#FDF6F5}
+  .two{display:grid; grid-template-columns:1fr 1fr; gap:12px}
+  @media(max-width:560px){ .two{grid-template-columns:1fr} }
+
+  /* service rows */
+  .svc{display:grid; grid-template-columns:1fr 128px; gap:10px; align-items:center;
+       padding:11px 0; border-bottom:1px solid var(--line-soft)}
+  .svc:last-of-type{border-bottom:none}
+  .svc .chk{display:flex; align-items:center; gap:10px; cursor:pointer; font-weight:500; font-size:15px}
+  .svc input[type=checkbox]{width:22px; height:22px; accent-color:var(--teal); flex:none; cursor:pointer}
+  .svc input[type=number]{padding:10px; text-align:right}
+  .svc input[type=number]:disabled{background:var(--cream); color:#A9A69E; border-color:var(--line-soft)}
+  .total{display:flex; justify-content:space-between; align-items:baseline; margin-top:14px; padding-top:14px;
+         border-top:2px solid var(--line); font-weight:700}
+  .total .amt{font-family:"Cormorant Garamond",Georgia,serif; font-size:30px; color:var(--teal-deep)}
+
+  .hp{position:absolute; left:-9999px; width:1px; height:1px; opacity:0}
+
+  /* sticky submit */
+  .bar{position:fixed; left:0; right:0; bottom:0; z-index:50; background:rgba(255,255,255,.97);
+       border-top:1px solid var(--line); padding:12px 0 calc(12px + env(safe-area-inset-bottom))}
+  .bar .wrap{display:flex; align-items:center; gap:12px}
+  .bar .status{flex:1; font-size:13px; color:var(--ink-soft); min-height:18px}
+  .bar .status.err{color:var(--bad); font-weight:600}
+  button.go{font-family:inherit; font-weight:700; font-size:16px; background:var(--teal); color:#fff;
+            border:none; border-radius:5px; padding:15px 28px; cursor:pointer; flex:none}
+  button.go:hover{background:var(--teal-deep)}
+  button.go[disabled]{opacity:.6; cursor:default}
+  .linkish{background:none; border:none; color:var(--ink-soft); font:inherit; font-size:13px;
+           text-decoration:underline; cursor:pointer; padding:0}
+
+  .done{display:none; background:var(--white); border:1px solid var(--teal); border-radius:8px;
+        padding:34px 24px; margin-top:16px; text-align:center}
+  .done h2{font-family:"Cormorant Garamond",Georgia,serif; font-size:32px; color:var(--ink);
+           letter-spacing:0; text-transform:none; margin-bottom:8px}
+  .done p{color:var(--ink-soft); margin-bottom:18px}
+  .done a.btn{display:inline-block; background:var(--teal); color:#fff; text-decoration:none;
+              font-weight:600; border-radius:5px; padding:13px 24px; margin:4px}
+  .done button{margin:4px}
+  .draft{font-size:12.5px; color:var(--ink-soft); text-align:center; margin-top:14px}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <h1>Site Intake</h1>
+    <span class="tag">SOKO internal</span>
+    <p>Fill this out on site. It goes straight to the Site Intake board for Stacey to build the estimate. Your answers save on this phone as you type.</p>
+  </div>
+</header>
+
+<div class="wrap">
+<form id="intake" novalidate>
+
+  <section>
+    <h2>The job</h2>
+    <div class="sub">Client name, email, phone, APN and jurisdiction all come from the lead — don't retype them.</div>
+
+    <div class="f">
+      <label for="jobName">Job name <span class="req">*</span></label>
+      <div class="hint">Short name for the board, e.g. Smith Remodel.</div>
+      <input id="jobName" name="jobName" type="text" autocomplete="off">
+    </div>
+
+    <div class="f">
+      <label for="leadSearch">Lead <span class="req">*</span></label>
+      <div class="hint">Pick the lead from the Leads Board.</div>
+      <input id="leadSearch" type="text" list="leadList" placeholder="Start typing a name…" autocomplete="off">
+      <datalist id="leadList"></datalist>
+      <input type="hidden" id="leadId" name="leadId">
+    </div>
+
+    <div class="f">
+      <label for="address">Project address <span class="req">*</span></label>
+      <input id="address" name="address" type="text" autocomplete="street-address" placeholder="123 E Camelback Rd, Phoenix, AZ 85012">
+    </div>
+
+    <div class="two">
+      <div class="f">
+        <label for="projectType">Project type <span class="req">*</span></label>
+        <select id="projectType" name="projectType">
+          <option value="">Select…</option>
+          <option>Residential Remodel</option>
+          <option>Residential Addition</option>
+          <option>Custom New Build SFR</option>
+          <option>ADU Design</option>
+          <option>Tenant Improvement</option>
+          <option>Detached Garage</option>
+          <option>Patio / AZ Room</option>
+          <option>Demolition Permit</option>
+          <option>Commercial New Build</option>
+          <option>Multifamily</option>
+          <option>Site Plan Only</option>
+        </select>
+      </div>
+      <div class="f">
+        <label for="projectTypePrice">Price for that <span class="req">*</span></label>
+        <div class="hint">Design and drafting.</div>
+        <input id="projectTypePrice" name="projectTypePrice" type="number" inputmode="decimal" min="0" step="1">
+      </div>
+    </div>
+
+    <div class="f">
+      <label for="sqft">Square footage</label>
+      <div class="hint">Approximate, work area only.</div>
+      <input id="sqft" name="sqft" type="number" inputmode="numeric" min="0" step="1">
+    </div>
+
+    <div class="f">
+      <label for="scope">Scope of work <span class="req">*</span></label>
+      <div class="hint">Tap the mic and talk it out: what's being built, removed or changed, and which rooms or areas.</div>
+      <textarea id="scope" name="scope" class="big"></textarea>
+    </div>
+  </section>
+
+  <section>
+    <h2>Services and pricing</h2>
+    <div class="sub">Tick what's included. The price box opens when you tick it.</div>
+    <div id="services"></div>
+    <div class="total"><span>Running total</span><span class="amt" id="total">$0</span></div>
+
+    <div class="f" style="margin-top:18px">
+      <label for="other">Other services and prices</label>
+      <div class="hint">Anything not listed. Example: demolition permit, $750.</div>
+      <textarea id="other" name="other"></textarea>
+    </div>
+
+    <div class="f">
+      <label for="fee">Fee and payment schedule <span class="req">*</span></label>
+      <div class="hint">Total and how it's split. Example: 50% to begin, 50% prior to city submittal. Note any consultant who bills the client direct.</div>
+      <textarea id="fee" name="fee"></textarea>
+      <button type="button" class="linkish" id="useTotal" style="margin-top:7px">Start from the running total</button>
+    </div>
+  </section>
+
+  <section>
+    <h2>Site and handoff</h2>
+    <div class="sub">What Stacey can't see from the office.</div>
+
+    <div class="f">
+      <label for="risks">Site conditions and risks</label>
+      <div class="hint">Unpermitted work, survey needs, HOA, utilities, access, anything odd on site.</div>
+      <textarea id="risks" name="risks" class="big"></textarea>
+    </div>
+
+    <div class="f">
+      <label for="photos">Google Photos album link</label>
+      <input id="photos" name="photos" type="url" inputmode="url" placeholder="https://photos.app.goo.gl/…" autocomplete="off">
+    </div>
+
+    <div class="f">
+      <label for="notes">Notes for Stacey</label>
+      <textarea id="notes" name="notes"></textarea>
+    </div>
+  </section>
+
+  <input class="hp" type="text" name="company" tabindex="-1" autocomplete="off" aria-hidden="true">
+  <div class="draft" id="draftNote"></div>
+</form>
+
+<div class="done" id="done">
+  <h2>Sent to the board.</h2>
+  <p>Stacey has it. Nothing left to do here.</p>
+  <a class="btn" id="openItem" href="#" target="_blank" rel="noopener">Open it in Monday</a>
+  <button class="go" type="button" id="another">Start another</button>
+</div>
+</div>
+
+<div class="bar" id="bar">
+  <div class="wrap">
+    <div class="status" id="status"></div>
+    <button class="go" type="submit" form="intake" id="go">Send to board</button>
+  </div>
+</div>
+
+<script>
+(function () {
+  var SERVICES = [
+    { key: "sitePlan",   label: "Site Plan" },
+    { key: "asBuilt",    label: "As-Built Measurements" },
+    { key: "cds",        label: "Construction Documents" },
+    { key: "structural", label: "Structural Engineering" },
+    { key: "mep",        label: "MEP Engineering" },
+    { key: "manualJ",    label: "Manual J S &amp; D Report" },
+    { key: "hoa",        label: "HOA Design Review" },
+    { key: "permits",    label: "Permit Services" }
+  ];
+  var DRAFT_KEY = "soko-site-intake-draft";
+  var PASS_KEY = "soko-site-intake-pass";
+
+  var form = document.getElementById("intake");
+  var statusEl = document.getElementById("status");
+  var goBtn = document.getElementById("go");
+  var totalEl = document.getElementById("total");
+  var doneEl = document.getElementById("done");
+  var draftNote = document.getElementById("draftNote");
+
+  // ---- service rows -------------------------------------------------------
+  var html = "";
+  SERVICES.forEach(function (s) {
+    html +=
+      '<div class="svc">' +
+        '<label class="chk" for="chk-' + s.key + '">' +
+          '<input type="checkbox" id="chk-' + s.key + '" data-svc="' + s.key + '">' +
+          '<span>' + s.label + '</span>' +
+        '</label>' +
+        '<input type="number" inputmode="decimal" min="0" step="1" placeholder="$" ' +
+               'id="price-' + s.key + '" data-price="' + s.key + '" disabled aria-label="' + s.label + ' price">' +
+      '</div>';
+  });
+  document.getElementById("services").innerHTML = html;
+
+  function recalc() {
+    var t = Number(document.getElementById("projectTypePrice").value || 0);
+    SERVICES.forEach(function (s) {
+      var c = document.getElementById("chk-" + s.key);
+      var p = document.getElementById("price-" + s.key);
+      if (c.checked) t += Number(p.value || 0);
+    });
+    totalEl.textContent = "$" + (isNaN(t) ? 0 : t).toLocaleString("en-US");
+    return t;
+  }
+
+  form.addEventListener("change", function (e) {
+    var k = e.target.getAttribute("data-svc");
+    if (k) {
+      var p = document.getElementById("price-" + k);
+      p.disabled = !e.target.checked;
+      if (!e.target.checked) p.value = "";
+      else p.focus();
+    }
+    recalc(); saveDraft();
+  });
+  form.addEventListener("input", function () { recalc(); saveDraft(); });
+
+  document.getElementById("useTotal").addEventListener("click", function () {
+    var fee = document.getElementById("fee");
+    var t = recalc();
+    var line = "Total $" + t.toLocaleString("en-US") + " — 50% to begin, 50% prior to city submittal.";
+    fee.value = fee.value ? fee.value + "\n" + line : line;
+    fee.focus(); saveDraft();
+  });
+
+  // ---- draft, so a dropped signal on site doesn't lose the visit ----------
+  function fields() {
+    var o = { services: {} };
+    ["jobName","leadId","leadSearch","address","projectType","projectTypePrice","sqft","scope","other","fee","risks","photos","notes"]
+      .forEach(function (id) { var el = document.getElementById(id); if (el) o[id] = el.value; });
+    SERVICES.forEach(function (s) {
+      o.services[s.key] = {
+        on: document.getElementById("chk-" + s.key).checked,
+        price: document.getElementById("price-" + s.key).value
+      };
+    });
+    return o;
+  }
+  function saveDraft() {
+    try {
+      localStorage.setItem(DRAFT_KEY, JSON.stringify({ at: Date.now(), d: fields() }));
+      draftNote.textContent = "Draft saved on this device " + new Date().toLocaleTimeString();
+    } catch (e) { /* private mode */ }
+  }
+  function loadDraft() {
+    var raw; try { raw = localStorage.getItem(DRAFT_KEY); } catch (e) { return; }
+    if (!raw) return;
+    var saved; try { saved = JSON.parse(raw); } catch (e) { return; }
+    var d = saved && saved.d; if (!d) return;
+    Object.keys(d).forEach(function (id) {
+      if (id === "services") return;
+      var el = document.getElementById(id); if (el && d[id]) el.value = d[id];
+    });
+    SERVICES.forEach(function (s) {
+      var v = d.services && d.services[s.key]; if (!v) return;
+      var c = document.getElementById("chk-" + s.key), p = document.getElementById("price-" + s.key);
+      c.checked = !!v.on; p.disabled = !v.on; p.value = v.price || "";
+    });
+    recalc();
+    draftNote.textContent = "Restored your unsent draft from " + new Date(saved.at).toLocaleString() + ".";
+  }
+  function clearDraft() { try { localStorage.removeItem(DRAFT_KEY); } catch (e) {} }
+
+  // ---- lead picker --------------------------------------------------------
+  var leads = [];
+  function passParam() {
+    var p = new URLSearchParams(location.search).get("pass");
+    if (p) { try { sessionStorage.setItem(PASS_KEY, p); } catch (e) {} return p; }
+    try { return sessionStorage.getItem(PASS_KEY) || ""; } catch (e) { return ""; }
+  }
+  function loadLeads() {
+    var q = passParam() ? "?leads=1&pass=" + encodeURIComponent(passParam()) : "?leads=1";
+    fetch("/.netlify/functions/site-intake" + q)
+      .then(function (r) { return r.json(); })
+      .then(function (j) {
+        if (j.error) { statusEl.textContent = j.error + " Add ?pass=… to the URL."; statusEl.className = "status err"; return; }
+        leads = j.leads || [];
+        var dl = document.getElementById("leadList");
+        dl.innerHTML = leads.map(function (l) {
+          return '<option value="' + String(l.name).replace(/"/g, "&quot;") + '"></option>';
+        }).join("");
+        if (j.warning) statusEl.textContent = j.warning;
+      })
+      .catch(function () { statusEl.textContent = "Couldn't load the lead list — you can still submit."; });
+  }
+  var leadSearch = document.getElementById("leadSearch");
+  leadSearch.addEventListener("input", function () {
+    var m = leads.filter(function (l) { return l.name === leadSearch.value; })[0];
+    document.getElementById("leadId").value = m ? m.id : "";
+    leadSearch.setAttribute("aria-invalid", leadSearch.value && !m ? "true" : "false");
+  });
+
+  // ---- submit -------------------------------------------------------------
+  function fail(msg, id) {
+    statusEl.textContent = msg; statusEl.className = "status err";
+    goBtn.disabled = false;
+    if (id) { var el = document.getElementById(id); el.setAttribute("aria-invalid", "true"); el.focus(); }
+  }
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    statusEl.textContent = ""; statusEl.className = "status";
+    Array.prototype.forEach.call(form.querySelectorAll('[aria-invalid="true"]'), function (el) {
+      if (el !== leadSearch) el.removeAttribute("aria-invalid");
+    });
+
+    var d = fields();
+    if (!d.jobName.trim()) return fail("Job name is required.", "jobName");
+    if (!d.address.trim()) return fail("Project address is required.", "address");
+    if (!d.projectType) return fail("Pick a project type.", "projectType");
+    if (!d.projectTypePrice) return fail("Project type price is required.", "projectTypePrice");
+    if (!d.scope.trim()) return fail("Scope of work is required.", "scope");
+    if (!d.fee.trim()) return fail("Fee and payment schedule is required.", "fee");
+    if (!d.leadId) {
+      if (!confirm("No lead is selected, so client details won't come across. Send anyway?")) {
+        return fail("Pick a lead, or send without one.", "leadSearch");
+      }
+    }
+
+    goBtn.disabled = true;
+    statusEl.textContent = "Sending…";
+    d.company = form.querySelector('[name=company]').value;
+
+    var headers = { "Content-Type": "application/json" };
+    if (passParam()) headers["X-Intake-Pass"] = passParam();
+
+    fetch("/.netlify/functions/site-intake", { method: "POST", headers: headers, body: JSON.stringify(d) })
+      .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
+      .catch(function () { return { ok: false, j: {} }; })
+      .then(function (res) {
+        if (!res.ok) return fail(res.j.error || "Couldn't send. Your draft is saved — try again in a moment.");
+        clearDraft();
+        form.style.display = "none";
+        document.getElementById("bar").style.display = "none";
+        if (res.j.url) document.getElementById("openItem").href = res.j.url;
+        doneEl.style.display = "block";
+        window.scrollTo(0, 0);
+      });
+  });
+
+  document.getElementById("another").addEventListener("click", function () {
+    location.href = location.pathname + location.search;
+  });
+
+  loadDraft();
+  loadLeads();
+  recalc();
+})();
+</script>
+
+</body>
+</html>
