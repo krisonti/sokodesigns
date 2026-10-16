@@ -445,5 +445,6 @@ footer a:hover{color:#fff;text-decoration:underline}
 const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}})},{threshold:0.08});
 document.querySelectorAll('.rv').forEach(el=>io.observe(el));
 </script>
+<script src="/chat.js" defer></script>
 </body>
 </html>
