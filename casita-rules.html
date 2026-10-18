@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Casita &amp; ADU Rules by City — Phoenix Metro | SOKO Designs</title>
-<meta name="description" content="What you can actually build in your backyard, city by city. Size caps, setbacks, and the guest house vs ADU distinction for Phoenix, Scottsdale, Mesa, Tempe, and unincorporated Maricopa County. Verified against each city's code.">
+<meta name="description" content="What you can actually build in your backyard, city by city. Size caps, height limits, setbacks and parking for Phoenix, Scottsdale, Mesa, Tempe, Chandler, Gilbert, Glendale and unincorporated Maricopa County. Verified against each city's code.">
 <meta name="robots" content="index,follow">
 <link rel="canonical" href="https://www.sokodesigns.com/casita-rules">
 <meta property="og:type" content="website">
@@ -61,6 +61,8 @@
     border-radius:3px; padding:12px 18px; transition:background .18s, color .18s, border-color .18s}
   .picker button:hover{border-color:#fff; color:#fff}
   .picker button[aria-selected="true"]{background:#fff; color:var(--teal-deep); border-color:#fff}
+  .picker-note{margin-top:18px; font-size:15px; color:#B9D3D3; max-width:70ch}
+  .picker-note a{color:#fff; font-weight:600}
 
   .city{background:var(--white); border:1px solid var(--line); border-radius:8px; padding:34px 32px; margin-top:-46px; position:relative; z-index:2; box-shadow:0 22px 54px rgba(26,26,26,.09)}
   .city-top{display:flex; justify-content:space-between; align-items:flex-start; gap:20px; flex-wrap:wrap; border-bottom:1px solid var(--line-soft); padding-bottom:20px}
@@ -116,6 +118,7 @@
     <h1>The same casita is 2,500 sq ft in one city and 1,000 in the next.</h1>
     <p>Arizona opened up backyard casitas, but every city wrote its own version — and a few kept a second, roomier category most people have never heard of. Pick your city and see what you can actually build.</p>
     <div class="picker" id="picker" role="tablist" aria-label="Choose a city"></div>
+    <p class="picker-note"><b style="color:#fff">Don't see your city?</b> Peoria, Surprise, Goodyear, Avondale, Buckeye, Queen Creek and Paradise Valley are next on our list. <a href="#check">Send us your address</a> and we'll pull your city's rules for you.</p>
   </div>
 </section>
 
@@ -132,7 +135,7 @@
     <div class="sec-head reveal">
       <div class="eyebrow">Side by side</div>
       <h2>Every city at a glance.</h2>
-      <p>The number that moves the most is the size cap — and whether the city still recognizes a guest house as something separate from an ADU.</p>
+      <p>Eight jurisdictions, one table. The number that moves the most is the size cap — and whether the city still recognizes a guest house as something separate from an ADU.</p>
     </div>
     <div class="cmp-wrap reveal">
       <table class="cmp">
@@ -309,8 +312,8 @@ const CITIES = [
       ["ADU size", "First ADU: 1,000 sq ft or 75% of the main house, whichever is less. Additional ADUs capped at 500 sq ft"],
       ["ADU count", "One attached and one detached. A third detached on lots of 1 acre or more if one qualifies as affordable"],
       ["ADU setbacks", "Detached ADUs can't sit in a required front or side yard, but may be as close as 5 ft to side or rear when placed in the rear yard"],
-      ["Height", "Whatever the underlying zoning district allows"],
-      ["Parking", "No separate ADU minimum — you just keep the main house's required parking"],
+      ["Height", "Same cap as the house. In R1-7 and the other R1 districts that is 30 ft (Sec. 5.504.D; ADU rules in Sec. 7.904, amended Sept. 2025)"],
+      ["Parking", "No separate ADU minimum — you just keep the main house's required parking, and replace any spaces the ADU displaces (Sec. 7.904)"],
       ["Renting an ADU", "Allowed, but the owner must live on the property for vacation or short-term rental use"]
     ],
     gotcha: "On a 5,000 sq ft Scottsdale home, an ADU maxes out at 1,000 sq ft — but a guest house could be 2,500. If the space is for your parents or your kids rather than a tenant, the guest house is often more than twice the building for the same backyard. The trade-off is that you can't rent it separately, and since January 2025 it carries a recorded deed restriction.",
@@ -328,10 +331,11 @@ const CITIES = [
     specs: [
       ["Guest house", "Not a separate category — Phoenix treats guest houses, casitas and granny flats as ADUs"],
       ["Size — standard lot", "75% of the main house's gross floor area, not to exceed 1,000 sq ft on lots up to 10,000 sq ft"],
-      ["Size — large lot", "75% of the main house's gross floor area, not to exceed 3,000 sq ft on lots over 10,000 sq ft"],
-      ["How many", "Two ADUs permitted, with a third allowed under certain circumstances"],
-      ["Setbacks", "State law caps the setback a city can require at 5 ft; lot coverage rules for your district still apply"],
-      ["Parking", "No additional parking can be required for an ADU"],
+      ["Size — large lot", "75% of the main house's gross floor area, not to exceed 3,000 sq ft or 10% of the net lot area, on lots over 10,000 sq ft (Sec. 706.A.8)"],
+      ["How many", "Two ADUs per single-family lot. A third on lots of an acre or more if one qualifies as affordable housing (Sec. 608.E.2)"],
+      ["Setbacks", "A detached ADU can sit 3 ft from an interior side or rear line, 5 ft from a street side, and right up to a dedicated alley. Front follows your district (Sec. 706.A.4.b)"],
+      ["Height", "Outside the required yards, the same as the house: 2 stories and 30 ft in R1-6 (Table 613.1). Tucked into the required rear or side yard, 15 ft unless you get a use permit (Sec. 706.A.4.c)"],
+      ["Parking", "No additional parking can be required for an ADU (A.R.S. 9-461.18). Convert a garage or carport and you do have to put replacement parking somewhere other than the front setback"],
       ["Design", "The city cannot require the ADU to match the main house's exterior"]
     ],
     gotcha: "Lot size is the lever in Phoenix. Cross 10,000 sq ft and your cap jumps from 1,000 to 3,000 sq ft — the most generous ADU allowance of any city on this page. Plenty of older Phoenix lots sit just above or just below that line, so it is worth confirming your exact parcel size before you settle on a design.",
@@ -351,7 +355,7 @@ const CITIES = [
       ["Size", "1,000 sq ft or 75% of the habitable floor area of the primary dwelling, whichever is less"],
       ["How many", "One attached and one detached. A third detached on lots over an acre if one is restricted-affordable"],
       ["Setbacks", "At least 5 ft from side and rear property lines. Front and street side follow your zoning district"],
-      ["Height", "Per the underlying zoning district — a two-story detached ADU is possible where zoning allows it"],
+      ["Height", "Same as the house: 30 ft in the RS single-residence districts (Table 11-5-3.A.1; Sec. 11-31-3.F) — so a two-story detached ADU behind a one-story home is allowed"],
       ["Minimum lot size", "None"],
       ["Parking", "No additional spaces required; keep 2 for the primary residence"],
       ["Owner-occupancy", "Not required — you can rent it without living on site"],
@@ -375,7 +379,7 @@ const CITIES = [
       ["Size — 1 acre or more", "75% of the interior habitable floor area, or 2,000 sq ft, whichever is less"],
       ["How many", "One attached and one detached. One more on lots of an acre or more if an ADU is income-restricted at 80% AMI"],
       ["Setbacks", "Minimum 5 ft rear, side and street side in all districts unless the district sets less. Front follows your district. Alley-adjacent setbacks are measured from the alley midpoint"],
-      ["Height", "Per the zoning district, typically 30 ft"],
+      ["Height", "Same as the house: 30 ft in R1-6 and every other R1 district, 35 ft in R1-4 (Table 4-202A; Sec. 3-402)"],
       ["Two-story", "Requires a Use Permit, per the Board of Adjustment decision of December 17, 2025"],
       ["Parking", "No additional parking required"],
       ["Not eligible", "Properties that already hold a duplex, triplex or similar"]
@@ -383,6 +387,73 @@ const CITIES = [
     gotcha: "Two things to plan around in Tempe. If your lot is an acre or more the cap doubles to 2,000 sq ft, which changes what's worth designing. And if you were picturing a two-story casita, that now needs a Use Permit — an extra approval step with its own timeline, so it belongs in your schedule from day one rather than as a surprise at submittal.",
     guide: "/guides/city-of-tempe-permit-by-inspection.html",
     utilities: "/blog/adu-utility-connections-tempe-arizona.html"
+  },
+  {
+    slug: "chandler",
+    name: "Chandler",
+    verified: "October 2026",
+    separate: true,
+    verdict: "Chandler still lists <b>guest quarters</b> as its own category — but that's a no-kitchen building for non-paying guests. Add a kitchen and it's an <b>ADU</b>, and Chandler is the one city here with a <b>design standard</b> you have to meet.",
+    biggest: "1,000 sq ft",
+    howMany: "1 attached + 1 detached",
+    specs: [
+      ["Guest quarters", "Still a separate accessory building in Chandler: sleeping and bathroom only, no kitchen, for non-paying guests. Anything with a kitchen is an ADU (Sec. 35-200; Sec. 35-2202)"],
+      ["Size", "75% of the main home's interior habitable area, or 1,000 sq ft, whichever is less (Ord. 5113, Sec. 35-2202.2(1)(A))"],
+      ["How many", "One attached and one detached. A third detached on lots of an acre or more if one is deed-restricted affordable (Sec. 35-2202.2(1)(A)–(B))"],
+      ["Setbacks", "Front follows your zoning district; rear and side at least 5 ft. A garage attached to the ADU has to meet the district's normal side and rear setbacks (Sec. 35-2202.2(1)(C)–(D))"],
+      ["Height", "Same as the house. In SF-8.5, Chandler's most common subdivision zoning, that's 25 ft at the setback line, stepping up at 45° to a 35 ft maximum, same as AG-1 (Sec. 35-2202.2(1)(C); Sec. 35-403(1)). The 15 ft cap on sheds and workshops does not apply to ADUs"],
+      ["Parking", "No extra space. Chandler's ADU section sets none, and state law (A.R.S. 9-461.18) bars the city from adding one. The old one-space rule for ADUs in the accessory-building section no longer applies"],
+      ["Utilities", "Same water, sewer and electric providers and meters as the house — no separate meters (Sec. 35-2202.2(1)(E))"],
+      ["Exterior", "Stucco or EIFS walls with a concrete tile roof at 4:12 — or match the main house's materials, colors and style (Sec. 35-2202.2(1)(F))"],
+      ["Entrance", "The ADU needs its own separate entrance (Sec. 35-2202.2(1)(G))"]
+    ],
+    gotcha: "Two things. Chandler wrote an exterior standard into its ADU ordinance: stucco and a concrete tile roof at 4:12, unless you match the main house instead — so a metal-roof modern casita behind a tile-roof home isn't a given. And the ADU has to run on the same meters as the house, so a tenant can't have their own utility accounts. Neither is a deal-breaker; both belong in the design before you fall in love with a rendering.",
+    guide: "/guides/city-of-chandler-permit-process.html",
+    utilities: "/blog/adu-utility-connections-chandler-arizona.html"
+  },
+  {
+    slug: "gilbert",
+    name: "Gilbert",
+    verified: "October 2026",
+    separate: false,
+    verdict: "Gilbert folded its old incidental dwelling unit rules into one ADU section — and it's the only city here where a casita <b>bigger than 1,000 sq ft</b> is on the table, with a use permit.",
+    biggest: "75% of your home (over 1,000 sq ft needs a use permit)",
+    howMany: "1 attached + 1 detached",
+    specs: [
+      ["Guest house", "Not a separate category — Gilbert's ADU section (Ord. 2931, effective Dec. 18, 2024) covers casitas, guest houses and granny flats"],
+      ["Size", "Up to 75% of the main home's gross square footage. Up to 1,000 sq ft is by right; anything between 1,000 sq ft and the 75% cap needs an Administrative Use Permit (LDC Sec. 5.2.3(4)(c), 5.2.3.A–B)"],
+      ["How many", "One attached and one detached. One more detached on parcels of an acre or more if one is restricted-affordable (Sec. 5.2.3(3))"],
+      ["Setbacks", "Front follows your district. A unit up to 1,000 sq ft can sit outside the building envelope, 5 ft from rear and side lines if it's 10 ft tall or less — every foot of height over 10 ft adds a foot of setback. Over 1,000 sq ft, it stays inside the normal envelope (Sec. 5.2.3.A(2), 5.2.3.B(2))"],
+      ["Height", "Capped at the district height: 30 ft and 2 stories in SF-6 and SF-7 (Tables 3.2.4.F.1, 3.2.4.G.1; Sec. 5.2.3(4)(b)). A tall unit near the line pays for it in setback — a 20 ft casita needs 15 ft from rear and side lines"],
+      ["Parking", "No extra space. Sec. 5.2.3 sets no ADU parking requirement, and state law (A.R.S. 9-461.18) bars the Town from adding one"],
+      ["Utilities", "All services come off the house's connections — one sewer tap and one water meter per lot (Town ADU guide; Sec. 3.2.4 accessory tables)"],
+      ["Rental", "Renting the ADU separately from the house is allowed (Sec. 5.2.3(4)(f))"],
+      ["Exterior", "Doesn't have to match the house, but elevations must be articulated, entries lit, roof-mounted equipment is prohibited and ground units need a 4 ft screen wall (Sec. 5.2.3(5))"]
+    ],
+    gotcha: "The height-to-setback trade is the one that reshapes designs in Gilbert. At 10 ft tall a detached casita can sit 5 ft off the rear line. Take it to a 14 ft roofline for vaulted ceilings and it has to be 9 ft off the line — on a typical 6,000 sq ft lot that pulls the building into the yard you were trying to keep. Decide on the roof height before you place the building, not after.",
+    guide: "/guides/town-of-gilbert-permit-process.html",
+    utilities: "/blog/adu-utility-connections-gilbert-arizona.html"
+  },
+  {
+    slug: "glendale",
+    name: "Glendale",
+    verified: "October 2026",
+    separate: false,
+    verdict: "Glendale's size rule is simple — up to the size of the house, never over 1,000 sq ft. The surprise is underground: every ADU needs its <b>own city water meter</b>.",
+    biggest: "1,000 sq ft",
+    howMany: "1 attached + 1 detached",
+    specs: [
+      ["Guest house", "Not a separate category — Glendale's ADU section (adopted Dec. 10, 2024, amended Nov. 25, 2025) covers casitas, guest houses and granny flats"],
+      ["Size", "Up to the gross floor area of the main house, but never more than 1,000 sq ft (UDC Sec. 35.3.204(A)(16))"],
+      ["How many", "One attached and one detached. On lots of an acre or more, one attached and two detached if one is recorded as restricted-affordable (Sec. 35.3.204(A)(9)–(10))"],
+      ["Setbacks", "Rear and side at least 5 ft from the property line; front follows your district (Sec. 35.3.204(A)(11))"],
+      ["Height", "Same as the house: 30 ft and 2 stories in R1-6 (Table 2.300-2, Sec. 35.2.303; Sec. 35.3.204(A)(12)). Note that Glendale's general accessory-building cap in R1 districts is 16 ft (Sec. 35.3.203(C)(1)), so confirm a two-story detached design with the city before you draw it"],
+      ["Parking", "No extra space and no in-lieu fee — but the ADU can't have its own driveway or parking area (Sec. 35.3.204(A)(20))"],
+      ["Utilities", "Separate utility meters, including a separate city water meter — that means a new tap at the main in the street, a right-of-way permit and a licensed contractor (Sec. 35.3.204(A)(24))"],
+      ["Rental", "Long-term rental is allowed. To use either unit as a short-term rental you have to live in the other one (Sec. 35.3.204(A)(25))"]
+    ],
+    gotcha: "Every other city on this page lets the casita share the house's water meter. Glendale requires its own, and a new tap means opening the street: right-of-way permit, utility coordination and a contractor licensed for that work, before you've poured a slab. On a lot where the water main runs down the far side of the street, this one line item can swing the budget by five figures. Price it first.",
+    guide: "/guides/city-of-glendale-permit-process.html"
   },
   {
     slug: "maricopa-county",
@@ -399,9 +470,13 @@ const CITIES = [
       ["Size", "75% of the gross floor area of the single-family dwelling, or 1,000 sq ft, whichever is less"],
       ["How many", "At least one attached and one detached on any lot where a single-family dwelling is allowed"],
       ["Third unit", "Permitted on parcels of an acre or more if deed-restricted as affordable at up to 80% AMI"],
-      ["Approval", "By right — no public hearing required"]
+      ["Setbacks", "A detached ADU may sit in the required rear or side yard, at least 5 ft from the property line, covering no more than 30% of that yard (Article 602.3.4.A)"],
+      ["Height", "Same as the house: 35 ft in the R1 districts (Section 502 table). A detached ADU that sits inside the rear or side setback is capped at 18 ft (Article 602.3.4.B)"],
+      ["Parking", "No extra parking. The county's ADU article sets none, and state law (A.R.S. 11-810.01) bars the county from adding it"],
+      ["Access", "The ADU shares one driveway entrance with the house; the driveway can split once it's on the lot (Article 602.3.4.C)"],
+      ["Approval", "By right — no public hearing, variance or special permit (Article 602.3.1)"]
     ],
-    gotcha: "This one is new enough that plenty of county parcel owners still assume a casita isn't allowed out there. Before HB 2928, unincorporated county zoning often either prohibited ADUs outright or made them impractical. If somebody told you no in 2024, that answer is out of date. The figures above are the floor the state statute sets; county-specific details like height in a required yard are worth confirming against the current ordinance for your exact parcel, which we'll do when we check your lot.",
+    gotcha: "This one is new enough that plenty of county parcel owners still assume a casita isn't allowed out there. Before HB 2928, unincorporated county zoning often either prohibited ADUs outright or made them impractical. If somebody told you no in 2024, that answer is out of date. The county also wrote in a trade-off: push the casita into the rear or side setback and it drops to a single story at 18 ft. Keep it inside the normal building envelope and it can go as tall as the house.",
     guide: "/guides/maricopa-county-permit-process.html",
     utilities: "/blog/adu-utility-connections-maricopa-county-arizona.html"
   }
@@ -420,8 +495,8 @@ const CITIES = [
         return '<li><span class="k">' + s[0] + '</span><span class="v">' + s[1] + '</span></li>';
       }).join('') + '</ul>' +
       '<div class="gotcha"><div class="lab">What most people miss</div><p>' + c.gotcha + '</p></div>' +
-      '<p class="city-links">More on ' + c.name + ': <a href="' + c.guide + '">the permit process</a> · ' +
-      '<a href="' + c.utilities + '">what utility connections cost</a></p>' +
+      '<p class="city-links">More on ' + c.name + ': <a href="' + c.guide + '">the permit process</a>' +
+      (c.utilities ? ' · <a href="' + c.utilities + '">what utility connections cost</a>' : '') + '</p>' +
       '<div style="margin-top:26px"><a class="btn btn-teal" href="#check">Check what fits on my lot &rarr;</a></div>';
     Array.prototype.forEach.call(picker.children, function(b, k){
       b.setAttribute('aria-selected', k === i ? 'true' : 'false');
@@ -442,6 +517,13 @@ const CITIES = [
   const want = location.hash.replace('#','').toLowerCase();
   let start = CITIES.findIndex(function(c){ return c.slug === want; });
   render(start > -1 ? start : 0);
+
+  // Also follow hash changes on an already-open page (e.g. a second emailed link).
+  window.addEventListener('hashchange', function(){
+    const w = location.hash.replace('#','').toLowerCase();
+    const i = CITIES.findIndex(function(c){ return c.slug === w; });
+    if (i > -1) render(i);
+  });
 
   // Comparison table
   document.getElementById('cmp-body').innerHTML = CITIES.map(function(c){
