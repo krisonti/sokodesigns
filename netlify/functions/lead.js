@@ -36,6 +36,17 @@ const LEADS_PROJECT_TYPES = [
   "Tenant Improvement","Commercial NB","Demo Permit","Zoning","Site Plan","Multifamily",
   "Civil","Construction Bid","Group Home","Project Mgt","New Build",
 ];
+// Landing pages still send the short ADU-board names; translate for the Leads Board.
+const LEADS_PROJECT_ALIASES = { "Remodel": "Res Remodel", "Room Addition": "Res Addition", "Guest House": "ADU", "Addition": "Res Addition", "New Build": "Res New Build" };
+// Leads Board extras: Lead Type (color_mm7mcqs9) and Industry (color_mm7qj94b).
+const LEADS_LEAD_TYPES = ["Homeowner","Contractor","Investor","Realtor","Designer / Architect","Other Pro","Business Owner","Landlord","Broker"];
+const LEADS_INDUSTRIES = ["Restaurant & Bar","Medical & Dental","Office","Retail","Salon & Spa","Warehouse & Industrial","Coffee & QSR","Brewery & Taproom","Fitness","Church / Daycare / School","Auto","Vet & Pet","Other TI"];
+// The /tenant-improvements page's "What's going in?" choices -> Industry label.
+const SCOPE_TO_INDUSTRY = {
+  "Restaurant, bar, or café": "Restaurant & Bar", "Retail storefront": "Retail", "Office": "Office",
+  "Medical, dental, or clinic": "Medical & Dental", "Salon, spa, or barbershop": "Salon & Spa",
+  "Gym or studio": "Fitness", "Warehouse or industrial": "Warehouse & Industrial",
+};
 
 exports.handler = async (event) => {
   if (event.httpMethod !== "POST") return json(405, { error: "Method not allowed." });
@@ -59,8 +70,11 @@ exports.handler = async (event) => {
     projectType: (data.projectType || "").trim(),
     leadSource:  (data.leadSource || "").trim(),
     business:    (data.business || "").trim(),
+    leadType:    (data.leadType || "").trim(),
     destination: data.destination === "leads" ? "leads" : "default",
   };
+  if (LEADS_PROJECT_ALIASES[lead.projectType]) lead.projectType = LEADS_PROJECT_ALIASES[lead.projectType];
+  lead.industry = lead.projectType === "Tenant Improvement" ? (SCOPE_TO_INDUSTRY[lead.scope] || "Other TI") : "";
 
   if (!lead.name || !lead.email || !lead.phone) {
     return json(400, { error: "Name, email, and phone are required." });
@@ -128,6 +142,8 @@ function leadsBoardColumns(lead, today) {
   };
   if (LEADS_PROJECT_TYPES.includes(lead.projectType)) cols.status = { label: lead.projectType };
   if (lead.business) cols.text_mm235c85 = String(lead.business).slice(0, 250);
+  if (LEADS_LEAD_TYPES.includes(lead.leadType)) cols.color_mm7mcqs9 = { label: lead.leadType };
+  if (LEADS_INDUSTRIES.includes(lead.industry)) cols.color_mm7qj94b = { label: lead.industry };
   return cols;
 }
 

@@ -57,6 +57,10 @@
       data.source = cfg.source || document.title;
       data.projectType = data.projectType || cfg.projectType || 'Other';
       if (leadSource) data.leadSource = leadSource;
+      // Which Monday board: "leads" = Leads Board (all plans/permits pages now),
+      // anything else falls back to the ADU Investor board.
+      if (cfg.destination) data.destination = cfg.destination;
+      if (cfg.leadType) data.leadType = cfg.leadType;
 
       // The board's Project Type list is short, so several choices collapse to
       // "Other". Keep the exact wording the person picked in the note.
