@@ -313,8 +313,10 @@ function photoTag(src, alt) {
 }
 
 /* ---------- steps ---------- */
+// A category's show_if (e.g. "flooring=fl-lvp") hides the whole step until that choice is made,
+// so steps are rebuilt on every render.
 function buildSteps() {
-  const cats = CAT.filter(c => forType(c.project_types));
+  const cats = CAT.filter(c => forType(c.project_types) && (!c.show_if || condOk(c.show_if)));
   steps = [{ kind: "welcome", title: "Welcome" }, { kind: "package", title: "Pick a Look", section: "Start" }]
     .concat(cats.map(c => ({ kind: "cat", id: c.category_id, title: c.title, section: c.section })))
     .concat([{ kind: "review", title: "Review & Sign", section: "Finish" }]);
@@ -323,6 +325,10 @@ function catSteps() { return steps.filter(s => s.kind === "cat"); }
 
 /* ---------- rendering ---------- */
 function render() {
+  const was = steps[cur];
+  buildSteps();
+  const at = was ? steps.findIndex(x => x.kind === was.kind && x.id === was.id) : -1;
+  cur = at >= 0 ? at : Math.min(cur, steps.length - 1);
   const s = steps[cur];
   const done = catSteps().filter(x => hasPick(x.id)).length, total = catSteps().length;
   $("#barFill").style.width = (locked ? 100 : Math.round(done / total * 100)) + "%";
