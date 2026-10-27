@@ -55,7 +55,7 @@ footer{background:#111110; color:#B7B4AC; padding:52px 0 38px; margin-top:0}
 .post-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:24px; padding:52px 0 20px}
 .card{background:var(--white); border:1px solid var(--line); border-radius:10px; overflow:hidden; display:flex; flex-direction:column; text-decoration:none; color:inherit; transition:transform .2s, box-shadow .2s}
 .card:hover{transform:translateY(-4px); box-shadow:0 22px 46px rgba(20,20,18,.10)}
-.card .thumb{aspect-ratio:16/10; overflow:hidden; background:var(--sand)}
+.card .thumb{aspect-ratio:16/9; overflow:hidden; background:var(--sand)}
 .card .thumb img{width:100%; height:100%; object-fit:cover; transition:transform .5s}
 .card:hover .thumb img{transform:scale(1.05)}
 .card .body{padding:22px 22px 24px; display:flex; flex-direction:column; flex:1}
@@ -79,6 +79,8 @@ footer{background:#111110; color:#B7B4AC; padding:52px 0 38px; margin-top:0}
 .post-feature{max-width:var(--maxw); margin:0 auto; padding:0 26px}
 .post-feature .img-wrap{margin-top:-1px; border-radius:0 0 10px 10px; overflow:hidden}
 .post-feature img{width:100%; aspect-ratio:21/9; object-fit:cover}
+/* Series title-card heroes are 16:9 with type baked in — a 21:9 crop cuts the band */
+.post-feature.banner img{aspect-ratio:16/9}
 
 .article{max-width:var(--readw); margin:0 auto; padding:46px 26px 20px; font-size:18px; line-height:1.75}
 .article p{margin:0 0 22px; color:#2B2A26}
