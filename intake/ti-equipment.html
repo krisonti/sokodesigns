@@ -138,6 +138,11 @@ input:focus,textarea:focus{outline:none; border-color:var(--teal); box-shadow:0 
 /* ---------- follow-up questions ---------- */
 .q.follow{margin-left:14px; border-left:3px solid var(--teal); margin-top:-6px}
 
+.many{font-weight:400; font-size:12.5px; color:var(--ink-soft); margin-left:8px}
+.eqmore .fine{font-size:12.5px}
+.eqgrid select{text-overflow:ellipsis}
+@media(max-width:420px){ .eqgrid select{font-size:15px; padding-left:9px; padding-right:9px} }
+.sure[aria-pressed="true"]{background:var(--ink); border-color:var(--ink); color:#fff}
 .eqmore{margin-top:10px; border-top:1px solid var(--line-soft); padding-top:8px}
 .eqmore summary{cursor:pointer; font-size:14px; font-weight:600; color:var(--teal, #4A7C7E); padding:4px 0}
 .eqmore summary::marker{color:var(--teal, #4A7C7E)}
@@ -319,7 +324,7 @@ const SECTIONS = [
     { id:'equipment', type:'equipment', label:'Equipment',
       help:'For each one, attach the spec sheet if you have it. That is usually a PDF from the manufacturer, and a photo of the data plate on the machine works just as well. If you attach one, you can skip the power and plumbing boxes entirely.',
       prefill:['','',''] },
-    { id:'eq_undecided', label:'Is anything still undecided?', type:'textarea',
+    { id:'eq_undecided', label:'Is anything still undecided?', type:'textarea', noSure:true,
       help:'Tell us what you have not picked yet. We can design around it as long as we know it is coming.' },
     { id:'eq_supplier', label:'Who is buying and connecting the equipment?', type:'check',
       options:['We buy it, you connect it','Our contractor supplies it','Some of it is leased','Not sure'],
@@ -340,8 +345,8 @@ const SECTIONS = [
     { id:'bar', label:'Will there be a bar?', type:'radio', options:['Full bar','Beer and wine','No bar','Not sure'], showIf:{ f:'industry', v:'Restaurant, bar or café' } },
 
     /* ---- salon ---- */
-    { id:'salon_bowls', label:'How many shampoo bowls?', type:'text', inputmode:'numeric', showIf:{ f:'industry', v:'Salon, spa or barbershop' },
-      help:'Each one needs water and a drain, so the count drives the plumbing.' },
+    { id:'salon_bowls', label:'How many shampoo bowls in total?', type:'text', inputmode:'numeric', showIf:{ f:'industry', v:'Salon, spa or barbershop' },
+      help:'Count them all, including any you already listed as equipment. Each one needs water and a drain, so this number drives the plumbing.' },
     { id:'salon_stations', label:'How many styling or barber chairs?', type:'text', inputmode:'numeric', showIf:{ f:'industry', v:'Salon, spa or barbershop' } },
     { id:'salon_pedi', label:'Any pedicure spas or soaking tubs?', type:'radio', options:['Yes','No','Not sure'], showIf:{ f:'industry', v:'Salon, spa or barbershop' } },
     { id:'salon_services', label:'Which services will you offer?', type:'check',
@@ -368,7 +373,7 @@ const SECTIONS = [
     { id:'ret_rooms', label:'Will you have fitting rooms?', type:'radio', options:['Yes','No','Not sure'], showIf:{ f:'industry', v:'Retail' } },
 
     /* ---- warehouse ---- */
-    { id:'wh_racking', label:'How high will the racking or storage go?', type:'text', placeholder:'Feet', showIf:{ f:'industry', v:'Warehouse or industrial' },
+    { id:'wh_racking', label:'How high will the racking or storage go, in feet?', type:'text', placeholder:'e.g. 16', showIf:{ f:'industry', v:'Warehouse or industrial' },
       help:'Above a certain height the fire sprinklers have to change, so this one matters.' },
     { id:'wh_forklift', label:'Forklifts on site?', type:'radio', options:['Yes, electric (needs charging)','Yes, propane','No','Not sure'], showIf:{ f:'industry', v:'Warehouse or industrial' } },
     { id:'wh_office', label:'Will there be office space inside the warehouse?', type:'radio', options:['Yes','No','Not sure'], showIf:{ f:'industry', v:'Warehouse or industrial' } },
@@ -796,9 +801,36 @@ function uploadBlock(q, small){
     <ul class="flist" id="list-${q.id}" aria-live="polite"></ul>`;
 }
 
+const BASE_KINDS = ['Refrigerator or freezer','Sink or plumbing fixture','Water heater','HVAC unit',
+  'Compressor or pump','Shelving or racking','Casework, counter or display','Washer or dryer','Specialty equipment','Other'];
+const KIND_SETS = {
+  'Restaurant, bar or café': ['Walk-in cooler or freezer','Ice machine','Cooking equipment','Exhaust hood','Dishwasher or warewashing','Bar equipment'],
+  'Other food business':     ['Walk-in cooler or freezer','Ice machine','Cooking equipment','Exhaust hood','Dishwasher or warewashing','Production equipment'],
+  'Salon, spa or barbershop':['Shampoo bowl','Styling or barber chair','Pedicure spa','Dryer or processor','Sterilizer','Nail station'],
+  'Medical, dental or clinic':['Exam or operatory chair','Imaging or X-ray','Autoclave or sterilizer','Medical gas equipment','Lab equipment'],
+  'Office':                  ['Server or network rack','Copier or printer','Kitchenette appliance'],
+  'Retail':                  ['Display case or fixture','Point of sale counter','Fitting room fixture'],
+  'Warehouse or industrial': ['Forklift charger','Dock equipment','Conveyor','Baler or compactor','Air compressor'],
+  'Church or assembly':      ['AV or sound equipment','Stage equipment','Kitchen appliance'],
+};
+const BASE_PLACES = ['Storage','Restroom','Office','Exterior or roof','Not sure'];
+const PLACE_SETS = {
+  'Restaurant, bar or café': ['Front of house','Dining area','Prep','Kitchen / BOH','Dish','Walk-in','Bar'],
+  'Other food business':     ['Front of house','Production','Prep','Kitchen / BOH','Dish','Walk-in'],
+  'Salon, spa or barbershop':['Reception','Styling floor','Shampoo area','Treatment room','Dispensary','Laundry'],
+  'Medical, dental or clinic':['Reception','Exam room','Operatory','Lab','Sterilization','Imaging'],
+  'Office':                  ['Reception','Open office','Private office','Conference','Break room','Server room'],
+  'Retail':                  ['Sales floor','Stockroom','Fitting rooms','Checkout'],
+  'Warehouse or industrial': ['Warehouse floor','Dock','Mezzanine','Racking area','Shop'],
+  'Church or assembly':      ['Lobby','Sanctuary','Stage','Classroom','Nursery','Kitchen'],
+};
+const isFood = () => ['Restaurant, bar or café','Other food business'].includes(S.answers.industry);
+const kindsFor  = () => (KIND_SETS[S.answers.industry]  || []).concat(BASE_KINDS);
+const placesFor = () => (PLACE_SETS[S.answers.industry] || []).concat(BASE_PLACES);
+
 function eqRowHTML(r, n){
   const k = esc(r.key), d = col => ` data-eq="${k}" data-col="${col}"`;
-  const txt = (col, label, extra = '') => `<label class="cell"><span>${label}</span><input type="text" value="${esc(r[col])}"${d(col)}${extra}></label>`;
+  const txt = (col, label, extra = '', type = 'text') => `<label class="cell"><span>${label}</span><input type="${type}" value="${esc(r[col])}"${d(col)}${extra}></label>`;
   return `<div class="eqrow" data-row="${k}">
     <div class="eqrow-h">
       <span class="eqnum">${n}</span>
@@ -806,10 +838,10 @@ function eqRowHTML(r, n){
       <button type="button" class="x" data-delrow="${k}" aria-label="Remove ${esc(r.name || 'this equipment')}">×</button>
     </div>
     <div class="eqgrid">
-      <label class="cell"><span>What is it</span><select${d('kind')}><option value=""></option><option${r.kind === 'Refrigerator or freezer' ? ' selected' : ''}>Refrigerator or freezer</option><option${r.kind === 'Walk-in cooler or freezer' ? ' selected' : ''}>Walk-in cooler or freezer</option><option${r.kind === 'Ice machine' ? ' selected' : ''}>Ice machine</option><option${r.kind === 'Cooking equipment' ? ' selected' : ''}>Cooking equipment</option><option${r.kind === 'Exhaust hood' ? ' selected' : ''}>Exhaust hood</option><option${r.kind === 'Dishwasher or warewashing' ? ' selected' : ''}>Dishwasher or warewashing</option><option${r.kind === 'Sink or plumbing fixture' ? ' selected' : ''}>Sink or plumbing fixture</option><option${r.kind === 'Water heater' ? ' selected' : ''}>Water heater</option><option${r.kind === 'Washer or dryer' ? ' selected' : ''}>Washer or dryer</option><option${r.kind === 'HVAC unit' ? ' selected' : ''}>HVAC unit</option><option${r.kind === 'Compressor or pump' ? ' selected' : ''}>Compressor or pump</option><option${r.kind === 'Shelving or racking' ? ' selected' : ''}>Shelving or racking</option><option${r.kind === 'Casework, counter or display' ? ' selected' : ''}>Casework, counter or display</option><option${r.kind === 'Specialty equipment' ? ' selected' : ''}>Specialty equipment</option><option${r.kind === 'Other' ? ' selected' : ''}>Other</option></select></label>
+      <label class="cell"><span>What is it</span><select${d('kind')}><option value=""></option>${kindsFor().map(o => `<option${r.kind === o ? ' selected' : ''}>${esc(o)}</option>`).join('')}</select></label>
       ${txt('model', 'Make and model')}
-      ${txt('qty', 'How many', ' inputmode="numeric" placeholder="1"')}
-      <label class="cell"><span>Where does it go</span><select${d('location')}><option value=""></option><option${r.location === 'Front of house' ? ' selected' : ''}>Front of house</option><option${r.location === 'Dining or waiting area' ? ' selected' : ''}>Dining or waiting area</option><option${r.location === 'Prep' ? ' selected' : ''}>Prep</option><option${r.location === 'Kitchen or back of house' ? ' selected' : ''}>Kitchen or back of house</option><option${r.location === 'Dish' ? ' selected' : ''}>Dish</option><option${r.location === 'Storage' ? ' selected' : ''}>Storage</option><option${r.location === 'Walk-in' ? ' selected' : ''}>Walk-in</option><option${r.location === 'Restroom' ? ' selected' : ''}>Restroom</option><option${r.location === 'Office' ? ' selected' : ''}>Office</option><option${r.location === 'Exterior or roof' ? ' selected' : ''}>Exterior or roof</option><option${r.location === 'Not sure' ? ' selected' : ''}>Not sure</option></select></label>
+      ${txt('qty', 'How many', ' min="1" step="1" inputmode="numeric" placeholder="1"', 'number')}
+      <label class="cell"><span>Where does it go</span><select${d('location')}><option value=""></option>${placesFor().map(o => `<option${r.location === o ? ' selected' : ''}>${esc(o)}</option>`).join('')}</select></label>
       <fieldset class="cell wide"><legend>New or already owned?</legend>${optsHTML('eqsrc_' + r.key, 'radio', ['Buying new','Already own it','Leased','Not sure'], [r.source], 'eqsrc-' + r.key, d('source'))}</fieldset>
     </div>
     <details class="eqmore"><summary>Power, gas and plumbing &mdash; only if you know it</summary>
@@ -821,7 +853,7 @@ function eqRowHTML(r, n){
       ${txt('btu', 'Gas BTU/hr <small>(blank if electric)</small>', ' inputmode="numeric"')}
       <fieldset class="cell wide"><legend>Needs water?</legend>${optsHTML('eqw_' + r.key, 'radio', ['Yes','No','Not sure'], [r.water], 'eqw-' + r.key, d('water'))}</fieldset>
       <fieldset class="cell wide"><legend>Needs a drain?</legend>${optsHTML('eqd_' + r.key, 'radio', ['Yes','No','Not sure'], [r.drain], 'eqd-' + r.key, d('drain'))}</fieldset>
-      <fieldset class="cell wide"><legend>Open flame, fryer or griddle?</legend>${optsHTML('eqf_' + r.key, 'radio', ['Yes','No','Not sure'], [r.flame], 'eqf-' + r.key, d('flame'))}</fieldset>
+      ${isFood() ? `<fieldset class="cell wide"><legend>Open flame, fryer or griddle?</legend>${optsHTML('eqf_' + r.key, 'radio', ['Yes','No','Not sure'], [r.flame], 'eqf-' + r.key, d('flame'))}</fieldset>` : ''}
     </div></details>
     <div class="eqspec"><span class="cell-l">Spec sheet or data-plate photo</span>${uploadBlock(fieldById('eqrow_' + r.key), true)}</div>
   </div>`;
@@ -844,7 +876,8 @@ function renderQuestion(q){
   }
   if (q.type === 'radio' || q.type === 'check'){
     const vals = Array.isArray(v) ? v : (v ? [v] : []);
-    return wrap('', `<fieldset><legend>${esc(q.label)}${req}</legend>${help}${optsHTML(q.id, q.type === 'radio' ? 'radio' : 'checkbox', q.options, vals, id)}</fieldset>`);
+    const many = q.type === 'check' ? '<span class="many">pick all that apply</span>' : '';
+    return wrap('', `<fieldset><legend>${esc(q.label)}${req}${many}</legend>${help}${optsHTML(q.id, q.type === 'radio' ? 'radio' : 'checkbox', q.options, vals, id)}</fieldset>`);
   }
   if (q.type === 'upload') return wrap(' up', `<div class="qlabel">${esc(q.label)}</div>${help}${uploadBlock(q)}`);
   const attrs = `id="${id}" name="${q.id}"${q.autocomplete ? ` autocomplete="${q.autocomplete}"` : ''}${q.placeholder ? ` placeholder="${esc(q.placeholder)}"` : ''}${q.inputmode ? ` inputmode="${q.inputmode}"` : ''}${q.required ? ' aria-required="true"' : ''}`;
@@ -927,9 +960,9 @@ function eqSummary(r, n){
     r.phase && (r.phase === 'Not sure' ? 'Phase: not sure' : r.phase + '-phase'),
     r.amps && 'Amps/HP: ' + r.amps,
     r.btu && 'Gas: ' + r.btu + ' BTU/hr',
-    r.water === 'Yes' && 'needs water',
-    r.drain === 'Yes' && 'needs a drain',
-    r.flame === 'Yes' && 'open flame / fryer / griddle',
+    r.water && 'Water: ' + r.water,
+    r.drain && 'Drain: ' + r.drain,
+    r.flame && 'Open flame/fryer/griddle: ' + r.flame,
     specs && specs + ' spec sheet' + (specs > 1 ? 's' : '') + ' attached',
   ].filter(Boolean);
   return { q:n + '. ' + (r.name || 'Unnamed equipment'), a:parts.join(' · ') };
@@ -980,10 +1013,17 @@ function validate(){
   const errs = {};
   if (!String(S.answers.name || '').trim()) errs.name = 'Please enter your name.';
   if (!EMAIL_RE.test(String(S.answers.email || '').trim())) errs.email = S.answers.email ? 'That email doesn’t look right.' : 'Please enter your email.';
-  for (const id of ['name','email']){
-    const q = $(`[data-q="${id}"]`), e = $('#err-' + id);
-    q.classList.toggle('invalid', !!errs[id]); e.hidden = !errs[id]; e.textContent = errs[id] || '';
-    $('#f-' + id).setAttribute('aria-invalid', String(!!errs[id]));
+  // Any other question marked required, as long as it is actually on screen.
+  FIELDS.filter(q => q.required && q.id !== 'name' && q.id !== 'email' && isShown(q)).forEach(q => {
+    const v = S.answers[q.id];
+    const empty = Array.isArray(v) ? !v.length : !String(v == null ? '' : v).trim();
+    if (empty) errs[q.id] = 'Please answer this one — the rest of the form depends on it.';
+  });
+  for (const id of Object.keys(errs).concat(['name','email'])){
+    const q = $(`[data-q="${id}"]`), e = $('#err-' + id), f = $('#f-' + id);
+    if (q) q.classList.toggle('invalid', !!errs[id]);
+    if (e){ e.hidden = !errs[id]; e.textContent = errs[id] || '' }
+    if (f) f.setAttribute('aria-invalid', String(!!errs[id]));
   }
   return Object.keys(errs).length ? errs : null;
 }
@@ -991,7 +1031,14 @@ function validate(){
 async function submit(){
   if (submitState === 'sending' || submitState === 'waiting') return;
   const errs = validate();
-  if (errs){ goTo(0, false); $('#f-' + Object.keys(errs)[0]).focus(); return }
+  if (errs){
+    const first = Object.keys(errs)[0];
+    const step = SECTIONS.findIndex(sec => sec.fields.some(q => q.id === first));
+    goTo(step < 0 ? 0 : step, false);
+    const el = $('#f-' + first) || $(`[data-q="${first}"] input`);
+    if (el) el.focus();
+    return;
+  }
   skipWait = false;
   if (S.files.some(isActive)){
     submitState = 'waiting'; renderSubmitBox();
@@ -1130,6 +1177,8 @@ form.addEventListener('input', e => {
   }
   readAnswer(n);
   if (q && FIELDS.some(f => f.showIf && f.showIf.f === n)) applyShowIf();
+  // The equipment dropdowns depend on the industry, so rebuild them when it changes.
+  if (n === 'industry') renderEqRows();
   if ((n === 'name' || n === 'email') && $(`[data-q="${n}"]`).classList.contains('invalid')) validate();
   save(); updateProgress();
 });
