@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
-<title>Equipment List — SOKO Designs</title>
+<title>Project Equipment List — SOKO Designs</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -294,6 +294,10 @@ const SECTIONS = [
     { id:'company', label:'Business name', type:'text', autocomplete:'organization', noSure:true },
     { id:'email', label:'Email', type:'email', required:true, autocomplete:'email', noSure:true },
     { id:'phone', label:'Phone', type:'tel', autocomplete:'tel', noSure:true },
+    { id:'industry', label:'What kind of business is going in?', type:'radio', required:true, noSure:true,
+      options:['Restaurant, bar or café','Other food business','Salon, spa or barbershop','Medical, dental or clinic','Office','Retail','Warehouse or industrial','Church or assembly','Something else'],
+      help:'This decides which questions we ask you. Pick the closest one.' },
+    { id:'industry_other', label:'Tell us what it is', type:'text', showIf:{ f:'industry', v:'Something else' } },
     { id:'opening', label:'When do you want to open?', type:'text', placeholder:'A month and year is fine' },
   ]},
 
@@ -301,11 +305,11 @@ const SECTIONS = [
     { id:'address', label:'Address and suite number', type:'text', autocomplete:'street-address' },
     { id:'sqft', label:'Roughly how many square feet?', type:'text', inputmode:'numeric' },
     { id:'prior_use', label:'What was in this space before you?', type:'radio',
-      options:['A restaurant or food business','Retail','Office','Never been occupied','Something else','Not sure'],
-      help:'If the last tenant was food, you inherit a lot of what is already there. If not, it is a change of occupancy and a bigger job.' },
+      options:['A restaurant or food business','Retail','Office','Medical','Salon','Warehouse','Never been occupied','Something else','Not sure'],
+      help:'If the last tenant did what you are doing, you inherit a lot of what is already there. If not, it is a change of occupancy and a bigger job.' },
     { id:'prior_detail', label:'What was the previous business?', type:'text', showIf:{ f:'prior_use', v:'Something else' } },
-    { id:'seating', label:'How many seats will you have?', type:'text', inputmode:'numeric',
-      help:'This drives your occupancy, how many restrooms you need, and parking. Put 0 if it is takeout only.' },
+    { id:'occupancy', label:'How many people will be in the space at once?', type:'text', inputmode:'numeric',
+      help:'Staff and customers at your busiest. This drives your occupancy, how many restrooms you need, and parking.' },
     { id:'hours', label:'What hours will you operate?', type:'text', placeholder:'e.g. 7am–9pm, seven days' },
     { id:'up_plan', short:'Floor plan', label:'Attach a floor plan or your lease exhibit', type:'upload', camera:true,
       help:'Even a rough sketch or a photo of the landlord drawing helps. This is the single most useful thing you can send.' },
@@ -322,25 +326,75 @@ const SECTIONS = [
       help:'Ice machines and display cases are often leased, and the leasing company connects them.' },
   ]},
 
-  { id:'cooking', title:'Cooking and ventilation', intro:'A hood is usually the biggest single line on a restaurant build-out.', fields:[
-    { id:'food', label:'What gets made on site, and from what?', type:'textarea', required:false,
+  { id:'operation', title:'About your operation', intro:'A few questions specific to what you do. Not sure is always a fine answer.', fields:[
+    /* ---- food service ---- */
+    { id:'food', label:'What gets made on site, and from what?', type:'textarea', showIf:{ f:'industry', v:["Restaurant, bar or café","Other food business"] },
       help:'Walk us through it. The health department needs this and so does the plan reviewer.' },
-    { id:'hood_exists', label:'Is there already a hood in the space?', type:'radio', options:['Yes','No','Not sure'] },
+    { id:'hood_exists', label:'Is there already a hood in the space?', type:'radio', options:['Yes','No','Not sure'], showIf:{ f:'industry', v:["Restaurant, bar or café","Other food business"] } },
     { id:'up_hood', short:'Hood photos', label:'Photos of the existing hood', type:'upload', camera:true, photos:true,
       showIf:{ f:'hood_exists', v:'Yes' }, help:'Stand back far enough to get the whole thing, plus a close-up of any label on it.' },
-    { id:'suppression', label:'Does that hood have fire suppression?', type:'radio', options:['Yes','No','Not sure'],
-      showIf:{ f:'hood_exists', v:'Yes' } },
-  ]},
-
-  { id:'utilities', title:'What the space already has', intro:'These three are the usual surprises. Not sure is a perfectly good answer.', fields:[
-    { id:'grease', label:'Is there a grease interceptor?', type:'radio', options:['Yes','No','Not sure'],
+    { id:'suppression', label:'Does that hood have fire suppression?', type:'radio', options:['Yes','No','Not sure'], showIf:{ f:'hood_exists', v:'Yes' } },
+    { id:'grease', label:'Is there a grease interceptor?', type:'radio', options:['Yes','No','Not sure'], showIf:{ f:'industry', v:["Restaurant, bar or café","Other food business"] },
       help:'If there is not one and you need one, it can mean cutting the floor. Worth knowing early.' },
     { id:'grease_size', label:'What size, if you know?', type:'text', placeholder:'Gallons', showIf:{ f:'grease', v:'Yes' } },
+    { id:'bar', label:'Will there be a bar?', type:'radio', options:['Full bar','Beer and wine','No bar','Not sure'], showIf:{ f:'industry', v:'Restaurant, bar or café' } },
+
+    /* ---- salon ---- */
+    { id:'salon_bowls', label:'How many shampoo bowls?', type:'text', inputmode:'numeric', showIf:{ f:'industry', v:'Salon, spa or barbershop' },
+      help:'Each one needs water and a drain, so the count drives the plumbing.' },
+    { id:'salon_stations', label:'How many styling or barber chairs?', type:'text', inputmode:'numeric', showIf:{ f:'industry', v:'Salon, spa or barbershop' } },
+    { id:'salon_pedi', label:'Any pedicure spas or soaking tubs?', type:'radio', options:['Yes','No','Not sure'], showIf:{ f:'industry', v:'Salon, spa or barbershop' } },
+    { id:'salon_services', label:'Which services will you offer?', type:'check',
+      options:['Color and chemical treatments','Nails','Waxing','Facials or massage','Laundry on site','Not sure'],
+      showIf:{ f:'industry', v:'Salon, spa or barbershop' },
+      help:'Chemicals and nail stations change the ventilation requirements.' },
+
+    /* ---- medical ---- */
+    { id:'med_rooms', label:'How many exam rooms or operatories?', type:'text', inputmode:'numeric', showIf:{ f:'industry', v:'Medical, dental or clinic' } },
+    { id:'med_imaging', label:'Any X-ray or imaging equipment?', type:'radio', options:['Yes','No','Not sure'], showIf:{ f:'industry', v:'Medical, dental or clinic' },
+      help:'Imaging usually means shielded walls, which has to be designed in rather than added later.' },
+    { id:'med_gas', label:'Will you have medical gas?', type:'check', options:['Oxygen','Nitrous oxide','Medical vacuum','Compressed air','None','Not sure'],
+      showIf:{ f:'industry', v:'Medical, dental or clinic' } },
+    { id:'med_steril', label:'Will there be a sterilization area?', type:'radio', options:['Yes','No','Not sure'], showIf:{ f:'industry', v:'Medical, dental or clinic' } },
+
+    /* ---- office ---- */
+    { id:'off_seats', label:'How many workstations?', type:'text', inputmode:'numeric', showIf:{ f:'industry', v:'Office' } },
+    { id:'off_rooms', label:'What enclosed rooms do you need?', type:'check',
+      options:['Private offices','Conference rooms','Break room with a sink','Server or IT room','Storage','Not sure'], showIf:{ f:'industry', v:'Office' },
+      help:'A server room usually needs its own cooling, which is the piece people forget.' },
+
+    /* ---- retail ---- */
+    { id:'ret_split', label:'Roughly how much is sales floor versus stockroom?', type:'text', placeholder:'e.g. 70% floor, 30% back', showIf:{ f:'industry', v:'Retail' } },
+    { id:'ret_rooms', label:'Will you have fitting rooms?', type:'radio', options:['Yes','No','Not sure'], showIf:{ f:'industry', v:'Retail' } },
+
+    /* ---- warehouse ---- */
+    { id:'wh_racking', label:'How high will the racking or storage go?', type:'text', placeholder:'Feet', showIf:{ f:'industry', v:'Warehouse or industrial' },
+      help:'Above a certain height the fire sprinklers have to change, so this one matters.' },
+    { id:'wh_forklift', label:'Forklifts on site?', type:'radio', options:['Yes, electric (needs charging)','Yes, propane','No','Not sure'], showIf:{ f:'industry', v:'Warehouse or industrial' } },
+    { id:'wh_office', label:'Will there be office space inside the warehouse?', type:'radio', options:['Yes','No','Not sure'], showIf:{ f:'industry', v:'Warehouse or industrial' } },
+    { id:'wh_haz', label:'Will you store chemicals, fuel or anything flammable?', type:'radio', options:['Yes','No','Not sure'], showIf:{ f:'industry', v:'Warehouse or industrial' } },
+
+    /* ---- church / assembly ---- */
+    { id:'ch_seats', label:'How many seats in the main room?', type:'text', inputmode:'numeric', showIf:{ f:'industry', v:'Church or assembly' },
+      help:'This is the number that sets your occupancy, exits and restroom count.' },
+    { id:'ch_fixed', label:'Fixed seating or loose chairs?', type:'radio', options:['Fixed pews or seats','Loose chairs','Not sure'], showIf:{ f:'industry', v:'Church or assembly' } },
+    { id:'ch_rooms', label:'What else is in the space?', type:'check',
+      options:['Classrooms','Childcare or nursery','Kitchen','Stage or platform','Offices','Not sure'], showIf:{ f:'industry', v:'Church or assembly' },
+      help:'Childcare and kitchens are each their own occupancy, which changes the drawings.' },
+
+    /* ---- anything else ---- */
+    { id:'op_other', label:'Tell us how the space will be used', type:'textarea', showIf:{ f:'industry', v:'Something else' },
+      help:'Walk us through a normal day. The more you tell us, the fewer questions we come back with.' },
+  ]},
+
+  { id:'utilities', title:'What the space already has', intro:'These are the usual surprises. Not sure is a perfectly good answer.', fields:[
     { id:'gas', label:'Is there gas service to the suite?', type:'radio', options:['Yes','No','Not sure'] },
     { id:'elec', label:'How big is the electrical service?', type:'text', placeholder:'e.g. 200A, 208V three-phase',
       help:'It is on the main panel label. A photo is easier than reading it.' },
     { id:'up_panel', short:'Panel photo', label:'Photo of the electrical panel', type:'upload', camera:true, photos:true,
       help:'Open the door if you can and get the label with the amps on it.' },
+    { id:'restrooms', label:'How many restrooms are in the suite now?', type:'text', inputmode:'numeric',
+      help:'If you need more than the space has, that is usually the biggest plumbing item on the job.' },
   ]},
 
   { id:'final', title:'Before you send it', fields:[
@@ -361,7 +415,7 @@ const MIME = { pdf:'application/pdf', jpg:'image/jpeg', jpeg:'image/jpeg', png:'
   xls:'application/vnd.ms-excel', xlsx:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' };
 const ACCEPT_DOCS = OK_EXT.map(e => '.' + e).join(',') + ',' + [...new Set(Object.values(MIME))].join(',');
 const ACCEPT_PHOTOS = PHOTO_EXT.map(e => '.' + e).join(',') + ',image/jpeg,image/png,image/heic,image/heif';
-const STORE_KEY = 'soko-facility-questionnaire-v1';
+const STORE_KEY = 'soko-ti-intake-v1';
 const PREVIEW = !/^https:\/\/script\.google(usercontent)?\.com\//.test(APPS_SCRIPT_URL);
 const FAIL_TEST = PREVIEW ? ((location.search.match(/[?&]fail=(all|1)/) || [])[1] || '') : '';   // preview only: ?fail=1 flaky wifi, ?fail=all dead wifi
 const STEPS = SECTIONS.map(s => s.title).concat('Review');
@@ -380,7 +434,8 @@ const uploadFieldIds = () => FIELDS.filter(q => q.type === 'upload').map(q => q.
 function isShown(q){
   if (!q.showIf) return true;
   const v = S.answers[q.showIf.f];
-  return Array.isArray(v) ? v.includes(q.showIf.v) : v === q.showIf.v;
+  const want = Array.isArray(q.showIf.v) ? q.showIf.v : [q.showIf.v];
+  return Array.isArray(v) ? v.some(x => want.includes(x)) : want.includes(v);
 }
 
 const $ = (s, r = document) => r.querySelector(s);
@@ -751,10 +806,10 @@ function eqRowHTML(r, n){
       <button type="button" class="x" data-delrow="${k}" aria-label="Remove ${esc(r.name || 'this equipment')}">×</button>
     </div>
     <div class="eqgrid">
-      <label class="cell"><span>What is it</span><select${d('kind')}"><option value=""></option><option${r.kind === 'Refrigerator' ? ' selected' : ''}>Refrigerator</option><option${r.kind === 'Freezer' ? ' selected' : ''}>Freezer</option><option${r.kind === 'Walk-in cooler or freezer' ? ' selected' : ''}>Walk-in cooler or freezer</option><option${r.kind === 'Batch freezer' ? ' selected' : ''}>Batch freezer</option><option${r.kind === 'Blast freezer' ? ' selected' : ''}>Blast freezer</option><option${r.kind === 'Dipping cabinet' ? ' selected' : ''}>Dipping cabinet</option><option${r.kind === 'Display case' ? ' selected' : ''}>Display case</option><option${r.kind === 'Ice machine' ? ' selected' : ''}>Ice machine</option><option${r.kind === 'Range or cooktop' ? ' selected' : ''}>Range or cooktop</option><option${r.kind === 'Oven' ? ' selected' : ''}>Oven</option><option${r.kind === 'Fryer' ? ' selected' : ''}>Fryer</option><option${r.kind === 'Griddle or flat top' ? ' selected' : ''}>Griddle or flat top</option><option${r.kind === 'Exhaust hood' ? ' selected' : ''}>Exhaust hood</option><option${r.kind === 'Dishwasher' ? ' selected' : ''}>Dishwasher</option><option${r.kind === 'Sink' ? ' selected' : ''}>Sink</option><option${r.kind === 'Prep table' ? ' selected' : ''}>Prep table</option><option${r.kind === 'Mixer' ? ' selected' : ''}>Mixer</option><option${r.kind === 'Water heater' ? ' selected' : ''}>Water heater</option><option${r.kind === 'Espresso or coffee' ? ' selected' : ''}>Espresso or coffee</option><option${r.kind === 'Other' ? ' selected' : ''}>Other</option></select></label>
+      <label class="cell"><span>What is it</span><select${d('kind')}><option value=""></option><option${r.kind === 'Refrigerator or freezer' ? ' selected' : ''}>Refrigerator or freezer</option><option${r.kind === 'Walk-in cooler or freezer' ? ' selected' : ''}>Walk-in cooler or freezer</option><option${r.kind === 'Ice machine' ? ' selected' : ''}>Ice machine</option><option${r.kind === 'Cooking equipment' ? ' selected' : ''}>Cooking equipment</option><option${r.kind === 'Exhaust hood' ? ' selected' : ''}>Exhaust hood</option><option${r.kind === 'Dishwasher or warewashing' ? ' selected' : ''}>Dishwasher or warewashing</option><option${r.kind === 'Sink or plumbing fixture' ? ' selected' : ''}>Sink or plumbing fixture</option><option${r.kind === 'Water heater' ? ' selected' : ''}>Water heater</option><option${r.kind === 'Washer or dryer' ? ' selected' : ''}>Washer or dryer</option><option${r.kind === 'HVAC unit' ? ' selected' : ''}>HVAC unit</option><option${r.kind === 'Compressor or pump' ? ' selected' : ''}>Compressor or pump</option><option${r.kind === 'Shelving or racking' ? ' selected' : ''}>Shelving or racking</option><option${r.kind === 'Casework, counter or display' ? ' selected' : ''}>Casework, counter or display</option><option${r.kind === 'Specialty equipment' ? ' selected' : ''}>Specialty equipment</option><option${r.kind === 'Other' ? ' selected' : ''}>Other</option></select></label>
       ${txt('model', 'Make and model')}
       ${txt('qty', 'How many', ' inputmode="numeric" placeholder="1"')}
-      <label class="cell"><span>Where does it go</span><select${d('location')}"><option value=""></option><option${r.location === 'Front counter' ? ' selected' : ''}>Front counter</option><option${r.location === 'Dining' ? ' selected' : ''}>Dining</option><option${r.location === 'Prep' ? ' selected' : ''}>Prep</option><option${r.location === 'Kitchen / back of house' ? ' selected' : ''}>Kitchen / back of house</option><option${r.location === 'Dish' ? ' selected' : ''}>Dish</option><option${r.location === 'Storage' ? ' selected' : ''}>Storage</option><option${r.location === 'Walk-in' ? ' selected' : ''}>Walk-in</option><option${r.location === 'Restroom' ? ' selected' : ''}>Restroom</option><option${r.location === 'Exterior or roof' ? ' selected' : ''}>Exterior or roof</option><option${r.location === 'Not sure' ? ' selected' : ''}>Not sure</option></select></label>
+      <label class="cell"><span>Where does it go</span><select${d('location')}><option value=""></option><option${r.location === 'Front of house' ? ' selected' : ''}>Front of house</option><option${r.location === 'Dining or waiting area' ? ' selected' : ''}>Dining or waiting area</option><option${r.location === 'Prep' ? ' selected' : ''}>Prep</option><option${r.location === 'Kitchen or back of house' ? ' selected' : ''}>Kitchen or back of house</option><option${r.location === 'Dish' ? ' selected' : ''}>Dish</option><option${r.location === 'Storage' ? ' selected' : ''}>Storage</option><option${r.location === 'Walk-in' ? ' selected' : ''}>Walk-in</option><option${r.location === 'Restroom' ? ' selected' : ''}>Restroom</option><option${r.location === 'Office' ? ' selected' : ''}>Office</option><option${r.location === 'Exterior or roof' ? ' selected' : ''}>Exterior or roof</option><option${r.location === 'Not sure' ? ' selected' : ''}>Not sure</option></select></label>
       <fieldset class="cell wide"><legend>New or already owned?</legend>${optsHTML('eqsrc_' + r.key, 'radio', ['Buying new','Already own it','Leased','Not sure'], [r.source], 'eqsrc-' + r.key, d('source'))}</fieldset>
     </div>
     <details class="eqmore"><summary>Power, gas and plumbing &mdash; only if you know it</summary>
