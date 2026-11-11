@@ -349,6 +349,8 @@ const SECTIONS = [
       help:'Count them all, including any you already listed as equipment. Each one needs water and a drain, so this number drives the plumbing.' },
     { id:'salon_stations', label:'How many styling or barber chairs?', type:'text', inputmode:'numeric', showIf:{ f:'industry', v:'Salon, spa or barbershop' } },
     { id:'salon_pedi', label:'Any pedicure spas or soaking tubs?', type:'radio', options:['Yes','No','Not sure'], showIf:{ f:'industry', v:'Salon, spa or barbershop' } },
+    { id:'salon_pedi_n', label:'How many pedicure stations?', type:'text', inputmode:'numeric', showIf:{ f:'salon_pedi', v:'Yes' },
+      help:'Each one needs water, a drain and usually its own circuit.' },
     { id:'salon_services', label:'Which services will you offer?', type:'check',
       options:['Color and chemical treatments','Nails','Waxing','Facials or massage','Laundry on site','Not sure'],
       showIf:{ f:'industry', v:'Salon, spa or barbershop' },
@@ -377,7 +379,15 @@ const SECTIONS = [
       help:'Above a certain height the fire sprinklers have to change, so this one matters.' },
     { id:'wh_forklift', label:'Forklifts on site?', type:'radio', options:['Yes, electric (needs charging)','Yes, propane','No','Not sure'], showIf:{ f:'industry', v:'Warehouse or industrial' } },
     { id:'wh_office', label:'Will there be office space inside the warehouse?', type:'radio', options:['Yes','No','Not sure'], showIf:{ f:'industry', v:'Warehouse or industrial' } },
+    { id:'wh_office_sf', label:'Roughly how big is that office, and is any of it on a mezzanine?', type:'text', showIf:{ f:'wh_office', v:'Yes' },
+      help:'A mezzanine counts as its own floor, which changes the exits and often the sprinklers.' },
+    { id:'wh_store', label:'What will you be storing?', type:'textarea', showIf:{ f:'industry', v:'Warehouse or industrial' },
+      help:'Plain words are fine — "boxed auto parts", "palletised food", "furniture". What it is and how it is packaged decides the sprinkler design, and the rack height alone does not settle it.' },
+    { id:'wh_clear', label:'How high is the ceiling at its lowest point, in feet?', type:'text', inputmode:'numeric', showIf:{ f:'industry', v:'Warehouse or industrial' },
+      help:'The landlord or the lease usually has this. "Not sure" is fine.' },
+    { id:'wh_docks', label:'How many dock doors or roll-ups?', type:'text', showIf:{ f:'industry', v:'Warehouse or industrial' } },
     { id:'wh_haz', label:'Will you store chemicals, fuel or anything flammable?', type:'radio', options:['Yes','No','Not sure'], showIf:{ f:'industry', v:'Warehouse or industrial' } },
+    { id:'wh_haz_what', label:'What, and roughly how much on site at once?', type:'textarea', showIf:{ f:'wh_haz', v:'Yes' } },
 
     /* ---- church / assembly ---- */
     { id:'ch_seats', label:'How many seats in the main room?', type:'text', inputmode:'numeric', showIf:{ f:'industry', v:'Church or assembly' },
@@ -398,6 +408,8 @@ const SECTIONS = [
       help:'It is on the main panel label. A photo is easier than reading it.' },
     { id:'up_panel', short:'Panel photo', label:'Photo of the electrical panel', type:'upload', camera:true, photos:true,
       help:'Open the door if you can and get the label with the amps on it.' },
+    { id:'sprinklered', label:'Is the space sprinklered?', type:'radio', options:['Yes','No','Not sure'],
+      help:'Look up. Sprinkler heads in the ceiling mean yes. This changes what is allowed in the space.' },
     { id:'restrooms', label:'How many restrooms are in the suite now?', type:'text', inputmode:'numeric',
       help:'If you need more than the space has, that is usually the biggest plumbing item on the job.' },
   ]},
@@ -486,9 +498,9 @@ let restored = false;
   S.step = Math.min(Math.max(0, S.step | 0), STEPS.length - 1);
   restored = Object.keys(S.answers).length > 0 || S.files.length > 0;
 })();
-const EQ_COLS = ['name','kind','model','qty','source','location','volts','phase','amps','btu','water','drain','flame'];
+const EQ_COLS = ['name','kind','model','qty','source','location','volts','phase','amps','btu','vent','water','drain','flame'];
 const newEqRow = name => ({ key:newId(5), name:name || '', kind:'', model:'', qty:'', source:'', location:'',
-  volts:'', phase:'', amps:'', btu:'', water:'', drain:'', flame:'' });
+  volts:'', phase:'', amps:'', btu:'', vent:'', water:'', drain:'', flame:'' });
 if (EQ_FIELD && !Array.isArray(S.answers[EQ_FIELD.id])) S.answers[EQ_FIELD.id] = (EQ_FIELD.prefill || []).map(newEqRow);
 // Only greet as "welcome back" if they actually entered something (not just the pre-filled equipment names).
 restored = restored && SECTIONS.some((_, i) => touched(i));
@@ -851,6 +863,7 @@ function eqRowHTML(r, n){
       ${txt('volts', 'Volts', ' inputmode="decimal" placeholder="e.g. 208"')}
       ${txt('amps', 'Amps or HP', ' placeholder="e.g. 30 A or 5 HP"')}
       ${txt('btu', 'Gas BTU/hr <small>(blank if electric)</small>', ' inputmode="numeric"')}
+      <fieldset class="cell wide ventq" data-vent="${k}"${r.btu ? '' : ' hidden'}><legend>Needs a vent or flue?</legend>${optsHTML('eqv_' + r.key, 'radio', ['Yes','No','Not sure'], [r.vent], 'eqv-' + r.key, d('vent'))}</fieldset>
       <fieldset class="cell wide"><legend>Needs water?</legend>${optsHTML('eqw_' + r.key, 'radio', ['Yes','No','Not sure'], [r.water], 'eqw-' + r.key, d('water'))}</fieldset>
       <fieldset class="cell wide"><legend>Needs a drain?</legend>${optsHTML('eqd_' + r.key, 'radio', ['Yes','No','Not sure'], [r.drain], 'eqd-' + r.key, d('drain'))}</fieldset>
       ${isFood() ? `<fieldset class="cell wide"><legend>Open flame, fryer or griddle?</legend>${optsHTML('eqf_' + r.key, 'radio', ['Yes','No','Not sure'], [r.flame], 'eqf-' + r.key, d('flame'))}</fieldset>` : ''}
@@ -960,6 +973,7 @@ function eqSummary(r, n){
     r.phase && (r.phase === 'Not sure' ? 'Phase: not sure' : r.phase + '-phase'),
     r.amps && 'Amps/HP: ' + r.amps,
     r.btu && 'Gas: ' + r.btu + ' BTU/hr',
+    r.vent && 'Vent/flue: ' + r.vent,
     r.water && 'Water: ' + r.water,
     r.drain && 'Drain: ' + r.drain,
     r.flame && 'Open flame/fryer/griddle: ' + r.flame,
@@ -1002,10 +1016,38 @@ function renderSubmitBox(){
   if (probs.length) html += `<div class="notice warn"><b>${probs.length} file${probs.length > 1 ? 's' : ''} didn’t upload.</b> You can still submit. We’ll list ${probs.length > 1 ? 'them' : 'it'} on your confirmation so you can email ${probs.length > 1 ? 'them' : 'it'} to <a href="mailto:${esc(BACKUP_EMAIL)}">${esc(BACKUP_EMAIL)}</a>.</div>`;
   if (submitState === 'waiting') html += `<div class="notice info"><b>Finishing ${active} upload${active === 1 ? '' : 's'}…</b> We’ll send everything the moment ${active === 1 ? 'it lands' : 'they land'}. <button type="button" class="linkbtn" data-skipwait>Submit now without ${active === 1 ? 'it' : 'them'}</button></div>`;
   if (submitState === 'error') html += `<div class="notice bad"><b>We couldn’t send your answers.</b> ${esc(submitError)} Your answers are still saved here. Try again, or <a href="${mailtoAnswers()}">email them to us</a> instead.</div>`;
+  const clash = contradictions();
+  if (clash.length && submitState === 'idle'){
+    html += `<div class="notice warn"><b>Worth a second look before you send:</b><ul style="margin:8px 0 0 18px">` +
+      clash.map(c => `<li>${esc(c)}</li>`).join('') + `</ul><p style="margin-top:8px">You can send it anyway — we would just rather ask now than halfway through the drawings.</p></div>`;
+  }
   const label = submitState === 'sending' ? 'Sending…' : submitState === 'waiting' ? 'Waiting for uploads…' : submitState === 'error' ? 'Try again' : 'Submit';
   html += `<button type="button" class="btn teal" data-submit${submitState === 'sending' || submitState === 'waiting' ? ' disabled' : ''}>${label}</button>
     <p class="small">Only your name and email are required.${active && submitState === 'idle' ? ` ${active} file${active === 1 ? ' is' : 's are'} still uploading. We’ll wait for ${active === 1 ? 'it' : 'them'}.` : ''}</p>`;
   box.innerHTML = html;
+}
+
+/* Answers that disagree with each other. Surfaced on the review step as a
+   question, never a block — the client may well be right and we may be the
+   ones who need to know. */
+function contradictions(){
+  const out = [];
+  const rows = eqRows();
+  const gasRows = rows.filter(r => String(r.btu || '').trim());
+  if (gasRows.length && S.answers.gas === 'No'){
+    out.push('You listed gas equipment (' + gasRows.map(r => r.name || 'unnamed').join(', ') +
+      ') but said there is no gas service to the suite. Bringing gas in is a big item, so tell us if it is already planned.');
+  }
+  const cooks = rows.filter(r => r.flame === 'Yes' || /cooking/i.test(r.kind || ''));
+  const hasHood = rows.some(r => /hood/i.test(r.kind || '') || /hood/i.test(r.name || ''));
+  if (cooks.length && !hasHood && S.answers.hood_exists === 'No'){
+    out.push('You listed cooking equipment but no hood, and said the space does not have one. Most cooking equipment needs one, so let us know if you are expecting to add it.');
+  }
+  const vents = rows.filter(r => String(r.btu || '').trim() && r.vent === 'No');
+  if (vents.length){
+    out.push('You marked gas equipment as not needing a vent or flue. That is unusual — worth double-checking the spec sheet.');
+  }
+  return out;
 }
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
@@ -1165,7 +1207,14 @@ form.addEventListener('submit', e => e.preventDefault());
 form.addEventListener('input', e => {
   if (e.target.dataset.eq){   // equipment table cell
     const row = eqRows().find(r => r.key === e.target.dataset.eq);
-    if (row){ row[e.target.dataset.col] = e.target.value; save(); updateProgress() }
+    if (row){
+      row[e.target.dataset.col] = e.target.value; save(); updateProgress();
+      // A gas appliance has to vent somewhere, so ask as soon as a BTU appears.
+      if (e.target.dataset.col === 'btu'){
+        const vq = $(`[data-vent="${e.target.dataset.eq}"]`);
+        if (vq) vq.hidden = !String(row.btu || '').trim();
+      }
+    }
     return;
   }
   const n = e.target.name; if (!n || e.target.type === 'file') return;
