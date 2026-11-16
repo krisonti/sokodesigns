@@ -38,6 +38,13 @@ exports.handler = async function (event) {
   const city = (data.city || "").trim();
   const variant = (data.variant || "").trim().toUpperCase();      // "A" | "B" (A/B test page)
   const leadSource = (data.leadSource || "").trim();              // e.g. "Paid Ad - Google" (from gclid/utm)
+  // The SOKO Development site (sokodevelopmentaz.com/adus and /casitas) posts to this same
+  // function and says so. Anything else is treated as sokodesigns.com, exactly as before.
+  const fromDev = String(data.site || "").trim().toLowerCase() === "development";
+  const brand = fromDev ? "SOKO Development" : "SOKO Designs";
+  const sitePage = fromDev
+    ? "sokodevelopmentaz.com/" + String(data.page || "").toLowerCase().replace(/[^a-z-]/g, "").slice(0, 20)
+    : "";
 
   if (!name || !email || !phone || !address) {
     return json(400, { error: "Name, email, phone, and address are required." });
@@ -46,7 +53,7 @@ exports.handler = async function (event) {
   // ---- 1. Capture the lead in Monday (highest priority) ----
   let mondayOk = false;
   try {
-    mondayOk = await createMondayLead({ name, email, phone, address, city, variant, leadSource });
+    mondayOk = await createMondayLead({ name, email, phone, address, city, variant, leadSource, sitePage });
   } catch (err) {
     console.error("Monday capture failed:", err);
   }
@@ -55,13 +62,13 @@ exports.handler = async function (event) {
   let reportSent = false;
   const debug = {};
   try {
-    const gen = await generateReport({ name, address, city });
+    const gen = await generateReport({ name, address, city, brand });
     debug.reportErr = gen.error || null;
     // If the AI report fails for any reason, fall back to a solid static report
     // so a lead ALWAYS receives an email.
     const reportHtml = gen.html || fallbackReport({ name, city });
     debug.usedFallback = !gen.html;
-    const sent = await sendEmail({ name, email, reportHtml });
+    const sent = await sendEmail({ name, email, reportHtml, brand });
     reportSent = sent.ok;
     debug.emailErr = sent.error || null;
   } catch (err) {
@@ -83,7 +90,7 @@ exports.handler = async function (event) {
 //   text_mm2hg88v = Notes/Comments
 const VALID_LEAD_SOURCES = ["CA Investor","Mesa Parent","Direct Mail","Paid Ad - Meta","Paid Ad - Google","Referral","Other"];
 
-async function createMondayLead({ name, email, phone, address, city, variant, leadSource }) {
+async function createMondayLead({ name, email, phone, address, city, variant, leadSource, sitePage }) {
   const token = process.env.MONDAY_API_TOKEN;
   const boardId = process.env.MONDAY_BOARD_ID || DEFAULT_BOARD_ID;
   if (!token) { console.error("Missing MONDAY_API_TOKEN"); return false; }
@@ -102,6 +109,7 @@ async function createMondayLead({ name, email, phone, address, city, variant, le
       `Address: ${address}`,
       city ? `Detected city: ${city}` : null,
       `Lead page: ${leadPage}`,
+      sitePage ? `Site: ${sitePage}` : null,
       `Submitted: ${new Date().toISOString()}`,
     ].filter(Boolean).join(" | ").slice(0, 2000),
   };
@@ -128,11 +136,11 @@ async function createMondayLead({ name, email, phone, address, city, variant, le
 }
 
 /* ---------------- Claude report ---------------- */
-async function generateReport({ name, address, city }) {
+async function generateReport({ name, address, city, brand = "SOKO Designs" }) {
   const key = process.env.ANTHROPIC_API_KEY;
   if (!key) { console.error("Missing ANTHROPIC_API_KEY — skipping AI report"); return { html: null, error: "missing ANTHROPIC_API_KEY" }; }
 
-  const prompt = `You are an ADU (accessory dwelling unit) feasibility analyst for SOKO Designs, a turnkey design-permit-build firm serving the Phoenix, Arizona metro.
+  const prompt = `You are an ADU (accessory dwelling unit) feasibility analyst for ${brand}, a turnkey design-permit-build firm serving the Phoenix, Arizona metro.
 
 Write a warm, professional PRELIMINARY feasibility report for a homeowner who just requested it from our website.
 
@@ -142,7 +150,7 @@ ${city ? `City (detected): ${city}` : ""}
 
 Grounding facts you may rely on:
 - Arizona state law (HB 2720 / HB 2928) now requires larger municipalities to permit ADUs on most single-family lots, generally by right (no public hearing or variance), often allowing long-term rental and reduced setbacks. Exact size caps, setbacks, and parcel rules vary by city and lot.
-- SOKO Designs offers three pre-designed, permit-ready models: a ~400 sq ft Studio Casita, a ~600 sq ft One-Bedroom, and an ~800 sq ft Two-Level (1 bed). Turnkey build investment typically $99,000–$149,000. Typical long-term rent $1,450–$1,800/month in the metro.
+- ${brand} offers three pre-designed, permit-ready models: a ~400 sq ft Studio Casita, a ~600 sq ft One-Bedroom, and an ~800 sq ft Two-Level (1 bed). Turnkey build investment typically $99,000–$149,000. Typical long-term rent $1,450–$1,800/month in the metro.
 - SOKO handles design, permitting, and construction under one contract, and works with remote/out-of-state owners.
 
 STRICT RULES:
@@ -199,17 +207,22 @@ function fallbackReport({ name, city }) {
 }
 
 /* ---------------- Resend email ---------------- */
-async function sendEmail({ name, email, reportHtml }) {
+async function sendEmail({ name, email, reportHtml, brand = "SOKO Designs" }) {
   const key = process.env.RESEND_API_KEY;
-  const from = process.env.FROM_EMAIL || "SOKO Designs <kris@sokodesigns.com>";
+  let from = process.env.FROM_EMAIL || "SOKO Designs <kris@sokodesigns.com>";
+  if (brand !== "SOKO Designs") {
+    // Same verified sending address, different display name.
+    const addr = (from.match(/<([^>]+)>/) || [])[1] || from;
+    from = `${brand} <${addr}>`;
+  }
   const notify = process.env.LEAD_NOTIFY_EMAIL;
   if (!key) { console.error("Missing RESEND_API_KEY — skipping email"); return { ok: false, error: "missing RESEND_API_KEY" }; }
 
-  const html = emailShell(name, reportHtml);
+  const html = emailShell(name, reportHtml, brand);
   const payload = {
     from,
     to: [email],
-    subject: "Your ADU Feasibility Report — SOKO Designs",
+    subject: `Your ADU Feasibility Report — ${brand}`,
     html,
     reply_to: "kris@sokodesigns.com",
   };
@@ -228,10 +241,10 @@ async function sendEmail({ name, email, reportHtml }) {
   return { ok: true, error: null };
 }
 
-function emailShell(name, inner) {
+function emailShell(name, inner, brand = "SOKO Designs") {
   return `<div style="font-family:Georgia,'Times New Roman',serif;max-width:600px;margin:0 auto;color:#1A1A1A;line-height:1.6">
     <div style="background:#4A7C7E;color:#fff;padding:22px 26px;border-radius:6px 6px 0 0">
-      <div style="font-size:24px;font-weight:700;letter-spacing:.5px">SOKO Designs</div>
+      <div style="font-size:24px;font-weight:700;letter-spacing:.5px">${brand}</div>
       <div style="font-size:12px;letter-spacing:2px;text-transform:uppercase;opacity:.85;margin-top:2px">ADU Feasibility Report</div>
     </div>
     <div style="border:1px solid #E3DED3;border-top:none;padding:26px;background:#fff">
@@ -242,7 +255,7 @@ function emailShell(name, inner) {
       </div>
     </div>
     <div style="font-family:Arial,sans-serif;font-size:11px;color:#8A877F;padding:16px 26px;line-height:1.5">
-      This report is preliminary guidance based on current Arizona law (HB 2720 / HB 2928) and general city ordinances. It is not a guarantee that your lot qualifies; final eligibility, size limits, and setbacks are confirmed against parcel records and construction documents during design. Cost and rent figures are illustrative market estimates, not financial advice. © SOKO Designs, Phoenix, AZ.
+      This report is preliminary guidance based on current Arizona law (HB 2720 / HB 2928) and general city ordinances. It is not a guarantee that your lot qualifies; final eligibility, size limits, and setbacks are confirmed against parcel records and construction documents during design. Cost and rent figures are illustrative market estimates, not financial advice. © ${brand}, Phoenix, AZ.
     </div>
   </div>`;
 }
