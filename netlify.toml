@@ -23,3 +23,9 @@
 # Client portal background job: new links, completion dates, client emails
 [functions."portal-sync"]
   schedule = "*/5 * * * *"
+
+# ADU re-engagement drip. Runs daily at 9:00 AM Phoenix time (16:00 UTC; Arizona has no DST).
+# It only emails leads whose Monday "Drip Status" is Active and whose last email was 14+ days ago.
+# Moved here from the old arizona-adu.netlify.app site in November 2026. It must run on ONE site only.
+[functions."re-engage"]
+  schedule = "0 16 * * *"
