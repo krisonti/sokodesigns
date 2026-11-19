@@ -4,7 +4,7 @@
  * Every project board has a "Client Portal" group (it comes from the RR / TI / RNB / VAR
  * templates). The page reads that group:
  *   - "Portal" row ............ Client Email, and Client Link (the private link, made for you)
- *   - "Permit #" row .......... rename it to include the number, e.g. "Permit # ADU-2026-01234"
+ *   - (client name, address, email and permit # come from the "Client Information" row under Sales)
  *   - stage rows .............. any row whose name is listed in STAGES below, in board order
  *   - to-do rows .............. Status = "Client To-Do" (hidden again once marked Done)
  *   - document rows ........... Status = "DOCUMENTS", with a Google Drive link in Client Link
@@ -49,7 +49,7 @@ const NAMES = {
   group: "Client Portal",
   portal: "Portal",
   updates: "Client Updates",
-  permit: /^permit\s*#?\s*:?\s*(.*)$/i,
+  info: "Client Information", // row under Sales: Client Name, Project Address, Client Email, Permit #
 };
 const LABELS = {
   done: "Done",

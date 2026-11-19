@@ -30,7 +30,7 @@ exports.handler = async function (event) {
   if (hit && Date.now() - hit.at < CACHE_MS) return send(hit.status, hit.body);
 
   try {
-    const portal = await lib.readPortal(m[1], { withUpdates: true });
+    const portal = await lib.readPortal(m[1]);
     let result = { status: 404, body: { error: "not_found" } };
     if (portal) {
       const c = lib.classify(portal);

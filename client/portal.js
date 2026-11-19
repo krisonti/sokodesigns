@@ -52,6 +52,7 @@
     var facts = $("facts");
     addFact(facts, "Project", d.projectType);
     addFact(facts, "Permit", d.permit);
+    addFact(facts, "Estimated completion", d.estimatedCompletion ? fmt(d.estimatedCompletion) : null);
     addFact(facts, "Last updated", d.updated ? fmt(d.updated) : null);
     if (d.address) document.title = d.address + " | SOKO Designs";
 
@@ -202,7 +203,7 @@
   function sample() {
     return {
       client: "Rivera", address: "1234 E Sample Rd",
-      projectType: "Residential remodel", permit: "RR-2026-01234", updated: "2026-11-18",
+      projectType: "Residential remodel", permit: "RR-2026-01234", estimatedCompletion: "2027-02-12", updated: "2026-11-18",
       stage: { name: "Building Plans", complete: false, target: "2026-12-12", flag: "on",
         summary: "We're drawing the full set of building plans.",
         next: "Engineering gets added next, then the set goes to the city." },

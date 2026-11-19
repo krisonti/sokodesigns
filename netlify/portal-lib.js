@@ -8,7 +8,10 @@ const { STAGES, NAMES, LABELS, TYPE_NAMES } = require("./portal-config.js");
 const MONDAY_API_URL = "https://api.monday.com/v2";
 const WORKSPACE_ID = 12225021; // Main workspace (the project boards live here)
 const SITE = "https://www.sokodesigns.com";
-const COL = { status: "status", link: "client_link", email: "client_email" };
+const COL = {
+  status: "status", link: "client_link", email: "client_email",
+  clientName: "client_name", address: "project_address", permit: "permit_no", // on the Client Information row
+};
 
 const STAGE_KEYS = Object.keys(STAGES);
 const lower = (s) => String(s || "").trim().toLowerCase();
@@ -33,6 +36,7 @@ async function monday(query, variables) {
 
 const ITEM_FIELDS = `id name created_at updated_at
   column_values { id type text value column { title } }
+  updates (limit: 25) { text_body created_at }
   subitems { id name board { id } column_values (ids: ["status", "client_link", "sent_to_client"]) { id type text value } }`;
 
 const isDriveUrl = (u) => /^https:\/\/(drive|docs)\.google\.com\/\S+$/i.test(u || "");
@@ -57,7 +61,7 @@ async function listPortalBoards() {
 }
 
 // Reads the Client Portal group of one board. Returns null when the board has none.
-async function readPortal(boardId, { withUpdates = false } = {}) {
+async function readPortal(boardId) {
   const meta = await monday(
     `query ($id: [ID!]) { boards (ids: $id) { id name groups { id title } } }`, { id: [String(boardId)] });
   const board = meta.boards && meta.boards[0];
@@ -65,11 +69,12 @@ async function readPortal(boardId, { withUpdates = false } = {}) {
   const group = (board.groups || []).find((g) => lower(g.title) === lower(NAMES.group));
   if (!group) return null;
   const data = await monday(
-    `query ($id: [ID!], $g: [String]) { boards (ids: $id) { groups (ids: $g) {
-       items_page (limit: 200) { items { ${ITEM_FIELDS} ${withUpdates ? "updates (limit: 50) { text_body created_at }" : ""} } } } } }`,
-    { id: [String(boardId)], g: [group.id] });
-  const items = (((data.boards[0] || {}).groups || [])[0] || {}).items_page;
-  return { boardId: String(board.id), boardName: board.name, groupId: group.id, items: ((items && items.items) || []).map(parseItem) };
+    `query ($id: [ID!], $g: [String], $info: CompareValue!) { boards (ids: $id) { groups (ids: $g) {
+       items_page (limit: 200) { items { ${ITEM_FIELDS} } } } ${INFO_PAGE} } }`,
+    { id: [String(boardId)], g: [group.id], info: [NAMES.info] });
+  const b = data.boards[0] || {};
+  const items = ((b.groups || [])[0] || {}).items_page;
+  return { boardId: String(board.id), boardName: board.name, groupId: group.id, items: ((items && items.items) || []).map(parseItem), info: pickInfo(b) };
 }
 
 // Reads the Client Portal groups of many boards at once (from listPortalBoards()).
@@ -78,17 +83,27 @@ async function readPortals(list) {
   for (let i = 0; i < list.length; i += 25) {
     const chunk = list.slice(i, i + 25);
     const data = await monday(
-      `query ($ids: [ID!], $g: [String]) { boards (ids: $ids) { id name groups (ids: $g) {
-         id title items_page (limit: 200) { items { ${ITEM_FIELDS} } } } } }`,
-      { ids: chunk.map((b) => b.boardId), g: chunk.map((b) => b.groupId) });
+      `query ($ids: [ID!], $g: [String], $info: CompareValue!) { boards (ids: $ids) { id name groups (ids: $g) {
+         id title items_page (limit: 200) { items { ${ITEM_FIELDS} } } } ${INFO_PAGE} } }`,
+      { ids: chunk.map((b) => b.boardId), g: chunk.map((b) => b.groupId), info: [NAMES.info] });
     for (const b of data.boards || []) {
       const want = chunk.find((x) => x.boardId === String(b.id));
       const g = (b.groups || []).find((x) => want && x.id === want.groupId);
       if (!g) continue;
-      out.push({ boardId: String(b.id), boardName: b.name, groupId: g.id, items: ((g.items_page && g.items_page.items) || []).map(parseItem) });
+      out.push({ boardId: String(b.id), boardName: b.name, groupId: g.id, items: ((g.items_page && g.items_page.items) || []).map(parseItem), info: pickInfo(b) });
     }
   }
   return out;
+}
+
+// The "Client Information" row (under Sales) holds the client's name, address, email and permit #.
+const INFO_PAGE = `info: items_page (limit: 5, query_params: { rules: [{ column_id: "name", compare_value: $info, operator: contains_text }] }) {
+  items { id name created_at updated_at column_values (ids: ["${COL.clientName}", "${COL.address}", "${COL.permit}", "${COL.email}"]) { id type text value column { title } } } }`;
+
+function pickInfo(board) {
+  const rows = (board.info && board.info.items) || [];
+  const row = rows.find((r) => lower(r.name) === lower(NAMES.info));
+  return row ? parseItem(row) : null;
 }
 
 function parseItem(it) {
@@ -117,6 +132,9 @@ function parseItem(it) {
     target: toDate(timelineTo),
     link,
     email,
+    clientName: ((byId(COL.clientName) || {}).text || "").trim(),
+    address: ((byId(COL.address) || {}).text || "").trim(),
+    permit: ((byId(COL.permit) || {}).text || "").trim(),
     updates: it.updates || [],
     subitems: (it.subitems || []).map(parseSubitem),
   };
@@ -149,12 +167,13 @@ function classify(portal) {
   const items = portal.items;
   const portalRow = items.find((i) => lower(i.name) === lower(NAMES.portal)) || null;
   const updatesRow = items.find((i) => lower(i.name) === lower(NAMES.updates)) || null;
-  const permitRow = items.find((i) => NAMES.permit.test(i.name)) || null;
-  const special = new Set([portalRow, updatesRow, permitRow].filter(Boolean).map((i) => i.id));
+  const special = new Set([portalRow, updatesRow].filter(Boolean).map((i) => i.id));
   const stages = items.filter((i) => !special.has(i.id) && isStageName(i.name));
   const others = items.filter((i) => !special.has(i.id) && !isStageName(i.name));
   return {
-    portalRow, updatesRow, permitRow, stages,
+    portalRow, updatesRow, stages,
+    // Where portal emails go: Client Email on the Client Information row (Portal row as a fallback)
+    email: (portal.info && portal.info.email) || (portalRow && portalRow.email) || null,
     todos: others.filter((i) => lower(i.status) === lower(LABELS.todo)),
     docs: others.filter((i) => lower(i.status) === lower(LABELS.doc)),
   };
@@ -199,6 +218,7 @@ function clientView(portal, c) {
   const allDone = tl.length > 0 && !current;
   const info = current ? STAGES[current.name] : (allDone ? STAGES[tl[tl.length - 1].name] : null);
   const names = parseBoardName(portal.boardName);
+  const ci = portal.info || {}; // Client Information row
 
   const updates = (c.updatesRow ? c.updatesRow.updates : [])
     .slice()
@@ -208,13 +228,15 @@ function clientView(portal, c) {
     .slice(0, 25);
 
   const touched = portal.items.map((i) => phoenixDate(i.updatedAt)).concat(updates.map((u) => u.date)).filter(Boolean).sort();
-  const permitMatch = c.permitRow ? NAMES.permit.exec(c.permitRow.name) : null;
 
   return {
-    client: names.client,
-    address: names.address,
+    // The Client Information row (under Sales) wins; the board name ("RR - 123 Main - Smith") is the fallback
+    client: ci.clientName || names.client,
+    address: ci.address || names.address,
     projectType: typeName(names.type),
-    permit: permitMatch && permitMatch[1].trim() ? permitMatch[1].trim() : null,
+    permit: ci.permit || null,
+    // Target date of the last stage that has one, until every stage is done
+    estimatedCompletion: allDone ? null : (tl.map((s) => s.target).filter(Boolean).pop() || null),
     updated: touched.pop() || null,
     stage: current || allDone ? {
       name: current ? current.name : tl[tl.length - 1].name,

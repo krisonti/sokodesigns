@@ -95,14 +95,18 @@ async function syncBoard(portal, inWindow, summary) {
   // 3. Client email
   if (row.justCreated) { await stampSent(); return; } // the client sees everything when they open the new link
   if (process.env.PORTAL_EMAILS === "off") return;
-  if (lib.lower(row.status) !== lib.lower(L.live) || !row.email || !lib.tokenFromLink(row.link)) return;
+  if (lib.lower(row.status) !== lib.lower(L.live) || !c.email || !lib.tokenFromLink(row.link)) return;
 
   const moved = c.stages.some((s) => lib.lower(s.status) === lib.lower(L.done) && inWindow(s.statusChangedAt));
   // A row created with its status already set has no "changed at" time, so use when it was made.
   const when = (i) => i.statusChangedAt || i.createdAt;
   const todos = c.todos.filter((t) => inWindow(when(t)));
   const docs = c.docs.filter((d) => inWindow(when(d)));
-  if (!moved && !todos.length && !docs.length && !newVersions.length) return;
+  // Posts on the Client Updates row in the last 5 minutes (oldest first)
+  const posts = (c.updatesRow ? c.updatesRow.updates : [])
+    .filter((u) => inWindow(u.created_at) && String(u.text_body || "").trim())
+    .sort((a, b) => (a.created_at < b.created_at ? -1 : 1));
+  if (!moved && !todos.length && !docs.length && !newVersions.length && !posts.length) return;
 
   const view = lib.clientView(portal, c);
   const lines = [];
@@ -110,17 +114,19 @@ async function syncBoard(portal, inWindow, summary) {
   if (newVersions.length) lines.push(`${newVersions.length === 1 ? "A new version is" : "New versions are"} ready for your review: ${newVersions.map((v) => `${v.stage} ${v.name}`).join("; ")}.`);
   if (todos.length) lines.push(`We need something from you: ${todos.map((t) => t.name).join("; ")}.`);
   if (docs.length) lines.push(`New on your project page: ${docs.map((d) => d.name).join("; ")}.`);
-  const only = (x) => [moved, newVersions.length, todos.length, docs.length].filter(Boolean).length === 1 && x;
+  for (const p of posts) lines.push(`Update from SOKO: ${String(p.text_body).trim().slice(0, 1000)}`);
+  const only = (x) => [moved, newVersions.length, todos.length, docs.length, posts.length].filter(Boolean).length === 1 && x;
   const subject = only(moved) && view.stage ? (view.stage.complete ? "Your project is complete" : `Your project moved to ${view.stage.name}`)
     : only(newVersions.length) ? (newVersions.length === 1 ? `Ready for your review: ${newVersions[0].stage} ${newVersions[0].name}` : "New versions are ready for your review")
     : only(todos.length) ? "We need something from you"
     : only(docs.length) ? "New documents for your project"
+    : only(posts.length) ? "New update on your project"
     : "Update on your project";
 
-  const sent = await sendEmail(row.email, view, subject, lines, row.link);
+  const sent = await sendEmail(c.email, view, subject, lines, row.link);
   if (sent) {
     await stampSent();
-    await note(row.id, `Emailed the client (${row.email}): ${lines.join(" ")}`);
+    await note(row.id, `Emailed the client (${c.email}): ${lines.join(" ").slice(0, 1500)}`);
     summary.emails++;
   }
 }
@@ -133,7 +139,7 @@ async function sendEmail(to, view, subject, lines, link) {
   const text = [hi, "", ...lines, "", `See where things stand${where}:`, link, "", `Questions? Call ${PHONE}.`, "SOKO Designs"].join("\n");
   const html = `<div style="font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:1.55;color:#1A1A1A;max-width:560px">
 <p>${esc(hi)}</p>
-${lines.map((l) => `<p>${esc(l)}</p>`).join("\n")}
+${lines.map((l) => `<p>${esc(l).replace(/\n/g, "<br>")}</p>`).join("\n")}
 <p style="margin:26px 0"><a href="${esc(link)}" style="background:#3A6365;color:#fff;text-decoration:none;font-weight:600;padding:13px 22px;border-radius:3px;display:inline-block">See your project page</a></p>
 <p style="color:#5B5B57;font-size:14px">Questions? Call <a href="tel:4806603133" style="color:#3A6365">${PHONE}</a>.<br>SOKO Designs</p>
 </div>`;
