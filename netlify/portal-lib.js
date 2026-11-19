@@ -8,6 +8,9 @@ const { STAGES, NAMES, LABELS, TYPE_NAMES } = require("./portal-config.js");
 const MONDAY_API_URL = "https://api.monday.com/v2";
 const WORKSPACE_ID = 12225021; // Main workspace (the project boards live here)
 const SITE = "https://www.sokodesigns.com";
+// The template boards themselves: RR, TI, RNB, VAR. Never make links for these.
+// (Copies of them are real project boards, whatever folder they're in or what they're called.)
+const TEMPLATE_BOARDS = ["18403041267", "18403000378", "18405785745", "18338585388"];
 const COL = {
   status: "status", link: "client_link", email: "client_email",
   clientName: "client_name", address: "project_address", permit: "permit_no", // on the Client Information row
@@ -51,7 +54,7 @@ async function listPortalBoards() {
       { ws: [WORKSPACE_ID], page });
     const boards = (data.boards || []).filter((b) => b.type === "board");
     for (const b of boards) {
-      if (/template/i.test(b.name)) continue;
+      if (TEMPLATE_BOARDS.includes(String(b.id))) continue;
       const g = (b.groups || []).find((x) => lower(x.title) === lower(NAMES.group));
       if (g) found.push({ boardId: String(b.id), boardName: b.name, groupId: g.id });
     }
