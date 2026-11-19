@@ -187,26 +187,24 @@
 
   function sample() {
     return {
-      client: "Jordan Rivera", address: "1234 E Sample Rd, Phoenix, AZ 85016",
-      projectType: "ADU", permit: "ADU-2026-01234", updated: "2026-11-18",
-      stage: { name: "City Review", complete: false, target: "2026-12-12", flag: "on",
-        summary: "The city is reviewing your plans. Nothing is needed from you right now.",
-        next: "The city will either approve the plans or send comments for us to address." },
-      todo: [{ text: "Sign the design agreement", url: "https://example.com" }, { text: "Pick your exterior paint color", url: null }],
+      client: "Rivera", address: "1234 E Sample Rd",
+      projectType: "Residential remodel", permit: "RR-2026-01234", updated: "2026-11-18",
+      stage: { name: "Building Plans", complete: false, target: "2026-12-12", flag: "on",
+        summary: "We're drawing the full set of building plans.",
+        next: "Engineering gets added next, then the set goes to the city." },
+      todo: [{ text: "Sign the design agreement", url: "https://example.com" }, { text: "Send a photo of your electrical panel", url: null }],
       timeline: [
-        { name: "Discovery & Site Review", status: "done", target: "2026-09-12", actual: "2026-09-10", flag: "on" },
-        { name: "Design", status: "done", target: "2026-10-03", actual: "2026-10-08", flag: "late", daysLate: 5 },
-        { name: "Construction Documents", status: "done", target: "2026-11-01", actual: "2026-10-30", flag: "on" },
-        { name: "Permit Submittal", status: "done", target: "2026-11-05", actual: "2026-11-04", flag: "on" },
-        { name: "City Review", status: "current", target: "2026-12-12", actual: null, flag: "on" },
-        { name: "Corrections & Resubmittal", status: "upcoming", target: "2027-01-09", actual: null, flag: null },
-        { name: "Permit Issued", status: "upcoming", target: "2027-01-23", actual: null, flag: null },
-        { name: "Construction", status: "upcoming", target: null, actual: null, flag: null },
+        { name: "Billing", status: "done", target: "2026-09-12", actual: "2026-09-10", flag: "on" },
+        { name: "Site Visit", status: "done", target: "2026-10-03", actual: "2026-10-08", flag: "late", daysLate: 5 },
+        { name: "Concept", status: "done", target: "2026-11-01", actual: "2026-10-30", flag: "on" },
+        { name: "Building Plans", status: "current", target: "2026-12-12", actual: null, flag: "on" },
+        { name: "Engineering", status: "upcoming", target: "2027-01-09", actual: null, flag: null },
+        { name: "Permits", status: "upcoming", target: null, actual: null, flag: null },
       ],
-      documents: [{ label: "Permit set", url: "https://drive.google.com/" }, { label: "Signed agreement", url: "https://drive.google.com/" }],
+      documents: [{ label: "Concept layout", url: "https://drive.google.com/" }, { label: "Signed agreement", url: "https://drive.google.com/" }],
       updates: [
-        { date: "2026-11-18", text: "Plans are in with the City of Phoenix. First review usually takes 3 to 4 weeks." },
-        { date: "2026-10-30", text: "Permit set is done. Thanks for signing off so fast." },
+        { date: "2026-11-18", text: "Concept approved. We've started the full building plans." },
+        { date: "2026-10-30", text: "Concept draft is in your Drive folder. Let us know what you'd change." },
       ],
     };
   }
