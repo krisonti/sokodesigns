@@ -1,50 +1,62 @@
 # Client portal
 
-Every client gets a private status page at `sokodesigns.com/client/<long random code>/`.
-The page reads from the Monday **PROJECTS** board. Nobody edits the page itself. Change
-Monday and the page catches up within about a minute.
+Every client can get a private status page at `sokodesigns.com/client/<code>/`.
 
-## Give a client a portal
+The page reads the **Client Portal** group at the top of that project's own Monday board. Nobody edits the page itself: change the group and the page catches up within about a minute.
 
-1. Open the project on the PROJECTS board. Make sure these are filled in:
-   - **Client Name** and **Address**. The address shows at the top of the page.
-   - **Type**. It picks the stage list (HVAC jobs get a shorter list).
-2. Set **Portal** to **Create link**.
-3. Within a few seconds:
-   - **Portal Link** fills in. That's the link you text the client.
-   - **Portal** switches to **Live**.
-   - One subitem appears for each stage.
-4. On the subitems, type a **Target** date for each stage.
+The group comes from the **RR, TI, RNB and VAR templates** (Main workspace > Templates). Any project board made from a template already has it.
 
-## Keep it up to date
+## The Client Portal group
 
-| To change this on the page | Do this in Monday |
+| Row | What it does |
 |---|---|
-| Move to the next stage | Set that stage's subitem **Status** to **Done**. **Actual** fills in with today's date by itself. The next stage becomes current. |
-| Skip a stage that doesn't apply (e.g. no corrections) | Set its subitem **Status** to **Skipped**. It disappears from the page. |
-| Status summary / what's next | Type in **Client Summary** / **Client Next Step**. Leave blank to use the standard wording for the stage. |
-| "Needed from you" | **Client To-Do**, one item per line. Add a link after a bar: `Sign the agreement \| https://...`. Empty = the section is hidden. |
-| Documents | **Client Documents**, one per line: `Permit set \| https://drive.google.com/...`. Only Google Drive and Docs links show. Set the Drive sharing so the client can open it. |
-| Updates | Post an update on the item that starts with **`Client update:`**. Only those show; every other update stays internal. |
-| Permit number | **Permit #** |
-| Current stage (for the team, and it triggers the stage email) | **Client Stage**, filled in automatically. Don't type in it. |
+| **Portal** | Put the client's email in **Client Email**. Set Status to **Create link**. Within 5 minutes the private link appears in **Client Link** and Status turns **Live**. Text that link to the client. |
+| **Permit #** | Rename the row to include the number, e.g. `Permit # ADU-2026-01234`. Leave it as `Permit #` to hide it. |
+| **Billing, Site Visit, Concept, Building Plans, Engineering, Permits** | The stages on the timeline, in this order. **Done** = finished. **N/A** = hidden from the client. Anything else = not done yet. The **end date of the Timeline** is the target date. **Completion Date** fills in by itself when you mark a stage Done. |
+| **To-dos** (add your own rows) | Name the row after what you need (e.g. "Sign the design agreement") and set Status to **Client To-Do**. It shows under "Needed from you" until you mark it Done. You can put a link in **Client Link**. |
+| **Documents** (add your own rows) | Name the row (e.g. "Permit set"), set Status to **DOCUMENTS** and put the Google Drive link in **Client Link**. Only Google Drive and Docs links show. Check the Drive sharing so the client can open it. |
+| **Client Updates** | **Every update posted on this row shows on the client's page.** Post internal notes on any other row. |
 
-Nothing else on the item is ever sent to the page: not NOTES, files, the project board link, people, the Phase column or other updates.
+Nothing else on the board ever reaches the page. That includes:
+- the other groups,
+- team rows inside the Client Portal group that aren't a stage, to-do or document,
+- people, files and notes.
 
-"On target" / "Behind target" is worked out from the dates. The current stage is behind when today is past its Target. A finished stage shows how many days late it was, if any.
+The page shows "On target" or "Behind target" from the dates. The current stage is behind when today is past its target date. A finished stage shows how many days late it was, if any.
 
-## Replace a link (or turn a page off)
+The heading comes from the board name: `RR - 123 Main St - Smith` shows "Smith", "123 Main St" and "Residential remodel".
 
-- **New link:** set **Portal** to **Create link** again. A new code is made and the old link stops working (give it up to a minute). The stages stay as they are.
-- **Turn off:** set **Portal** to **Off**. The link shows "This link isn't working". Set it back to **Live** to turn it on again with the same link.
+## Client emails
 
-## Edit the stages
+A background job runs every 5 minutes. It emails the client at **Client Email** when one of these happens:
 
-Stage names, their standard wording and which project types get which list all live in
-**`netlify/portal-config.js`**. Edit, commit, push.
+| What you do | What the client gets |
+|---|---|
+| Mark a stage **Done** | "Your project moved to [next stage]" |
+| Set a row to **Client To-Do** | "We need something from you" |
+| Set a row to **DOCUMENTS** | "New documents for your project" |
 
-- Changes apply to portals created **after** the edit. Existing projects keep their subitems. Rename, add or reorder a project's subitems in Monday to change just that project.
-- A subitem whose name isn't in the config still shows on the timeline. It just has no standard wording, so fill in Client Summary / Next Step for it.
+- Several changes in the same 5 minutes go out as one email.
+- Every email links to the client's page and gives 480-660-3133.
+- Emails come from kris@sokodesigns.com, and replies go to you.
+- Each email is logged as an update on the **Portal** row, so the team can see what went out.
+- Emails only go out while Portal is **Live** and Client Email is filled in.
+- No email goes out on the run that creates the link, because you text that one yourself.
+- `Client Updates` posts don't send an email. Mention them in a to-do or call if they matter.
+- To stop all portal emails at once, set the Netlify environment variable `PORTAL_EMAILS` to `off`.
+
+## Replace or turn off a link
+
+- **New link:** set Portal to **Create link** again. A new code is made within 5 minutes, and the old link stops working within about a minute after that.
+- **Turn off:** set Portal to anything other than Live, e.g. ON HOLD. The link shows "This link isn't working". Set it back to **Live** to turn the same link on again.
+
+## Change the stages
+
+Stage names and the wording the client sees for each stage are in **`netlify/portal-config.js`**. Edit, commit, push.
+
+- **Rename a stage:** change it in that file and on the rows in the templates (and any live boards).
+- **Add a stage:** add it to that file, then add a row with the same name to the Client Portal group.
+- Rows are shown in board order. A row whose name isn't in the config file isn't treated as a stage.
 - Never call us architects or designers in the wording.
 
 ## How it's built
@@ -52,54 +64,20 @@ Stage names, their standard wording and which project types get which list all l
 | Piece | File |
 |---|---|
 | Page | `client/index.html`, `client/portal.css` (on top of `/lp.css`), `client/portal.js` |
-| Data | `netlify/functions/portal.js`. It finds the item by Portal Token and returns only an allowlist of fields. It keeps results for 60 seconds per link. |
-| Create / replace link | `netlify/functions/portal-hook.js`, called by a Monday webhook on the Portal column |
-| Stages | `netlify/portal-config.js` |
+| Page data | `netlify/functions/portal.js`. It checks the code against the board's Portal row and returns only an allowlist of fields (`clientView` in `netlify/portal-lib.js`). It keeps results for 60 seconds. |
+| Links, completion dates, emails | `netlify/functions/portal-sync.js`, every 5 minutes (schedule in `netlify.toml`) |
+| Shared Monday reading | `netlify/portal-lib.js` |
+| Stages and labels | `netlify/portal-config.js` |
 | Routing / privacy | `_redirects` (`/client/*`), `netlify.toml` (noindex, no-referrer, strict content policy), `robots.txt` |
 
-- **Env var:** `MONDAY_API_TOKEN` (already set on Netlify).
-- **No analytics or outside scripts.** The content policy blocks them. The only outside request is Google Fonts, and it never sees the link.
+- **Links:** `/client/<boardId>-<43 random characters>/`. The board number alone opens nothing.
+- **Env vars:** `MONDAY_API_TOKEN` and `RESEND_API_KEY` (both already set on Netlify). `FROM_EMAIL` and `PORTAL_EMAILS` are optional.
+- **No analytics or outside scripts** on portal pages.
 - **Layout check without Monday:** open `/client/?demo=1` to see sample data.
 
-**Monday setup this depends on:**
-- PROJECTS columns `portal_status`, `portal_token`, `portal_link`, `permit_no`, `client_summary`, `client_next_step`, `client_todo`, `client_documents`.
-- Subitem columns: Status (with a **Skipped** label), Target (`date0`), Actual (`actual_date`).
-- A subitem automation: Status changes to Done, then set Actual to today.
-- Two webhooks pointing at `/.netlify/functions/portal-hook`: one on the `portal_status` column, one on subitem column changes.
-- Column `client_stage` (Client Stage).
-- The three email automations below.
+**Monday setup on each template:**
+- a **Client Portal** group at the top;
+- columns `client_link` (Client Link) and `client_email` (Client Email);
+- Status labels **Create link**, **Live** and **Client To-Do**.
 
----
-
-# Client emails (Monday automations)
-
-Emails go out from Monday, through the Gmail integration, to the project's **Email** column.
-Each one links to the client's portal page. All three only send when **Portal is Live** and the column isn't empty.
-
-| When | Monday rule (PROJECTS board, Automations) | Subject |
-|---|---|---|
-| A stage moves | **Client Stage** changes | Your project moved to the next stage |
-| A to-do is added or edited | **Client To-Do** changes | Something is needed for your project |
-| A document is added or edited | **Client Documents** changes | New documents for your project |
-
-**How a stage move reaches Monday:**
-1. You mark a stage subitem **Done** or **Skipped**.
-2. The `portal-hook` function, via a webhook on subitem status changes, writes the new current stage into **Client Stage**.
-3. That change fires the email. The column only changes when the stage really moves, so re-saving the same status sends nothing.
-
-**Things to know:**
-- **Any edit counts.** Fixing a typo in Client To-Do or Client Documents sends another email. Make the edit in one go.
-- **No email when the link is first created.** You text that one yourself. Client Stage stays blank until the first stage is marked Done.
-- **Check the Email column holds the client, not a GC,** before turning a portal on.
-- **To pause emails for one client,** set Portal to Off. Their page goes dark too.
-- **To change the wording,** edit the three rules in Monday (Automations, then "Send email").
-- **`Client update:` posts don't send an email.** Monday can't filter updates by their text.
-
-## Column group
-
-Keep all the portal columns in one collapsible **Client Portal** column group on the PROJECTS board:
-- Portal, Portal Link, Portal Token, Client Stage, Permit #, Client Summary, Client Next Step, Client To-Do, Client Documents.
-
-The Monday API can't build column groups, so this is done by hand:
-1. Open the first column's header menu (the three dots) and pick the grouping option. Monday labels it something like **Group columns** or **Add to group**. Make a new group called **Client Portal**.
-2. Do the same for each of the other columns, adding them to that group.
+The job finds every board in the Main workspace with a group named exactly **Client Portal**. Boards with "Template" in the name are skipped.
