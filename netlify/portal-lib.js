@@ -185,7 +185,7 @@ function clientView(portal, c) {
   return {
     client: names.client,
     address: names.address,
-    projectType: names.type ? TYPE_NAMES[names.type] || null : null,
+    projectType: typeName(names.type),
     permit: permitMatch && permitMatch[1].trim() ? permitMatch[1].trim() : null,
     updated: touched.pop() || null,
     stage: current || allDone ? {
@@ -209,14 +209,23 @@ function clientView(portal, c) {
 function parseBoardName(name) {
   let rest = String(name || "").trim();
   let type = null;
-  const m = /^([A-Z]{2,5})\s*-\s*/.exec(rest);
-  if (m) { type = m[1]; rest = rest.slice(m[0].length); }
+  // Type code, possibly combined: "RR", "RR/ADU"
+  const m = /^([A-Z]{2,5}(?:\s*\/\s*[A-Z]{2,5})*)\s*-\s*/.exec(rest);
+  if (m) { type = m[1].replace(/\s+/g, ""); rest = rest.slice(m[0].length); }
   const parts = rest.split(/\s+-\s*|\s*-\s+/).map((s) => s.trim()).filter(Boolean);
   return {
     type,
     address: parts[0] || null,
     client: parts.length > 1 ? parts[parts.length - 1] : null,
   };
+}
+
+// "RR/ADU" -> "Residential remodel and ADU". Unknown codes are left off.
+function typeName(code) {
+  if (!code) return null;
+  const names = code.split("/").map((c) => TYPE_NAMES[c]).filter(Boolean);
+  if (!names.length) return null;
+  return names.map((n, i) => (i === 0 || n === "ADU" ? n : n.toLowerCase())).join(" and ");
 }
 
 // ---------- dates ----------
