@@ -19,3 +19,7 @@
     X-Frame-Options = "DENY"
     X-Content-Type-Options = "nosniff"
     Content-Security-Policy = "default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'"
+
+# Client portal background job: new links, completion dates, client emails
+[functions."portal-sync"]
+  schedule = "*/5 * * * *"

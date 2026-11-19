@@ -1,104 +1,79 @@
 /**
- * Client portal settings: stage lists, default wording, and project type names.
+ * Client portal settings. EDIT THIS FILE to change stage wording or add a stage name.
  *
- * EDIT THIS FILE to change the stages. Then commit and push.
+ * Every project board has a "Client Portal" group (it comes from the RR / TI / RNB / VAR
+ * templates). The page reads that group:
+ *   - "Portal" row ............ Client Email, and Client Link (the private link, made for you)
+ *   - "Permit #" row .......... rename it to include the number, e.g. "Permit # ADU-2026-01234"
+ *   - stage rows .............. any row whose name is listed in STAGES below, in board order
+ *   - to-do rows .............. Status = "Client To-Do" (hidden again once marked Done)
+ *   - document rows ........... Status = "DOCUMENTS", with a Google Drive link in Client Link
+ *   - "Client Updates" row .... every update posted on it shows on the page
  *
- * How stages work:
- * - When someone sets a project's Portal column to "Create link", one subitem is made
- *   for each stage in that project's list (below). From then on the subitems ARE the
- *   timeline for that project. Editing this file only changes projects that get a
- *   portal later. Existing ones keep their subitems (rename or add subitems by hand).
- * - "summary" and "next" are the default wording shown for the current stage. Anything
- *   typed into the Client Summary / Client Next Step columns in Monday replaces them.
- *   Keep it short and plain. Never call us architects or designers.
+ * A stage row: Status Done = finished, N/A = hidden, anything else = not done yet.
+ * Target date = end of its Timeline. Completion Date fills in by itself when marked Done.
+ *
+ * "summary" and "next" are what the page says while that stage is the current one.
+ * Keep it short and plain. Never call us architects or designers.
  */
 
 const STAGES = {
-  "Discovery & Site Review": {
-    summary: "We're collecting what we need to start: site measurements, property records and the rules that apply to your lot.",
-    next: "Once we have the site information, we start laying out your plans.",
+  "Billing": {
+    summary: "We're getting the paperwork in place: estimate, agreement and deposit.",
+    next: "Once the agreement is signed and the deposit is in, we schedule your site visit.",
   },
-  "Design": {
-    summary: "We're working out the layout. You'll get a draft to review before we go further.",
-    next: "After you approve the layout, we start the full permit drawings.",
+  "Site Visit": {
+    summary: "We're visiting your property to measure and document what's there.",
+    next: "We use the measurements to draw your concept.",
   },
-  "Construction Documents": {
-    summary: "We're drawing the full permit set: plans, structural and the details the city needs to see.",
-    next: "When the set is done and you've signed off, we submit it to the city.",
+  "Concept": {
+    summary: "We're drawing the concept layout. You'll get it to review before we go further.",
+    next: "Once you approve the concept, we start the building plans.",
   },
-  "Permit Submittal": {
-    summary: "Your plans are going in to the city. We handle the application.",
-    next: "The city assigns reviewers and starts its review.",
+  "Building Plans": {
+    summary: "We're drawing the full set of building plans.",
+    next: "Engineering gets added next, then the set goes to the city.",
   },
-  "City Review": {
-    summary: "The city is reviewing your plans. Nothing is needed from you right now.",
-    next: "The city will either approve the plans or send comments for us to address.",
+  "Engineering": {
+    summary: "Engineers are working on the structural and other drawings the city requires.",
+    next: "When engineering is back, we submit for permits.",
   },
-  "Corrections & Resubmittal": {
-    summary: "The city sent back comments. We're making the changes and resubmitting.",
-    next: "Once the city accepts the changes, the permit can be issued.",
-  },
-  "Permit Issued": {
-    summary: "Your permit is issued.",
-    next: "Pay any remaining city fees and line up your build.",
-  },
-  "Construction": {
-    summary: "Your project is under construction.",
-    next: "We'll post updates here as the work moves along.",
-  },
-
-  // Stages used only by the HVAC list below
-  "Project Info Received": {
-    summary: "We have your project information and are reviewing it.",
-    next: "We start the load calculations.",
-  },
-  "Calculations": {
-    summary: "We're running the calculations for your report.",
-    next: "We send you the finished report.",
-  },
-  "Report Delivered": {
-    summary: "Your report is done and delivered.",
-    next: "Nothing else is needed. Call us if the city has questions.",
+  "Permits": {
+    summary: "Your plans are with the city for permit review. We handle the back and forth.",
+    next: "Once the city approves, your permit is issued.",
   },
 };
 
-// Stage lists. "default" is used for any project type not listed in TYPE_LIST.
-const LISTS = {
-  default: [
-    "Discovery & Site Review",
-    "Design",
-    "Construction Documents",
-    "Permit Submittal",
-    "City Review",
-    "Corrections & Resubmittal",
-    "Permit Issued",
-    "Construction",
-  ],
-  hvac: ["Project Info Received", "Calculations", "Report Delivered"],
+// Names and labels the page and sync job look for (match Monday exactly, case-insensitive)
+const NAMES = {
+  group: "Client Portal",
+  portal: "Portal",
+  updates: "Client Updates",
+  permit: /^permit\s*#?\s*:?\s*(.*)$/i,
+};
+const LABELS = {
+  done: "Done",
+  skip: "N/A",
+  todo: "Client To-Do",
+  doc: "DOCUMENTS",
+  create: "Create link",
+  live: "Live",
 };
 
-// Monday "Type" label -> which list above to use
-const TYPE_LIST = {
-  HVAC: "hvac",
-};
-
-// Monday "Type" label -> what the client sees
+// Board name prefix ("RR - 123 Main - Smith") -> what the client sees
 const TYPE_NAMES = {
-  MFNB: "Multifamily new build",
-  RNB: "Residential new build",
-  CNB: "Commercial new build",
   RR: "Residential remodel",
+  RNB: "Residential new build",
+  NB: "New build",
+  CNB: "Commercial new build",
+  MF: "Multifamily",
+  MFNB: "Multifamily new build",
   ADD: "Addition",
   ADU: "ADU",
   TI: "Tenant improvement",
   SP: "Site plan",
   VAR: "Variance",
   HVAC: "HVAC energy report",
-  "Gazebo/Patio": "Gazebo / patio",
 };
 
-function stagesForType(typeLabel) {
-  return LISTS[TYPE_LIST[typeLabel] || "default"];
-}
-
-module.exports = { STAGES, LISTS, TYPE_LIST, TYPE_NAMES, stagesForType };
+module.exports = { STAGES, NAMES, LABELS, TYPE_NAMES };
