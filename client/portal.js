@@ -113,6 +113,20 @@
           : t.flag === "on" ? "On target" : null;
         if (flagText) addDate(el("span", "t-flag " + t.flag, flagText));
         if (dates.childNodes.length) li.appendChild(dates);
+
+        // Versions sent for this stage (v1, v2, 30CD...), newest last as listed in Monday
+        if (t.versions && t.versions.length) {
+          var vl = el("ul", "t-versions");
+          vl.setAttribute("aria-label", t.name + " versions");
+          t.versions.forEach(function (v) {
+            var vi = el("li");
+            vi.appendChild(extLink(v.url, v.name));
+            if (v.date) vi.appendChild(el("span", "v-date", "Sent " + fmt(v.date)));
+            vi.appendChild(el("span", "v-state" + (v.done ? "" : " open"), v.done ? "Reviewed" : "Ready for your review"));
+            vl.appendChild(vi);
+          });
+          li.appendChild(vl);
+        }
         ol.appendChild(li);
       });
       $("timeline-sec").hidden = false;
@@ -192,12 +206,15 @@
       stage: { name: "Building Plans", complete: false, target: "2026-12-12", flag: "on",
         summary: "We're drawing the full set of building plans.",
         next: "Engineering gets added next, then the set goes to the city." },
-      todo: [{ text: "Sign the design agreement", url: "https://example.com" }, { text: "Send a photo of your electrical panel", url: null }],
+      todo: [{ text: "Review Building Plans: 30CD", url: "https://drive.google.com/" }, { text: "Send a photo of your electrical panel", url: null }],
       timeline: [
         { name: "Billing", status: "done", target: "2026-09-12", actual: "2026-09-10", flag: "on" },
         { name: "Site Visit", status: "done", target: "2026-10-03", actual: "2026-10-08", flag: "late", daysLate: 5 },
-        { name: "Concept", status: "done", target: "2026-11-01", actual: "2026-10-30", flag: "on" },
-        { name: "Building Plans", status: "current", target: "2026-12-12", actual: null, flag: "on" },
+        { name: "Concept", status: "done", target: "2026-11-01", actual: "2026-10-30", flag: "on", versions: [
+          { name: "v1", url: "https://drive.google.com/", date: "2026-10-20", done: true },
+          { name: "v2", url: "https://drive.google.com/", date: "2026-10-27", done: true } ] },
+        { name: "Building Plans", status: "current", target: "2026-12-12", actual: null, flag: "on", versions: [
+          { name: "30CD", url: "https://drive.google.com/", date: "2026-11-18", done: false } ] },
         { name: "Engineering", status: "upcoming", target: "2027-01-09", actual: null, flag: null },
         { name: "Permits", status: "upcoming", target: null, actual: null, flag: null },
       ],

@@ -82,8 +82,19 @@ async function syncBoard(portal, inWindow, summary) {
     }
   }
 
+  // New versions: a subitem under a (not N/A) stage with a Drive link and no "Sent to Client" date yet
+  const newVersions = c.stages
+    .filter((s) => lib.lower(s.status) !== lib.lower(L.skip))
+    .flatMap((s) => lib.versionsOf(s).filter((v) => !v.sent).map((v) => ({ ...v, stage: lib.stageName(s.name) })));
+  const stampSent = async () => {
+    for (const v of newVersions) {
+      if (v.boardId) await setColumns(v.boardId, v.id, { sent_to_client: { date: lib.phoenixToday() } });
+    }
+  };
+
   // 3. Client email
-  if (process.env.PORTAL_EMAILS === "off" || row.justCreated) return;
+  if (row.justCreated) { await stampSent(); return; } // the client sees everything when they open the new link
+  if (process.env.PORTAL_EMAILS === "off") return;
   if (lib.lower(row.status) !== lib.lower(L.live) || !row.email || !lib.tokenFromLink(row.link)) return;
 
   const moved = c.stages.some((s) => lib.lower(s.status) === lib.lower(L.done) && inWindow(s.statusChangedAt));
@@ -91,21 +102,24 @@ async function syncBoard(portal, inWindow, summary) {
   const when = (i) => i.statusChangedAt || i.createdAt;
   const todos = c.todos.filter((t) => inWindow(when(t)));
   const docs = c.docs.filter((d) => inWindow(when(d)));
-  if (!moved && !todos.length && !docs.length) return;
+  if (!moved && !todos.length && !docs.length && !newVersions.length) return;
 
   const view = lib.clientView(portal, c);
   const lines = [];
   if (moved && view.stage) lines.push(view.stage.complete ? "Every stage of your project is done." : `Your project moved to the next stage: ${view.stage.name}.`);
+  if (newVersions.length) lines.push(`${newVersions.length === 1 ? "A new version is" : "New versions are"} ready for your review: ${newVersions.map((v) => `${v.stage} ${v.name}`).join("; ")}.`);
   if (todos.length) lines.push(`We need something from you: ${todos.map((t) => t.name).join("; ")}.`);
   if (docs.length) lines.push(`New on your project page: ${docs.map((d) => d.name).join("; ")}.`);
-  const subject = moved && !todos.length && !docs.length && view.stage
-    ? (view.stage.complete ? "Your project is complete" : `Your project moved to ${view.stage.name}`)
-    : todos.length && !moved && !docs.length ? "We need something from you"
-    : docs.length && !moved && !todos.length ? "New documents for your project"
+  const only = (x) => [moved, newVersions.length, todos.length, docs.length].filter(Boolean).length === 1 && x;
+  const subject = only(moved) && view.stage ? (view.stage.complete ? "Your project is complete" : `Your project moved to ${view.stage.name}`)
+    : only(newVersions.length) ? (newVersions.length === 1 ? `Ready for your review: ${newVersions[0].stage} ${newVersions[0].name}` : "New versions are ready for your review")
+    : only(todos.length) ? "We need something from you"
+    : only(docs.length) ? "New documents for your project"
     : "Update on your project";
 
   const sent = await sendEmail(row.email, view, subject, lines, row.link);
   if (sent) {
+    await stampSent();
     await note(row.id, `Emailed the client (${row.email}): ${lines.join(" ")}`);
     summary.emails++;
   }

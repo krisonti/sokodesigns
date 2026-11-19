@@ -87,6 +87,15 @@ h3{font-family:"Inter",system-ui,sans-serif; font-size:15px; font-weight:600; li
   .t-dates span{display:inline-block; white-space:nowrap; margin-right:14px}
 }
 
+/* versions under a stage */
+.t-versions{grid-column:1 / -1; list-style:none; margin-top:10px; display:grid; gap:8px}
+.t-versions li{display:flex; flex-wrap:wrap; align-items:baseline; gap:4px 14px; font-size:15px}
+.t-versions a{color:var(--teal-deep); font-weight:600; text-decoration:underline; text-underline-offset:3px; text-decoration-thickness:1px}
+.t-versions a:hover{color:var(--ink)}
+.v-date{font-size:14px; color:var(--ink-faint)}
+.v-state{font-size:14px; color:var(--ink-faint)}
+.v-state.open{color:var(--ink); font-weight:600}
+
 /* 5. documents */
 .docs{list-style:none; display:grid; gap:10px}
 .docs a{display:flex; justify-content:space-between; align-items:center; gap:16px; padding:16px 18px; border:1px solid var(--ink); border-radius:3px; text-decoration:none; font-weight:600; background:transparent; transition:background .2s, color .2s}

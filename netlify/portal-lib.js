@@ -32,7 +32,10 @@ async function monday(query, variables) {
 }
 
 const ITEM_FIELDS = `id name created_at updated_at
-  column_values { id type text value column { title } }`;
+  column_values { id type text value column { title } }
+  subitems { id name board { id } column_values (ids: ["status", "client_link", "sent_to_client"]) { id type text value } }`;
+
+const isDriveUrl = (u) => /^https:\/\/(drive|docs)\.google\.com\/\S+$/i.test(u || "");
 
 // Every board in the workspace that has a "Client Portal" group (templates left out).
 async function listPortalBoards() {
@@ -115,7 +118,29 @@ function parseItem(it) {
     link,
     email,
     updates: it.updates || [],
+    subitems: (it.subitems || []).map(parseSubitem),
   };
+}
+
+// A version under a stage row (e.g. "v2" under Concept, "60CD" under Building Plans)
+function parseSubitem(s) {
+  const cv = s.column_values || [];
+  const byId = (id) => cv.find((c) => c.id === id) || {};
+  let link = null;
+  try { const v = JSON.parse(byId("client_link").value || "null"); link = v && v.url ? String(v.url).trim() : null; } catch { /* ignore */ }
+  return {
+    id: String(s.id),
+    boardId: s.board ? String(s.board.id) : null,
+    name: (s.name || "").trim(),
+    status: (byId("status").text || "").trim(),
+    link,
+    sent: toDate(byId("sent_to_client").text),
+  };
+}
+
+// Versions the client can see: subitems of a stage row that have a Google Drive link
+function versionsOf(stageRow) {
+  return (stageRow.subitems || []).filter((v) => v.name && isDriveUrl(v.link));
 }
 
 // ---------- understanding the group ----------
@@ -159,7 +184,10 @@ function timeline(c, today) {
     let flag = null, daysLate = null;
     if (done && s.target && actual) { daysLate = dayDiff(s.target, actual); flag = daysLate > 0 ? "late" : "on"; }
     else if (status === "current" && s.target) flag = today > s.target ? "behind" : "on";
-    return { name: stageKey(s.name) || s.name, status, target: s.target, actual, flag, daysLate: flag === "late" ? daysLate : null };
+    const versions = versionsOf(s).map((v) => ({
+      name: v.name.slice(0, 120), url: v.link, date: v.sent, done: lower(v.status) === lower(LABELS.done),
+    }));
+    return { name: stageKey(s.name) || s.name, status, target: s.target, actual, flag, daysLate: flag === "late" ? daysLate : null, versions };
   });
 }
 
@@ -196,10 +224,12 @@ function clientView(portal, c) {
       target: current ? current.target : null,
       flag: current ? current.flag : null,
     } : null,
-    todo: c.todos.map((t) => ({ text: t.name.slice(0, 300), url: /^https:\/\/\S+$/i.test(t.link || "") ? t.link : null })),
+    // Versions not yet marked Done are waiting on the client's review, then the regular to-dos
+    todo: tl.flatMap((s) => s.versions.filter((v) => !v.done).map((v) => ({ text: `Review ${s.name}: ${v.name}`, url: v.url })))
+      .concat(c.todos.map((t) => ({ text: t.name.slice(0, 300), url: /^https:\/\/\S+$/i.test(t.link || "") ? t.link : null }))),
     timeline: tl,
     documents: c.docs
-      .filter((d) => /^https:\/\/(drive|docs)\.google\.com\/\S+$/i.test(d.link || ""))
+      .filter((d) => isDriveUrl(d.link))
       .map((d) => ({ label: d.name.slice(0, 200), url: d.link })),
     updates,
   };
@@ -247,6 +277,6 @@ function phoenixToday() { return phoenixDate(new Date().toISOString()); }
 
 module.exports = {
   SITE, COL, LABELS, NAMES, STAGES,
-  monday, listPortalBoards, readPortal, readPortals, parseItem, classify, timeline, clientView,
+  monday, listPortalBoards, readPortal, readPortals, parseItem, classify, timeline, clientView, versionsOf, stageName: (n) => stageKey(n) || n,
   tokenFromLink, linkFor, parseBoardName, phoenixDate, phoenixToday, lower,
 };
