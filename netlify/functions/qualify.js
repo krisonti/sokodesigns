@@ -255,7 +255,7 @@ function emailShell(name, inner, brand = "SOKO Designs") {
       </div>
     </div>
     <div style="font-family:Arial,sans-serif;font-size:11px;color:#8A877F;padding:16px 26px;line-height:1.5">
-      This report is preliminary guidance based on current Arizona law (HB 2720 / HB 2928) and general city ordinances. It is not a guarantee that your lot qualifies; final eligibility, size limits, and setbacks are confirmed against parcel records and construction documents during design. Cost and rent figures are illustrative market estimates, not financial advice. © ${brand}, Phoenix, AZ.
+      This report is preliminary guidance based on current Arizona law (HB 2720 / HB 2928) and general city ordinances. It is not a guarantee that your lot qualifies; final eligibility, size limits, and setbacks are confirmed against parcel records and construction documents during design. Cost and rent figures are illustrative market estimates, not financial advice. © ${brand}, Phoenix, AZ. Construction by SOKO Development LLC, Arizona ROC 369315.
     </div>
   </div>`;
 }
