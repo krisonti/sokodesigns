@@ -137,7 +137,7 @@
       var docs = $("docs");
       d.documents.forEach(function (doc) {
         var a = extLink(doc.url, doc.label);
-        a.appendChild(el("small", null, "Google Drive"));
+        a.appendChild(el("small", null, linkHost(doc.url)));
         var li = el("li"); li.appendChild(a); docs.appendChild(li);
       });
       $("docs-sec").hidden = false;
@@ -195,6 +195,14 @@
     if (p.length !== 3) return ymd || "";
     var d = new Date(+p[0], +p[1] - 1, +p[2]);
     return d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+  }
+
+  // "Google Drive" for Drive/Docs links, otherwise the site name (e.g. "docusign.net")
+  function linkHost(url) {
+    try {
+      var h = new URL(url).hostname.replace(/^www./, "");
+      return /(^|.)(drive|docs).google.com$/.test(h) ? "Google Drive" : h;
+    } catch (e) { return ""; }
   }
 
   function plural(n, word) { return n + " " + word + (n === 1 ? "" : "s"); }

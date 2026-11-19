@@ -42,7 +42,11 @@ const ITEM_FIELDS = `id name created_at updated_at
   updates (limit: 25) { text_body created_at }
   subitems { id name board { id } column_values (ids: ["status", "client_link", "sent_to_client"]) { id type text value } }`;
 
-const isDriveUrl = (u) => /^https:\/\/(drive|docs)\.google\.com\/\S+$/i.test(u || "");
+// Links the client may see: any https web address EXCEPT Monday (those are internal and need a login)
+function isClientUrl(u) {
+  if (!/^https:\/\/\S+$/i.test(u || "")) return false;
+  try { return !/(^|\.)monday\.com$/i.test(new URL(u).hostname); } catch { return false; }
+}
 
 // Every board in the workspace that has a "Client Portal" group (templates left out).
 async function listPortalBoards() {
@@ -159,9 +163,9 @@ function parseSubitem(s) {
   };
 }
 
-// Versions the client can see: subitems of a stage row that have a Google Drive link
+// Versions the client can see: subitems of a stage row that have a web link in Client Link
 function versionsOf(stageRow) {
-  return (stageRow.subitems || []).filter((v) => v.name && isDriveUrl(v.link));
+  return (stageRow.subitems || []).filter((v) => v.name && isClientUrl(v.link));
 }
 
 // ---------- understanding the group ----------
@@ -249,10 +253,10 @@ function clientView(portal, c) {
     } : null,
     // Versions not yet marked Done are waiting on the client's review, then the regular to-dos
     todo: tl.flatMap((s) => s.versions.filter((v) => !v.done).map((v) => ({ text: `Review ${s.name}: ${v.name}`, url: v.url })))
-      .concat(c.todos.map((t) => ({ text: t.name.slice(0, 300), url: /^https:\/\/\S+$/i.test(t.link || "") ? t.link : null }))),
+      .concat(c.todos.map((t) => ({ text: t.name.slice(0, 300), url: isClientUrl(t.link) ? t.link : null }))),
     timeline: tl,
     documents: c.docs
-      .filter((d) => isDriveUrl(d.link))
+      .filter((d) => isClientUrl(d.link))
       .map((d) => ({ label: d.name.slice(0, 200), url: d.link })),
     updates,
   };

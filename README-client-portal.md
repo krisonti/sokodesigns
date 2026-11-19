@@ -25,10 +25,12 @@ Everything else on that row stays internal: the Text column, phones, GC and land
 |---|---|
 | **Portal** | Set Status to **Create link**. Within 5 minutes the private link appears in **Client Link** and Status turns **Live**. Text that link to the client. Fill in Client Email on the Client Information row first. |
 | **Billing, Site Visit, Concept, Building Plans, Engineering, Permits** | The stages on the timeline, in this order. **Done** = finished. **N/A** = hidden from the client. Anything else = not done yet. The **end date of the Timeline** is the target date. **Completion Date** fills in by itself when you mark a stage Done. |
-| **Versions** (subitems under a stage) | Under the stage row, add a subitem named the way the client should see it ("v1", "v2", "30CD", "60CD", "100CD"). Paste the Google Drive link into the subitem's **Client Link**. Within 5 minutes the version shows under that stage and under "Needed from you" as "Review Concept: v2", and the client gets an email. **Sent to Client** fills in with the date. Mark the subitem **Done** once the client has signed off: it moves to "Reviewed" and leaves "Needed from you". Subitems without a Drive link stay internal. To email a version again, clear its Sent to Client date. |
+| **Versions** (subitems under a stage) | Under the stage row, add a subitem named the way the client should see it ("v1", "v2", "30CD", "60CD", "100CD"). Paste its link (Google Drive, DocuSign, Dropbox and so on) into the subitem's **Client Link**. Within 5 minutes the version shows under that stage and under "Needed from you" as "Review Concept: v2", and the client gets an email. **Sent to Client** fills in with the date. Mark the subitem **Done** once the client has signed off: it moves to "Reviewed" and leaves "Needed from you". Subitems without a link stay internal. To email a version again, clear its Sent to Client date. |
 | **To-dos** (add your own rows) | Name the row after what you need (e.g. "Sign the design agreement") and set Status to **Client To-Do**. It shows under "Needed from you" until you mark it Done. You can put a link in **Client Link**. |
-| **Documents** (add your own rows) | Name the row (e.g. "Permit set"), set Status to **DOCUMENTS** and put the Google Drive link in **Client Link**. Only Google Drive and Docs links show. Check the Drive sharing so the client can open it. |
+| **Documents** (add your own rows) | Name the row (e.g. "Permit set"), set Status to **DOCUMENTS** and put its link in **Client Link**. Check the sharing so the client can open it. |
 | **Client Updates** | **Every update posted on this row shows on the client's page.** Post internal notes on any other row. |
+
+Links must start with https. Monday links are never shown, because they are internal and need a login.
 
 Nothing else on the board ever reaches the page. That includes:
 - the other groups,
@@ -47,7 +49,7 @@ A background job runs every 5 minutes. It emails the client at **Client Email** 
 | What you do | What the client gets |
 |---|---|
 | Mark a stage **Done** | "Your project moved to [next stage]" |
-| Paste a Drive link into a version subitem's **Client Link** | "Ready for your review: Concept v2" (sent once per version; Sent to Client is stamped) |
+| Paste a link into a version subitem's **Client Link** | "Ready for your review: Concept v2" (sent once per version; Sent to Client is stamped) |
 | Set a row to **Client To-Do** | "We need something from you" |
 | Set a row to **DOCUMENTS** | "New documents for your project" |
 | Post an update on the **Client Updates** row | "New update on your project", with the update text in the email |
