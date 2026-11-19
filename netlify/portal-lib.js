@@ -238,8 +238,6 @@ function clientView(portal, c) {
     address: ci.address || names.address,
     projectType: typeName(names.type),
     permit: ci.permit || null,
-    // Target date of the last stage that has one, until every stage is done
-    estimatedCompletion: allDone ? null : (tl.map((s) => s.target).filter(Boolean).pop() || null),
     updated: touched.pop() || null,
     stage: current || allDone ? {
       name: current ? current.name : tl[tl.length - 1].name,

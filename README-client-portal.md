@@ -39,7 +39,6 @@ The page shows "On target" or "Behind target" from the dates. The current stage 
 
 The project type comes from the board name: `RR - 123 Main St - Smith` shows "Residential remodel". So do the name and address when those columns are blank.
 
-**Estimated completion** at the top of the page is the target date of the last stage that has one. It disappears once every stage is done.
 
 ## Client emails
 
