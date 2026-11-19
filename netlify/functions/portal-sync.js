@@ -87,8 +87,10 @@ async function syncBoard(portal, inWindow, summary) {
   if (lib.lower(row.status) !== lib.lower(L.live) || !row.email || !lib.tokenFromLink(row.link)) return;
 
   const moved = c.stages.some((s) => lib.lower(s.status) === lib.lower(L.done) && inWindow(s.statusChangedAt));
-  const todos = c.todos.filter((t) => inWindow(t.statusChangedAt));
-  const docs = c.docs.filter((d) => inWindow(d.statusChangedAt));
+  // A row created with its status already set has no "changed at" time, so use when it was made.
+  const when = (i) => i.statusChangedAt || i.createdAt;
+  const todos = c.todos.filter((t) => inWindow(when(t)));
+  const docs = c.docs.filter((d) => inWindow(when(d)));
   if (!moved && !todos.length && !docs.length) return;
 
   const view = lib.clientView(portal, c);
