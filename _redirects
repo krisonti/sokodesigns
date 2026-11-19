@@ -37,3 +37,6 @@
 /category/*                           /hvac   301
 /cart                                 /            301
 /checkout                             /            301
+
+# --- Client portal: every /client/<token>/ link loads the one portal page ---
+/client/*     /client/index.html    200

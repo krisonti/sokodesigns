@@ -7,3 +7,15 @@
   for = "/selections/data/*"
   [headers.values]
     Access-Control-Allow-Origin = "*"
+
+# Client portal: private pages. Keep out of search, never send the link to other sites,
+# no third-party scripts, and don't let browsers or proxies keep a copy.
+[[headers]]
+  for = "/client/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+    Referrer-Policy = "no-referrer"
+    Cache-Control = "no-cache"
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Content-Security-Policy = "default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'"
