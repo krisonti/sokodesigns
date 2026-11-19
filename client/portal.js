@@ -4,7 +4,7 @@
   "use strict";
 
   var API = "/.netlify/functions/portal?t=";
-  var PHONE = "480-710-4866";
+  var PHONE = "480-660-3133";
   var $ = function (id) { return document.getElementById(id); };
 
   var token = (location.pathname.match(/^\/client\/([A-Za-z0-9_-]{32,64})\/?$/) || [])[1];
@@ -22,14 +22,14 @@
     })
     .then(function (data) { if (data) render(data); })
     .catch(function () {
-      message("We couldn't load your project", "Something went wrong on our end. Try again in a minute, or call or text " + PHONE + ".");
+      message("We couldn't load your project", "Something went wrong on our end. Try again in a minute, or call " + PHONE + ".");
     });
 
   // ---------- states ----------
 
   function notFound() {
     message("This link isn't working",
-      "It may have been replaced with a new one. Call or text " + PHONE + " and we'll send you the current link.");
+      "It may have been replaced with a new one. Call " + PHONE + " and we'll send you the current link.");
   }
 
   function message(title, text) {

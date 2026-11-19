@@ -1,15 +1,20 @@
 /**
- * Client portal: Monday webhook for the "Portal" column on the PROJECTS board.
+ * Client portal: Monday webhooks on the PROJECTS board.
  *
- * When someone sets Portal = "Create link":
+ * A) Portal column changed. When someone sets Portal = "Create link":
  *   1. a new random token is made and saved in "Portal Token" (this kills any old link)
  *   2. "Portal Link" gets the client's page URL
  *   3. if the project has no subitems yet, one subitem per stage is created
  *      (stage list comes from netlify/portal-config.js, picked by the Type column)
  *   4. Portal is set to "Live"
  *
+ * B) A stage subitem's Status changed. The project's current stage is worked out the same
+ *    way the portal page does it (first stage that isn't Done or Skipped) and written to
+ *    "Client Stage". It is left untouched when nothing changed. A Monday automation emails
+ *    the client when Client Stage changes.
+ *
  * The webhook body is never trusted on its own: the item is re-read from Monday and the
- * work only happens if it's on the PROJECTS board and Portal really says "Create link".
+ * work only happens if it's on the PROJECTS board (and, for A, Portal really says "Create link").
  *
  * Env vars: MONDAY_API_TOKEN (required)
  */
@@ -20,7 +25,7 @@ const { stagesForType } = require("../portal-config.js");
 const MONDAY_API_URL = "https://api.monday.com/v2";
 const BOARD_ID = "18167716329"; // PROJECTS
 const SITE = "https://www.sokodesigns.com";
-const COL = { portal: "portal_status", token: "portal_token", link: "portal_link", type: "color_mm00kgcd" };
+const COL = { portal: "portal_status", token: "portal_token", link: "portal_link", type: "color_mm00kgcd", stage: "client_stage" };
 
 exports.handler = async function (event) {
   if (event.httpMethod !== "POST") return send(405, { error: "method_not_allowed" });
@@ -29,12 +34,14 @@ exports.handler = async function (event) {
   if (body.challenge) return send(200, { challenge: body.challenge }); // Monday handshake
 
   const ev = body.event || {};
-  const id = String(ev.pulseId || ev.itemId || "");
+  const isSubitem = !!ev.parentItemId;
+  const id = String(isSubitem ? ev.parentItemId : (ev.pulseId || ev.itemId || ""));
   if (!/^\d{5,20}$/.test(id)) return send(200, { ignored: true });
 
   try {
     const item = await getItem(id);
     if (!item || String(item.board.id) !== BOARD_ID) return send(200, { ignored: true });
+    if (isSubitem) return await syncStage(item);
     if (colText(item, COL.portal) !== "Create link") return send(200, { ignored: true });
 
     const token = crypto.randomBytes(32).toString("base64url"); // 43 URL-safe characters
@@ -56,11 +63,25 @@ exports.handler = async function (event) {
 
 async function getItem(id) {
   const out = await mondayGraphql(
-    `query ($id: [ID!]) { items (ids: $id) { id board { id } subitems { id }
-       column_values (ids: ["${COL.portal}", "${COL.type}"]) { id text } } }`,
+    `query ($id: [ID!]) { items (ids: $id) { id board { id }
+       subitems { id name column_values (ids: ["status"]) { id text } }
+       column_values (ids: ["${COL.portal}", "${COL.type}", "${COL.stage}"]) { id text } } }`,
     { id: [id] });
   if (out.errors) throw new Error("Monday read failed: " + JSON.stringify(out.errors).slice(0, 300));
   return (out.data && out.data.items && out.data.items[0]) || null;
+}
+
+// Current stage = first subitem that isn't Done or Skipped ("Complete" when all are done).
+async function syncStage(item) {
+  const stages = (item.subitems || [])
+    .map((s) => ({ name: (s.name || "").trim(), state: colText(s, "status") }))
+    .filter((s) => s.name && s.state !== "Skipped");
+  if (!stages.length) return send(200, { ignored: true });
+  const current = stages.find((s) => s.state !== "Done");
+  const stage = current ? current.name : "Complete";
+  if (stage === colText(item, COL.stage)) return send(200, { unchanged: true });
+  await setColumns(item.id, { [COL.stage]: stage });
+  return send(200, { ok: true, stage });
 }
 
 async function setColumns(id, values) {
