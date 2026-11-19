@@ -1,0 +1,123 @@
+/* ---- SOKO client portal ----
+   Builds on /lp.css (same palette, fonts, buttons). Only portal-specific rules here.
+   Accent rule: teal is used for the current stage and the "Needed from you" items only.
+   Small teal text uses --teal-deep (6:1 on cream); --teal alone is too light for body text. */
+
+:root{ --col:720px; --ink-faint:#6B6A64; }
+
+body{background:var(--cream); min-height:100vh; display:flex; flex-direction:column}
+main{flex:1}
+.col{max-width:var(--col); margin:0 auto; padding-left:22px; padding-right:22px}
+
+/* keyboard focus, everywhere */
+a:focus-visible, button:focus-visible{outline:3px solid var(--teal-deep); outline-offset:3px; border-radius:2px}
+
+.sr{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap}
+.skip{position:absolute; left:-9999px; top:0; background:var(--ink); color:#fff; padding:10px 16px; z-index:10; text-decoration:none}
+.skip:focus{left:12px; top:12px}
+
+/* top: logo only, no navigation */
+.top{background:var(--white); border-bottom:1px solid var(--line); padding:10px 0}
+.logo{height:52px; width:auto}
+
+/* sections: hairline between, no boxes */
+main section{padding:52px 0}
+main section + section, #portal > section + section, #portal + section{border-top:1px solid var(--line)}
+#portal > section:first-child{border-top:none}
+h2{font-size:clamp(28px,4.4vw,36px); margin-bottom:18px}
+h3{font-family:"Inter",system-ui,sans-serif; font-size:15px; font-weight:600; line-height:1.4; margin-bottom:4px}
+.note{color:var(--ink-faint); font-size:15px; margin:-8px 0 18px}
+
+/* loading / not found */
+.msg{padding-top:64px; padding-bottom:40px}
+.msg h1{font-size:clamp(34px,6vw,46px); margin-bottom:14px}
+.msg p{color:var(--ink-soft); max-width:52ch}
+.msg a{color:var(--teal-deep); font-weight:600}
+
+/* 1. intro */
+.intro{padding-top:40px}
+.intro h1{font-size:clamp(40px,8vw,64px); line-height:1.02}
+.address{font-size:clamp(18px,2.4vw,21px); color:var(--ink-soft); margin-top:10px}
+.facts{display:flex; flex-wrap:wrap; gap:14px 40px; margin-top:28px}
+.facts div{min-width:0}
+.facts dt{font-size:14px; color:var(--ink-faint)}
+.facts dd{font-weight:500}
+
+/* 2. current status */
+.stage-name{font-family:"Cormorant Garamond",Georgia,serif; font-weight:600; font-size:clamp(30px,5.4vw,40px); line-height:1.1; color:var(--teal-deep)}
+.stage-flag{font-size:15px; color:var(--ink-soft); margin-top:6px}
+.stage-flag strong{color:var(--ink)}
+.lead{font-size:19px; margin-top:18px; max-width:58ch}
+.next{margin-top:24px; padding-left:18px; border-left:2px solid var(--line)}
+.next p{color:var(--ink-soft); max-width:58ch}
+
+/* 3. needed from you */
+.needed{border-top:3px solid var(--teal) !important}
+.todo{list-style:none}
+.todo li{display:flex; align-items:center; justify-content:space-between; gap:16px; padding:16px 0; border-bottom:1px solid var(--line)}
+.todo li:first-child{padding-top:0}
+.todo span{font-weight:500}
+.todo .btn{flex:none; padding:11px 20px; font-size:15px; background:var(--teal-deep)}
+.todo .btn:hover{background:var(--ink)}
+@media(max-width:520px){ .todo li{flex-direction:column; align-items:stretch} .todo .btn{text-align:center} }
+
+/* 4. timeline: vertical everywhere, dates to the right on wider screens */
+.timeline{list-style:none}
+.timeline li{position:relative; display:grid; grid-template-columns:1fr auto; gap:4px 24px; padding:0 0 26px 34px}
+.timeline li:last-child{padding-bottom:0}
+.timeline li::before{ /* the rail */
+  content:""; position:absolute; left:7px; top:20px; bottom:-2px; width:2px; background:var(--line)}
+.timeline li:last-child::before{display:none}
+.timeline li.done::before{background:var(--teal-deep)}
+.mark{position:absolute; left:0; top:4px; width:16px; height:16px; border-radius:50%; border:2px solid #A8A293; background:var(--cream)}
+.done .mark{background:var(--teal-deep); border-color:var(--teal-deep)}
+.done .mark svg{display:block; width:12px; height:12px; margin:0 0 0 0; color:#fff}
+.current .mark{border:5px solid var(--teal); background:var(--white)}
+.t-name{font-weight:500}
+.upcoming .t-name{color:var(--ink-soft)}
+.current .t-name{font-weight:600}
+.t-now{display:inline-block; margin-left:8px; font-size:13px; font-weight:600; color:var(--teal-deep)}
+.t-dates{font-size:14px; color:var(--ink-faint); text-align:right; white-space:nowrap}
+.t-dates span{display:block}
+.t-flag{font-size:14px}
+.t-flag.behind, .t-flag.late{color:var(--ink); font-weight:600}
+@media(max-width:560px){
+  .timeline li{grid-template-columns:1fr}
+  .t-dates{text-align:left; white-space:normal}
+  .t-dates span{display:inline-block; white-space:nowrap; margin-right:14px}
+}
+
+/* 5. documents */
+.docs{list-style:none; display:grid; gap:10px}
+.docs a{display:flex; justify-content:space-between; align-items:center; gap:16px; padding:16px 18px; border:1px solid var(--ink); border-radius:3px; text-decoration:none; font-weight:600; background:transparent; transition:background .2s, color .2s}
+.docs a:hover{background:var(--ink); color:#fff}
+.docs small{font-weight:400; font-size:14px; color:inherit; opacity:.75}
+
+/* 6. updates */
+.updates{list-style:none}
+.updates li{display:grid; grid-template-columns:110px 1fr; gap:4px 20px; padding:16px 0; border-bottom:1px solid var(--line)}
+.updates li:first-child{padding-top:0}
+.updates li:last-child{border-bottom:none}
+.updates time{font-size:14px; color:var(--ink-faint); padding-top:2px}
+.updates p + p{margin-top:8px}
+@media(max-width:520px){ .updates li{grid-template-columns:1fr} }
+
+/* 7. contact */
+.contact p{color:var(--ink-soft)}
+.contact-list{list-style:none; margin-top:16px; display:grid; gap:6px}
+.contact-list a{color:var(--teal-deep); font-weight:600; text-decoration:underline; text-underline-offset:3px; text-decoration-thickness:1px}
+.contact-list a:hover{color:var(--ink)}
+
+/* slim footer */
+footer.slim{background:#111110; color:#B7B4AC; padding:28px 0; font-size:14px}
+footer.slim p + p{margin-top:4px}
+
+@media(max-width:560px){
+  main section{padding:40px 0}
+  .logo{height:44px}
+}
+
+@media (prefers-reduced-motion:reduce){
+  *, *::before, *::after{transition:none !important; animation:none !important}
+  .btn:hover{transform:none}
+}

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#F4F3F0">
+<title>Your project | SOKO Designs</title>
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/lp.css">
+<link rel="stylesheet" href="/client/portal.css">
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to your project</a>
+
+<div class="top">
+  <div class="col">
+    <img class="logo" src="/soko-designs-logo.png" alt="SOKO Designs" width="66" height="56">
+  </div>
+</div>
+
+<main id="main">
+  <!-- Shown until the data loads, and for bad links / errors -->
+  <div class="col msg" id="msg" role="status" aria-live="polite">
+    <p>Loading your project.</p>
+  </div>
+
+  <div id="portal" hidden>
+    <section class="col intro" aria-labelledby="client-name">
+      <h1 id="client-name"></h1>
+      <p class="address" id="address"></p>
+      <dl class="facts" id="facts"></dl>
+    </section>
+
+    <section class="col status" aria-labelledby="status-h">
+      <h2 id="status-h">Where things stand</h2>
+      <p class="stage-name" id="stage-name"></p>
+      <p class="stage-flag" id="stage-flag"></p>
+      <p class="lead" id="stage-summary"></p>
+      <div class="next" id="stage-next-wrap">
+        <h3>What happens next</h3>
+        <p id="stage-next"></p>
+      </div>
+    </section>
+
+    <section class="col needed" id="needed" aria-labelledby="needed-h" hidden>
+      <h2 id="needed-h">Needed from you</h2>
+      <ul class="todo" id="todo"></ul>
+    </section>
+
+    <section class="col" id="timeline-sec" aria-labelledby="timeline-h" hidden>
+      <h2 id="timeline-h">Timeline</h2>
+      <ol class="timeline" id="timeline"></ol>
+    </section>
+
+    <section class="col" id="docs-sec" aria-labelledby="docs-h" hidden>
+      <h2 id="docs-h">Documents</h2>
+      <ul class="docs" id="docs"></ul>
+    </section>
+
+    <section class="col" id="updates-sec" aria-labelledby="updates-h" hidden>
+      <h2 id="updates-h">Updates</h2>
+      <ol class="updates" id="updates"></ol>
+    </section>
+  </div>
+
+  <section class="col contact" aria-labelledby="contact-h">
+    <h2 id="contact-h">Questions</h2>
+    <p>Call, text or email us.</p>
+    <ul class="contact-list">
+      <li><a href="tel:4807104866">480-710-4866</a></li>
+      <li><a href="mailto:kris@sokodesigns.com">kris@sokodesigns.com</a></li>
+      <li>60 E Rio Salado Pkwy, Suite 9055<br>Tempe, AZ 85281</li>
+    </ul>
+  </section>
+</main>
+
+<footer class="slim">
+  <div class="col">
+    <p>SOKO Designs, Tempe, Arizona</p>
+    <p>Construction by SOKO Development LLC, Arizona ROC 369315</p>
+  </div>
+</footer>
+
+<script src="/client/portal.js"></script>
+</body>
+</html>
