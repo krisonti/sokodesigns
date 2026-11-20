@@ -95,7 +95,7 @@ Stage names and the wording the client sees for each stage are in **`netlify/por
 **Monday setup on each template:**
 - a **Client Portal** group at the top;
 - columns `client_link` (Client Link) and `client_email` (Client Email);
-- columns `client_name` (Client Name), `project_address` (Project Address) and `permit_no` (Permit #), filled in on the **Client Information** row. So far only the RR Template has these.
+- columns `client_name` (Client Name), `project_address` (Project Address) and `permit_no` (Permit #), filled in on the **Client Information** row. RNB uses its existing "Client Name" and "Client Email" columns instead (the portal also reads any column titled exactly that).
 - Status labels **Create link**, **Live** and **Client To-Do**;
 - on its subitems: columns `client_link` (Client Link) and `sent_to_client` (Sent to Client).
 
