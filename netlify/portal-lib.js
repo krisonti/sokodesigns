@@ -105,7 +105,7 @@ async function readPortals(list) {
 
 // The "Client Information" row (under Sales) holds the client's name, address, email and permit #.
 const INFO_PAGE = `info: items_page (limit: 5, query_params: { rules: [{ column_id: "name", compare_value: $info, operator: contains_text }] }) {
-  items { id name created_at updated_at column_values (ids: ["${COL.clientName}", "${COL.address}", "${COL.permit}", "${COL.email}"]) { id type text value column { title } } } }`;
+  items { id name created_at updated_at column_values { id type text value column { title } } } }`;
 
 function pickInfo(board) {
   const rows = (board.info && board.info.items) || [];
@@ -116,6 +116,8 @@ function pickInfo(board) {
 function parseItem(it) {
   const cv = it.column_values || [];
   const byId = (id) => cv.find((c) => c.id === id);
+  // Some templates already had their own "Client Name" / "Client Email" columns (e.g. RNB): use those too
+  const byTitle = (type, title) => cv.find((c) => c.type === type && lower(c.column && c.column.title) === lower(title));
   const status = byId(COL.status);
   let statusChangedAt = null;
   try { statusChangedAt = status && status.value ? JSON.parse(status.value).changed_at || null : null; } catch { /* ignore */ }
@@ -126,7 +128,7 @@ function parseItem(it) {
   let link = null;
   try { const v = JSON.parse((byId(COL.link) || {}).value || "null"); link = v && v.url ? String(v.url).trim() : null; } catch { /* ignore */ }
   let email = null;
-  try { const v = JSON.parse((byId(COL.email) || {}).value || "null"); email = v && v.email ? String(v.email).trim() : null; } catch { /* ignore */ }
+  try { const v = JSON.parse((byId(COL.email) || byTitle("email", "Client Email") || {}).value || "null"); email = v && v.email ? String(v.email).trim() : null; } catch { /* ignore */ }
   return {
     id: String(it.id),
     name: (it.name || "").trim(),
@@ -139,7 +141,7 @@ function parseItem(it) {
     target: toDate(timelineTo),
     link,
     email,
-    clientName: ((byId(COL.clientName) || {}).text || "").trim(),
+    clientName: ((byId(COL.clientName) || byTitle("text", "Client Name") || {}).text || "").trim(),
     address: ((byId(COL.address) || {}).text || "").trim(),
     permit: ((byId(COL.permit) || {}).text || "").trim(),
     updates: it.updates || [],
